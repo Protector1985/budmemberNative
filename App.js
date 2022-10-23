@@ -4,8 +4,8 @@ import { store } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import "@expo/match-media";
 import {useMediaQuery} from 'react-responsive';
-
-import Signup from './src/components/signup/Signup'
+import Login from './src/components/login/Login';
+import Signup from './src/components/signup/Signup';
 
 
 //add store and provider!!
@@ -17,10 +17,8 @@ export default function App() {
 
   return (
     <View style={styles.masterContainer}>
-     
         <Signup />
         <StatusBar style="light" />
-     
     </View>
   );
 }
