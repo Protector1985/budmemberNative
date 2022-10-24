@@ -1,6 +1,8 @@
 import {useState, useEffect} from 'react';
-import { StyleSheet, View, Text, TextInput, Image } from "react-native";
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity } from "react-native";
+import { ScrollView } from 'react-native-gesture-handler'
 import {useFonts} from 'expo-font'
+import { A } from '@expo/html-elements';
 import moment from 'moment'
 import DropDownPicker from 'react-native-dropdown-picker';
 
@@ -77,7 +79,15 @@ export default function Signup() {
 
     return (
         <View style={styles.masterContainer}>
+       
             <View style={styles.subContainer}>
+            
+            <ScrollView
+                contentContainerStyle={{
+                    flexGrow:0.8,
+                    justifyContent: 'space-between',
+                    overflow: "hidden",
+                }}>
                 <View style={styles.imgContainer}>
                     <Image style={styles.logo} source={require('../login/logo.jpg')} />
                 </View>
@@ -170,6 +180,21 @@ export default function Signup() {
                     
                     </View>
                 </View>
+                <View style={styles.termsPrivacy}>
+                    <Text style={styles.termsHeadline}>By clicking create account, I agree that:</Text>
+                    <View style={styles.termsStatementContainer}>
+                        <Text style={styles.bulletPoint}>{`\u2B24`}</Text>
+                        <Text style={styles.termsStatement}>I have read and accepted the <A href="https://budmember.com/terms-and-conditions/" style={styles.link}>terms & conditions</A></Text>
+                    </View>
+                    <View style={styles.termsStatementContainer}>
+                        <Text style={styles.bulletPoint}>{`\u2B24`}</Text>
+                        <Text style={styles.termsStatement}>I have read and accepted the <A href="https://budmember.com/privacy-policy/" style={styles.link}>privacy policy</A></Text>
+                    </View> 
+                </View>
+                <TouchableOpacity style={styles.btn}>
+                    <Text style={styles.btnText}>Create Account</Text>
+                </TouchableOpacity>
+                </ScrollView>
             </View>
         </View>
     )
@@ -177,22 +202,25 @@ export default function Signup() {
 
 const styles = StyleSheet.create({
     masterContainer: {
+        position: 'absolute',
         flex:1,
         backgroundColor:"#2a1b6e",
         height: "100%",
         width: "100%", 
         justifyContent: "center",
-        alignItems: "center",      
+        alignItems: "center", 
+           
     },
 
     subContainer: {
         flex: 1,
         width: "90%",
-        height: "90%",
+        height: "80%",
+        
     },
 
     topContainer: {
-        flex: 1,
+        flexGrow: 1,
         width: "100%",
        
     },
@@ -238,7 +266,7 @@ const styles = StyleSheet.create({
     },
 
     imgContainer: {
-        flex: 1,
+        flex: 3,
         width: "100%",
         height: "auto",
         marginTop: 10,
@@ -269,6 +297,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto",
         color: "#dbdbdb",
         fontSize: 16,
+        marginTop: "8%",
     },
 
     lineContainer: {
@@ -276,7 +305,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginTop: "2%",
+        
     },
 
     line: {
@@ -307,6 +336,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto",
         color: "#dbdbdb", 
         fontSize: 16,
+        marginTop: "3%",
     },
     dropDownContainer: {
         flexDirection: "row",
@@ -325,6 +355,47 @@ const styles = StyleSheet.create({
      
     indDropDownContainer: {
         flexDirection: "column",
-       }
+    },
+    termsPrivacy : {
+      marginTop: "8%",
+    },
+    termsHeadline: {
+        color: "#b4b4b4",
+        fontFamily: "Roboto",
+    },
+    termsStatementContainer: {
+        marginLeft: 30,
+        alignItems: "center",
+        flexDirection: "row",
+        width: "100%",
+        alignItems: "center",
+        marginTop: 6,
+    },
+    termsStatement : {
+        color: "#b4b4b4",
+        fontFamily: "Roboto",
+        fontSize: 10,
+    },
+    bulletPoint : {
+        fontSize: 7,
+        color: "#b4b4b4",
+        marginRight: 10,
+    },
+    btn: {
+        backgroundColor: "#2da491",
+        width: "100%",
+        padding: 10,
+        marginTop: 15,
+        textAlign: "center",
+        borderRadius: 15,
+       
+    }, 
+    btnText: {
+        textAlign: "center",
+        color: "#fff"
+    },
+    link: {
+        color: "rgb(22, 169, 46)"
+    }
     
 })

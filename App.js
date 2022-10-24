@@ -1,11 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import { store } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import "@expo/match-media";
 import {useMediaQuery} from 'react-responsive';
 import Login from './src/components/login/Login';
 import Signup from './src/components/signup/Signup';
+import SignIn from './src/components/signin/SignIn';
+import ForgotPassword from './src/components/forgotPassword/ForgotPassword';
 
 
 //add store and provider!!
@@ -17,7 +19,7 @@ export default function App() {
 
   return (
     <View style={styles.masterContainer}>
-        <Signup />
+        <ForgotPassword />
         <StatusBar style="light" />
     </View>
   );
