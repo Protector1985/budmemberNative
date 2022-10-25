@@ -1,47 +1,55 @@
 
 import {useContext, useState} from "react";
-import {StyleSheet, Text, View, Image, TextInput, line, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, Image, TextInput, line, TouchableOpacity, ActivityIndicator} from 'react-native';
 import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import SocialLoginButton from './SocialLoginButton';
 import ContinueButton from './ContinueButton'
 import { AuthContext } from "../../../context/AuthContext";
 import { findUser } from "../../../api/nodeApi";
+import Spinner from '../../utils/Spinner';
 
 export default function Login({navigation}) {
-    const {login, logout} = useContext(AuthContext);
-    const [email, setEmail] = useState("")
-    const [testState, setTestState] = useState("")
    
+    
+    
+    //state for login component
+    const [email, setEmail] = useState("");
+    const [isLoading, setLoading] = useState(false);
+    
+    //initialize Roboto font
     const [regular] = useFonts({
         Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
       });
-  
+    
+      //if font not intitialized, don't return anything.
       if (!regular) {
         return null;
       }
 
+      // onPress function passed to Continue button
       async function handlePress() {
-        
-        // console.log("PRESSED")
-        //api call to check if email exists!
-            
+        setLoading(true)
+       
+        //Checks if user is already signed up    
         const res = await findUser(email)
         
-        if(res.data.code === "NonExist") {
-            setTestState("fji")
-            navigation.navigate('Signup')
-            
-        }
-        //if a user was found under the email address then
-        // navigation.navigate('Signin')
-
-        //if no user was found under the email address then
-        // navigation.navigate('Signup')
+        //if user is not signed up, navigate to signup
+        if(!res.data.success) {
+            setLoading(false)
+            navigation.navigate('Signup', {email})
         
+            //if user is signed up, navigate to signin    
+        } else if(res.data.success) {
+            setLoading(false)
+            navigation.navigate('Signin', {email})
+        }    
       }
 
-   
+    //if isLoading === true, return the loading spinner
+    if(isLoading) {
+        return <Spinner />
+    }
     
 
     return (
@@ -63,7 +71,7 @@ export default function Login({navigation}) {
                 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email address</Text>
-                    <TextInput value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
+                    <TextInput autoComplete={'email'} value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
                     <View style={styles.continueContainer}>
                         <ContinueButton pressed={handlePress} />
                     </View>

@@ -16,8 +16,8 @@ export default function AppNav() {
         <ActivityIndicator size={'large'} />
       </View>
     )
-
   }
+  
   return (
     <NavigationContainer style={styles.masterContainer} >
       { userToken !== null ? <AppStack /> : <AuthStack />}

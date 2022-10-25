@@ -1,10 +1,19 @@
 
+import {useContext, useState} from 'react'
 import {View, Text, TextInput, StyleSheet, Image} from "react-native";
 import {useFonts} from 'expo-font'
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { AuthContext } from '../../../context/AuthContext';
 
 
 export default function SignIn() {
+    //state needed for this component
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+     //State passed from useContext - AuthContext
+    const {login, logout} = useContext(AuthContext);
+    
+    //initialize Roboto font
     const [regular] = useFonts({
         Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
       });
@@ -12,6 +21,17 @@ export default function SignIn() {
       if (!regular) {
         return null;
       }
+
+      function disableButton() {
+        if(email.trim() === "" || password.trim() === "") {
+            return true
+        } else {
+            return false
+        }
+      }
+
+   
+
     return(
         <View style={styles.masterContainer}>
             <View style={styles.subContainer}>
@@ -23,17 +43,26 @@ export default function SignIn() {
                     <View style={styles.inputContainers}>
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Email address</Text>
-                            <TextInput style={styles.inputField}/>
+                            <TextInput 
+                                autoComplete={'email'} 
+                                value={email} 
+                                onChangeText={(text) => setEmail(text)} 
+                                style={styles.inputField}/>
                         </View>
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Password</Text>
-                            <TextInput style={styles.inputField}/>
+                            <TextInput 
+                                secureTextEntry={true} 
+                                autoComplete={'password'} 
+                                value={password} 
+                                onChangeText={(text) => setPassword(text)} 
+                                style={styles.inputField}/>
                         </View>
                     </View>
                     <View style={styles.btnSection}>
                         <Text style={styles.forgotPassword}>Forgot Password</Text>
-                        <TouchableOpacity style={styles.btn}>
-                            <Text style={styles.btnText}>Sign In</Text>
+                        <TouchableOpacity disabled={disableButton()} style={ disableButton() === false ? styles.btn : styles.btnDisabled}>
+                            <Text style={disableButton() === false ? styles.btnText : styles.btnTextDisabled}>Sign In</Text>
                         </TouchableOpacity>
                     </View>
                     
@@ -108,11 +137,23 @@ const styles = StyleSheet.create({
         marginTop: 15,
         textAlign: "center",
         borderRadius: 15,
-       
     }, 
+    btnDisabled: {
+        backgroundColor: "#2da49180",
+        width: "100%",
+        padding: 10,
+        marginTop: 15,
+        textAlign: "center",
+        borderRadius: 15,
+        opacity: 10,
+    },
     btnText: {
         textAlign: "center",
         color: "#fff"
+    },
+    btnTextDisabled: {
+        textAlign: "center",
+        color: "grey"
     },
     forgotPassword: {
         marginTop: "3%",
