@@ -1,23 +1,52 @@
+
+import {useContext, useState} from "react";
 import {StyleSheet, Text, View, Image, TextInput, line, TouchableOpacity} from 'react-native';
 import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import SocialLoginButton from './SocialLoginButton';
 import ContinueButton from './ContinueButton'
+import { AuthContext } from "../../../context/AuthContext";
+import { findUser } from "../../../api/nodeApi";
 
-export default function Login() {
+export default function Login({navigation}) {
+    const {login, logout} = useContext(AuthContext);
+    const [email, setEmail] = useState("")
+    const [testState, setTestState] = useState("")
+   
     const [regular] = useFonts({
-        Roboto: require('../../../assets/fonts/roboto-regular.ttf'),
+        Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
       });
   
       if (!regular) {
         return null;
       }
 
+      async function handlePress() {
+        
+        // console.log("PRESSED")
+        //api call to check if email exists!
+            
+        const res = await findUser(email)
+        
+        if(res.data.code === "NonExist") {
+            setTestState("fji")
+            navigation.navigate('Signup')
+            
+        }
+        //if a user was found under the email address then
+        // navigation.navigate('Signin')
+
+        //if no user was found under the email address then
+        // navigation.navigate('Signup')
+        
+      }
+
+   
+    
 
     return (
         <View style={styles.masterContainer}>
             <View style={styles.subContainer}>
-        
             <View style={styles.imgContainer}>
                 <Image style={styles.logo} source={require('./logo.jpg')} />
             </View>
@@ -34,9 +63,9 @@ export default function Login() {
                 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email address</Text>
-                    <TextInput style={styles.inputField}  />
+                    <TextInput value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
                     <View style={styles.continueContainer}>
-                        <ContinueButton />
+                        <ContinueButton pressed={handlePress} />
                     </View>
                     
                 </View>

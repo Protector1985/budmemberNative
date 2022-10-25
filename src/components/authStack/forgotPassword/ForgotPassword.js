@@ -4,7 +4,7 @@ import {useFonts} from 'expo-font'
 
 export default function ForgotPassword() {
     const [regular] = useFonts({
-        Roboto: require('../../../assets/fonts/roboto-regular.ttf'),
+        Roboto: require('../../../../assets/fonts/roboto-regular.ttf'),
       });
 
       if (!regular) {

@@ -4,26 +4,27 @@ import { store } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import "@expo/match-media";
 import {useMediaQuery} from 'react-responsive';
-import Login from './src/components/login/Login';
-import Signup from './src/components/signup/Signup';
-import SignIn from './src/components/signin/SignIn';
-import ForgotPassword from './src/components/forgotPassword/ForgotPassword';
+import { AuthProvider } from './src/context/AuthContext';
+import AppNav from './src/navigation/AppNav';
+import Amplify from 'aws-amplify'
+import config from './src/aws-exports'
 
 
-//add store and provider!!
-export default function App() {
 
-  const tablet = useMediaQuery({
-    query: "(min-device-width: 650)"
-  })
+function App() {
+
 
   return (
-    <View style={styles.masterContainer}>
-        <ForgotPassword />
-        <StatusBar style="light" />
-    </View>
+    <AuthProvider>
+      <View style={styles.masterContainer}> 
+          <AppNav />
+          <StatusBar style="light" />
+      </View>
+    </AuthProvider>
+    
   );
 }
+
 
 const styles = StyleSheet.create({
   masterContainer: {
@@ -31,3 +32,5 @@ const styles = StyleSheet.create({
   },
   
 });
+
+export default App

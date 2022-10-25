@@ -1,0 +1,17 @@
+{
+  "providers": [
+    "awscloudformation"
+  ],
+  "projectName": "demoAmplify",
+  "version": "3.1",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "react-native",
+    "config": {
+      "SourceDir": "/Users/michaelbraun/Documents/mycannaguy/budmemberNative/src",
+      "DistributionDir": "/Users/michaelbraun/Documents/mycannaguy/budmemberNative/",
+      "BuildCommand": "expo:build",
+      "StartCommand": "npm start"
+    }
+  }
+}

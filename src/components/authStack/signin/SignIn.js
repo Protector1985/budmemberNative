@@ -6,7 +6,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function SignIn() {
     const [regular] = useFonts({
-        Roboto: require('../../../assets/fonts/roboto-regular.ttf'),
+        Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
       });
 
       if (!regular) {

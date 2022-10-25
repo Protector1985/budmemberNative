@@ -35,7 +35,7 @@ export default function Signup() {
     const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
     const [regular] = useFonts({
-        Roboto: require('../../../assets/fonts/roboto-regular.ttf'),
+        Roboto: require('../../../../assets/fonts/roboto-regular.ttf'),
       });
 
     

@@ -1,9 +1,9 @@
 import { TouchableOpacity, Text, StyleSheet} from "react-native";
 import {useFonts} from 'expo-font'
 
-export default function ContinueButton() {
+export default function ContinueButton({pressed}) {
     const [regular] = useFonts({
-        Roboto: require('../../../assets/fonts/roboto-regular.ttf'),
+        Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
       });
   
       if (!regular) {
@@ -11,7 +11,7 @@ export default function ContinueButton() {
       }
 
     return(
-        <TouchableOpacity style={styles.btnContainer}>
+        <TouchableOpacity onPress={() => pressed()} style={styles.btnContainer}>
             <Text style={styles.btn}>Continue</Text>
         </TouchableOpacity>
     )
