@@ -6,13 +6,13 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContext } from '../../../context/AuthContext';
 
 
-export default function SignIn() {
+export default function SignIn({navigation}) {
     //state needed for this component
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(navigation.state.params.email || "");
     const [password, setPassword] = useState("");
      //State passed from useContext - AuthContext
     const {login, logout} = useContext(AuthContext);
-    
+   
     //initialize Roboto font
     const [regular] = useFonts({
         Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
@@ -61,7 +61,7 @@ export default function SignIn() {
                     </View>
                     <View style={styles.btnSection}>
                         <Text style={styles.forgotPassword}>Forgot Password</Text>
-                        <TouchableOpacity disabled={disableButton()} style={ disableButton() === false ? styles.btn : styles.btnDisabled}>
+                        <TouchableOpacity onPress={() => login(email, password)} disabled={disableButton()} style={ disableButton() === false ? styles.btn : styles.btnDisabled}>
                             <Text style={disableButton() === false ? styles.btnText : styles.btnTextDisabled}>Sign In</Text>
                         </TouchableOpacity>
                     </View>

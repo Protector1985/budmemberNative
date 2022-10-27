@@ -1,10 +1,14 @@
-import {Text, View} from 'react-native'
+import { createStackNavigator } from "react-navigation-stack";
+import { createAppContainer } from 'react-navigation';
+import Home from './home/Home.js'
 
-
-export default function AppStack() {
-    return (
-        <View>
-            <Text> This is the App </Text>
-        </View>
-    )
+const screens = {
+    Home: {
+        screen: Home
+    },
+   
 }
+
+
+const AppStack = createStackNavigator(screens);
+export default createAppContainer(AppStack);

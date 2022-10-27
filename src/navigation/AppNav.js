@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { useContext } from 'react';
 import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import AppStack from '../components/appStack/AppStack';
 import AuthStack from '../components/authStack/AuthStack';
 import { AuthContext } from '../context/AuthContext';
 
@@ -9,7 +10,7 @@ import { AuthContext } from '../context/AuthContext';
 export default function AppNav() {
   const {isLoading, userToken} = useContext(AuthContext)
 
-  
+ 
   if(isLoading) {
     return (
       <View style={styles.loadingContainer}>

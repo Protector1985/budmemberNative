@@ -1,9 +1,14 @@
 import { View, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import {useFonts} from 'expo-font'
 import { AntDesign } from '@expo/vector-icons'; 
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export default function Welcome({navigation}) {
     
+
+
+
     const [regular] = useFonts({
         Roboto: require('../../assets/fonts/roboto-regular.ttf'),
       });

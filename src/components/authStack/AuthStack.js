@@ -25,6 +25,6 @@ const screens = {
 }
 
 
-const AppStack = createStackNavigator(screens);
-export default createAppContainer(AppStack);
+const AuthStack = createStackNavigator(screens);
+export default createAppContainer(AuthStack);
 
