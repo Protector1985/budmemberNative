@@ -17,7 +17,7 @@ async function submitUserData(firstName, lastName, birthDate, header){
           FirstName: firstName,
           MiddleName: "",
           LastName: lastName,
-          irthdate: birthDate,
+          Birthdate: birthDate,
         },
       };
       const res = await updateUser(updateObject, header);
@@ -27,7 +27,6 @@ async function submitUserData(firstName, lastName, birthDate, header){
         throw new Error(err)      
     } 
   };
-
 
 export default async function handleCreateAccount(email, password, firstName, lastName, birthDate){
     //console.log({email,password,repeatPassword,checkedTerms});

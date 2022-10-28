@@ -12,6 +12,7 @@ export default function SignIn({navigation}) {
     const [password, setPassword] = useState("");
      //State passed from useContext - AuthContext
     const {login, logout} = useContext(AuthContext);
+    
    
     //initialize Roboto font
     const [regular] = useFonts({

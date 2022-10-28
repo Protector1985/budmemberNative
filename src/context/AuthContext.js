@@ -14,7 +14,7 @@ export const AuthProvider = ({children}) => {
     
     //sets token for context and stores it in local storage
     async function login(email, password) {
-        // setIsLoading(true)
+        setIsLoading(true)
 
         try {
             var res = await signIn({
@@ -22,13 +22,13 @@ export const AuthProvider = ({children}) => {
                 password: password,
               });
               if(!res.data.success) {
-                // setIsLoading(false)
+                setIsLoading(false)
                 Alert.alert("Wrong Password", "The password you entered didn't match our records") 
                 
                 } else if(res.data.success) {
                 setUserToken(res.data.token)
                 AsyncStorage.setItem("userToken", res.data.token)
-                // setIsLoading(false)
+                setIsLoading(false)
                 
             }
         } catch (err) {

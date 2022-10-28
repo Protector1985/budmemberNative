@@ -35,24 +35,24 @@ export default function Signup({navigation}) {
     
     //generates array of years since 1900
     let years = generateYears();
-    // const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
+    const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
     const [regular] = useFonts({
         Roboto: require('../../../../assets/fonts/roboto-regular.ttf'),
       });
 
-      const [birthDayString, setBirthDayString] = useState(moment().subtract("18", "years").format("YYYY-MM-DD").toString())
+    //   const [birthDayString, setBirthDayString] = useState(moment().subtract("18", "years").format("YYYY-MM-DD").toString())
 
 
       //Initialize dropdown values ----
-    //     useEffect(() => {
-    //         const monthIndex = moment().month();
-    //         setBirthMonth(months[monthIndex].value)
-    //         setBirthYear(moment().subtract(18, 'years').format("YYYY"))
-    //         setDayOfBirth(moment().format("DD"))
-    //         const days = moment(`${moment().subtract(18, 'years').format("YYYY")}-${months[monthIndex].label}`, "YYYY-MMMM").daysInMonth()
-    //         setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
-    //   }, [])
+        useEffect(() => {
+            const monthIndex = moment().month();
+            setBirthMonth(months[monthIndex].value)
+            setBirthYear(moment().subtract(18, 'years').format("YYYY"))
+            setDayOfBirth(moment().format("DD"))
+            const days = moment(`${moment().subtract(18, 'years').format("YYYY")}-${months[monthIndex].label}`, "YYYY-MMMM").daysInMonth()
+            setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
+      }, [])
       //----end of dropdown initialization
 
 
@@ -61,24 +61,24 @@ export default function Signup({navigation}) {
       //side effect functions from dropdown ----------- 
       //sets days per month dynamically when year and month is changed - includes leap year
       //closes dropdown after selection
-    //   function monthValSideEffects(value) {
-    //     const days = moment(`${Number(birthYear)}-${months[Number(value) -1].label}`, "YYYY-MMMM").daysInMonth();
+      function monthValSideEffects(value) {
+        const days = moment(`${Number(birthYear)}-${months[Number(value) -1].label}`, "YYYY-MMMM").daysInMonth();
         
-    //     //stringified value to avoid re-renders
-    //     setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
-    //   }
+        //stringified value to avoid re-renders
+        setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
+      }
 
-    //   function yearValSideEffects(value) {
-    //     const days = moment(`${value}-${months[Number(birthMonth) -1].label})`, "YYYY-MMMM").daysInMonth();
-    //     const dim = generateDaysInMonth(days)
+      function yearValSideEffects(value) {
+        const days = moment(`${value}-${months[Number(birthMonth) -1].label})`, "YYYY-MMMM").daysInMonth();
+        const dim = generateDaysInMonth(days)
         
-    //     //stringified value to avoid re-renders
-    //     setDaysInMonth(JSON.stringify(dim))
-    //   }
-    //   //-----end of side effect functions
-    //   if (!regular) {
-    //     return null;
-    //   }
+        //stringified value to avoid re-renders
+        setDaysInMonth(JSON.stringify(dim))
+      }
+      //-----end of side effect functions
+      if (!regular) {
+        return null;
+      }
       console.log(birthDayString)
       async function handleSignup() {
         signUp(email, password, firstName, lastName, birthDayString.toString())
@@ -88,35 +88,10 @@ export default function Signup({navigation}) {
         return Number(moment().subtract("18", "years").format("YYYY"))
       }
      
-console.log(birthDayString)
-console.log(modalOpen)
+
     return (
         <View style={styles.masterContainer}>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalOpen}
-                onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.modalContainer}>
-            <View style={styles.modalBox}>
-                <View style={styles.picker}>
-                <Text style={styles.dobText}>Please select your date of birth</Text>
-                    <DatePicker 
-                        onChange={(value) => setBirthDayString(moment(value).format("YYYY-MM-DD"))}
-                        format="yyyy-mm-dd"
-                        startYear={startYear()}
-                    />
-                </View>
-                <TouchableOpacity onPress={() => setModalOpen(false)} style={styles.btn2}>
-                    <Text style={styles.btnText2}>Confirm</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
-        
-        </Modal>
+            
         
         
         
@@ -190,6 +165,48 @@ console.log(modalOpen)
 
                 <View style={styles.bottomContainer}>
                     <Text style={styles.dateOfBirth}>Date of Birth</Text>
+                     <View style={styles.dropDownContainer}>
+                    
+                     <View style={styles.indDropDownContainer}>
+                         <Text style={styles.label}>Month</Text>
+                         <DropDownPicker
+                            style={styles.dropdownGlobalStyle} 
+                            placeholder={birthMonth}
+                            containerStyle={styles.dropDownLong} 
+                            value={birthMonth} 
+                            items={months} 
+                            setValue={setBirthMonth} 
+                            onClose={() => setMonthOpen(false)} 
+                            onChangeValue={(value) => monthValSideEffects(value)} 
+                            open={monthOpen} 
+                            setOpen={() => setMonthOpen(true)} />
+                    </View>
+                    <View style={styles.indDropDownContainer}>
+                        <Text style={styles.label}>Day</Text>
+                        <DropDownPicker 
+                            placeholder={dayOfBirth}
+                            containerStyle={styles.dropDownShort} 
+                            value={dayOfBirth} 
+                            items={JSON.parse(daysInMonth)} 
+                            setValue={setDayOfBirth} 
+                            onClose={() => setDayOpen(false)} 
+                            open={dayOpen} 
+                            setOpen={() => setDayOpen(true)} />
+                    </View>
+                    <View style={styles.indDropDownContainer}>
+                        <Text style={styles.label}>Year</Text>
+                        <DropDownPicker 
+                            placeholder={birthYear}
+                            containerStyle={styles.dropDownLong} 
+                            value={birthYear} 
+                            items={years} 
+                            setValue={setBirthYear} 
+                            open={yearOpen} 
+                            onClose={() => setYearOpen(false)} 
+                            onChangeValue={(value) => yearValSideEffects(value)} 
+                            setOpen={() => setYearOpen(true)}/>
+                    </View>
+                    </View>
                     
                     </View>
                 <View style={styles.termsPrivacy}>
@@ -449,6 +466,42 @@ const styles = StyleSheet.create({
     }
     
 })
+
+
+
+//New Modal
+// <Modal
+//                 animationType="slide"
+//                 transparent={true}
+//                 visible={modalOpen}
+//                 onRequestClose={() => {
+//           Alert.alert('Modal has been closed.');
+//           setModalVisible(!modalVisible);
+//         }}>
+//         <View style={styles.modalContainer}>
+//             <View style={styles.modalBox}>
+//                 <View style={styles.picker}>
+//                 <Text style={styles.dobText}>Please select your date of birth</Text>
+//                     <DatePicker 
+//                         onChange={(value) => setBirthDayString(moment(value).format("YYYY-MM-DD"))}
+//                         format="yyyy-mm-dd"
+                        
+//                     />
+//                 </View>
+//                 <TouchableOpacity onPress={() => setModalOpen(false)} style={styles.btn2}>
+//                     <Text style={styles.btnText2}>Confirm</Text>
+//                 </TouchableOpacity>
+//             </View>
+//         </View>
+        
+//         </Modal>
+
+
+
+
+
+
+
 
 
 
