@@ -37,13 +37,8 @@ export default function Signup({navigation}) {
     let years = generateYears();
     const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
-    const [regular] = useFonts({
-        Roboto: require('../../../../assets/fonts/roboto-regular.ttf'),
-      });
 
-    //   const [birthDayString, setBirthDayString] = useState(moment().subtract("18", "years").format("YYYY-MM-DD").toString())
-
-
+      
       //Initialize dropdown values ----
         useEffect(() => {
             const monthIndex = moment().month();
@@ -76,9 +71,7 @@ export default function Signup({navigation}) {
         setDaysInMonth(JSON.stringify(dim))
       }
       //-----end of side effect functions
-      if (!regular) {
-        return null;
-      }
+     
       console.log(birthDayString)
       async function handleSignup() {
         signUp(email, password, firstName, lastName, birthDayString.toString())
@@ -290,7 +283,7 @@ const styles = StyleSheet.create({
     createAcc:{
         color: "#dbdbdb",
         fontSize: 25,
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         
     },
 
@@ -299,14 +292,14 @@ const styles = StyleSheet.create({
     },
 
     alreadyMember: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb",
         fontSize: 14,
     },
 
     signIn: {
         color: "#2da491",
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         textDecorationLine: "underline",
         fontSize: 14,
     },
@@ -340,7 +333,7 @@ const styles = StyleSheet.create({
     },
 
     signupWithSocial: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb",
         fontSize: 16,
         marginTop: "8%",
@@ -361,13 +354,13 @@ const styles = StyleSheet.create({
     },
 
     or : {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 21,
     },
 
     label: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 12,
     },
@@ -379,7 +372,7 @@ const styles = StyleSheet.create({
     },
 
     dateOfBirth: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 16,
         marginTop: "3%",
@@ -407,7 +400,7 @@ const styles = StyleSheet.create({
     },
     termsHeadline: {
         color: "#b4b4b4",
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
     },
     termsStatementContainer: {
         marginLeft: 30,
@@ -419,7 +412,7 @@ const styles = StyleSheet.create({
     },
     termsStatement : {
         color: "#b4b4b4",
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         fontSize: 10,
     },
     bulletPoint : {
@@ -460,7 +453,7 @@ const styles = StyleSheet.create({
         color: "rgb(22, 169, 46)"
     },
     dobText: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         fontSize: 20,
         textAlign: "center",
     }

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-const ENDPOINT = "http://localhost:5000"
+const ENDPOINT = "https://api-stag.budmember.com"
 
 const setToken = (headers = {}) => {
     const newHeaders = { ...headers }

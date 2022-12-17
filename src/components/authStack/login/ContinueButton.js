@@ -2,13 +2,7 @@ import { TouchableOpacity, Text, StyleSheet} from "react-native";
 import {useFonts} from 'expo-font'
 
 export default function ContinueButton({pressed}) {
-    const [regular] = useFonts({
-        Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
-      });
-  
-      if (!regular) {
-        return null;
-      }
+    
 
     return(
         <TouchableOpacity onPress={() => pressed()} style={styles.btnContainer}>
@@ -30,7 +24,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
         color: "#fff",
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         textAlign: "center",
         
     }

@@ -3,13 +3,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import {useFonts} from 'expo-font'
 
 export default function ForgotPassword() {
-    const [regular] = useFonts({
-        Roboto: require('../../../../assets/fonts/roboto-regular.ttf'),
-      });
-
-      if (!regular) {
-        return null;
-      }
+    
     return(
         <View style={styles.masterContainer}>
             <View style={styles.subContainer}>
@@ -85,7 +79,7 @@ const styles = StyleSheet.create({
         marginBottom: "3%",
     },
     label: {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 12,
         marginBottom: "1%",
@@ -104,7 +98,7 @@ const styles = StyleSheet.create({
         color: "#fff"
     },
     resetDisclaimer : {
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 17,
         marginBottom:"5%",

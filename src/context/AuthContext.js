@@ -10,7 +10,6 @@ export const AuthProvider = ({children}) => {
 
     const [isLoading, setIsLoading] = React.useState(false);
     const [userToken, setUserToken] = React.useState(null);
-
     
     //sets token for context and stores it in local storage
     async function login(email, password) {

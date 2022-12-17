@@ -5,13 +5,8 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Welcome({navigation}) {
-    
 
 
-
-    const [regular] = useFonts({
-        Roboto: require('../../assets/fonts/roboto-regular.ttf'),
-      });
 
       function handleNavigation() {
         navigation.navigate("Login")
@@ -64,7 +59,7 @@ const styles = StyleSheet.create({
     },
     btnText: {
         color: "#fff",
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         fontSize: 20,
         marginLeft: "10%" ,
          

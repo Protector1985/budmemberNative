@@ -1,14 +1,19 @@
-import { createStackNavigator } from "react-navigation-stack";
-import { createAppContainer } from 'react-navigation';
-import Home from './home/Home.js'
 
-const screens = {
-    Home: {
-        screen: Home
-    },
-   
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import TabNavigator from "./TabNavigator/TabNavigator";
+const Drawer = createDrawerNavigator();
+
+
+export default function AppStack({navigation}) {
+ 
+    return (
+        <Drawer.Navigator screenOptions={{
+            headerShown: false
+          }}>
+            <Drawer.Screen name="Map">
+            {(props)=> <TabNavigator {...props} />}
+            </Drawer.Screen>
+        </Drawer.Navigator>
+    )
 }
 
-
-const AppStack = createStackNavigator(screens);
-export default createAppContainer(AppStack);

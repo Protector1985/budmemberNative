@@ -17,15 +17,7 @@ export default function Login({navigation}) {
     const [email, setEmail] = useState("");
     const [isLoading, setLoading] = useState(false);
     
-    //initialize Roboto font
-    const [regular] = useFonts({
-        Roboto: require("../../../../assets/fonts/roboto-regular.ttf"),
-      });
-    
-      //if font not intitialized, don't return anything.
-      if (!regular) {
-        return null;
-      }
+
 
       // onPress function passed to Continue button
       async function handlePress() {
@@ -148,16 +140,16 @@ const styles = StyleSheet.create({
     },
     signIn: {
         fontSize: 30,
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         marginBottom: 30,
     },
     newUser: {
         fontSize:18,
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
     },
     createNew: {
         fontSize:15,
-        fontFamily: "Roboto",
+        fontFamily: "Roboto-Regular",
         color: "#2da491",
         textDecorationLine: "underline",
     },
