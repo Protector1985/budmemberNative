@@ -19,14 +19,12 @@ export default function TabNavigator({navigation}) {
         <Tab.Navigator style={styles.bottomContainer} screenOptions={{
             headerShown: false,
             tabBarStyle: {
-                
                 display:"flex",
                 flexDirection:"row",
                 justifyContent: "space-around",
                 alignItems:"center",
             }
           }}>
-        
             <Tab.Screen
                 name="Map"
                 component={MapScreen}
@@ -48,7 +46,6 @@ export default function TabNavigator({navigation}) {
                 component={QrScanner}
                 options={{
                 tabBarButton: (props) => <CustomTabBarButton navigation={navigation} pictureEl={<AntDesign style={styles.icon}  name="menuunfold" size={26} color="black" />} />,
-                
                 }}
             />
         </Tab.Navigator>

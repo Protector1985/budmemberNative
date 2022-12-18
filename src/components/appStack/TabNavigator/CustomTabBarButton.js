@@ -3,8 +3,7 @@ import { DrawerActions } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 
 export default function CustomTabBarButton({navigation, pictureEl}) {
-    
-    
+      
     return(
         <TouchableOpacity style={styles.btn} onPress={() => navigation.dispatch(DrawerActions.openDrawer())} >
             {pictureEl}
