@@ -6,11 +6,11 @@ import {
   import { FontAwesome } from '@expo/vector-icons'; 
 
   export default function DrawerContent(props) {
-    console.log(props.state.routeNames)
+    
     return(
         <DrawerContentScrollView style={styles.container}>
             <ImageBackground 
-                source={require("../../../assets/pictures/splash1.jpg")} 
+                source={require("../../../assets/pictures/splash6.jpg")} 
                 style={styles.backgroundContainer}
             >
                 <Image style={styles.profile} source={require("../../../assets/pictures/profilePic.jpg")} />
