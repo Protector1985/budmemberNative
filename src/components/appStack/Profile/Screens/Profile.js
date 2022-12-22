@@ -2,35 +2,33 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TextInput } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Dimensions from "react-native"
+import moment from 'moment';
 
 
-export default function Profile() {
-    const [email, setEmail] = React.useState("")
-    const [phone, setPhone] = React.useState("")
-    const [birthDate, setBirtDate] = React.useState("")
-   
+export default function Profile({ email, firstName, lastName, phone, birthDate, membership}) {
+
+
     return (
         <SafeAreaView style={styles.container}>
-        <ImageBackground style={styles.imgContainer} source={require("../../../assets/pictures/splash6.jpg")}>
-            <Image style={styles.profilePic} source={require("../../../assets/pictures/profilePic.jpg")} />
+        <ImageBackground style={styles.imgContainer} source={require("../../../../assets/pictures/splash6.jpg")}>
+            <Image style={styles.profilePic} source={require("../../../../assets/pictures/profilePic.jpg")} />
             <View style={styles.nameContainer}>
-                <Text style={styles.name}>Michael Braun</Text>
-                <Text style={styles.membership}>VIP Gold Member</Text>
+                <Text style={styles.name}>{`${firstName} ${lastName}`}</Text>
+                <Text style={styles.membership}>{!membership ? "Not Subscribed" : membership}</Text>
             </View>
         </ImageBackground>
             <ScrollView style={styles.inputContainer}>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Your Email</Text>
-                    <TextInput style={styles.inputField} autoComplete={'email'} value={email} onChangeText={(text) => setEmail(() => text)}/>
+                    <Text style={styles.textDisplay}>{email}</Text>
                 </View>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Phone</Text>
-                    <TextInput style={styles.inputField} autoComplete={'tel'} value={phone} onChangeText={(text) => setPhone(() => text)}/>
+                    <Text style={styles.textDisplay}>{phone}</Text>
                 </View>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Birth Date</Text>
-                    <TextInput style={styles.inputField} autoComplete={'birthdate-full'} value={phone} onChangeText={(text) => setPhone(() => text)}/>
+                    <Text style={styles.textDisplay}>{moment(birthDate).format("MM/DD/YYYY")}</Text>
                 </View>
             </ScrollView> 
         </SafeAreaView>
@@ -82,14 +80,21 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: "auto",
     },
-    inputField: {
+    inputSubContainer: {
         borderBottomColor: "#cecece",
         borderBottomWidth: 1,
         marginBottom: 20,
-        height: 40,
+        marginTop: 30,
+        height: 58,
     },
     label: {
         color: "#333333"
+    },
+    textDisplay: {
+        fontSize: 18,
+        marginTop: 10,
+       
+        
     }
     
     

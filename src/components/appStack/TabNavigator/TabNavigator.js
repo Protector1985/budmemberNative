@@ -5,18 +5,23 @@ import { AntDesign } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
 import MapScreen from '../MapScreen/MapScreen';
 import QrScanner from '../QrScanner/QrScanner'
-import Profile from '../Profile/Profile'
+import Profile from '../Profile/Screens/Profile'
 import Billing from '../Billing/Billing';
 import ContactUs from '../ContactUs/ContactUs';
 import CustomTabBarButton from './CustomTabBarButton';
 import { DrawerActions } from '@react-navigation/native';
 import { FlipInEasyX } from 'react-native-reanimated';
+import ProfileStack from '../Profile/ProfileStack';
+
+
+
+
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator(props) {
+    
     const {navigation, firstEl} = props
-    console.log(firstEl)
     //the first screen will always be returned in the tab stack
     //in order to show the tab bar across all screens we need to 
     //return the first screen conditionally
@@ -25,7 +30,7 @@ export default function TabNavigator(props) {
             case "Map":
                 return MapScreen
             case "Profile":
-                return Profile
+                return ProfileStack
             case "Billing":
                 return Billing
             case "ContactUs":

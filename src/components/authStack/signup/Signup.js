@@ -27,10 +27,10 @@ export default function Signup({navigation}) {
     const [monthOpen, setMonthOpen] = useState(false)
     const [dayOpen, setDayOpen] = useState(false)
     const [yearOpen, setYearOpen] = useState(false)
-    const [birthMonth, setBirthMonth] = useState();
-    const [birthYear, setBirthYear] = useState();
-    const [daysInMonth, setDaysInMonth] = useState("")
-    const [dayOfBirth, setDayOfBirth] = useState({label:"", value:""});
+    const [birthMonth, setBirthMonth] = useState("");
+    const [birthYear, setBirthYear] = useState("");
+    const [daysInMonth, setDaysInMonth] = useState([])
+    const [dayOfBirth, setDayOfBirth] = useState("");
     const {signUp, login, logout} = useContext(AuthContext);
     
     //generates array of years since 1900
@@ -38,6 +38,9 @@ export default function Signup({navigation}) {
     const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
 
+    console.log(birthMonth)
+    console.log(birthYear);
+    console.log(dayOfBirth)
       
       //Initialize dropdown values ----
         useEffect(() => {
@@ -46,6 +49,7 @@ export default function Signup({navigation}) {
             setBirthYear(moment().subtract(18, 'years').format("YYYY"))
             setDayOfBirth(moment().format("DD"))
             const days = moment(`${moment().subtract(18, 'years').format("YYYY")}-${months[monthIndex].label}`, "YYYY-MMMM").daysInMonth()
+            console.log("days")
             setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
       }, [])
       //----end of dropdown initialization
@@ -72,7 +76,7 @@ export default function Signup({navigation}) {
       }
       //-----end of side effect functions
      
-      console.log(birthDayString)
+     
       async function handleSignup() {
         signUp(email, password, firstName, lastName, birthDayString.toString())
       }
@@ -81,15 +85,11 @@ export default function Signup({navigation}) {
         return Number(moment().subtract("18", "years").format("YYYY"))
       }
      
+      console.log("Days in month: " + daysInMonth)
 
     return (
         <View style={styles.masterContainer}>
-            
         
-        
-        
-      
-       
             <View style={styles.subContainer}>
             
             <ScrollView
@@ -180,7 +180,7 @@ export default function Signup({navigation}) {
                             placeholder={dayOfBirth}
                             containerStyle={styles.dropDownShort} 
                             value={dayOfBirth} 
-                            items={JSON.parse(daysInMonth)} 
+                            items={["31"]} 
                             setValue={setDayOfBirth} 
                             onClose={() => setDayOpen(false)} 
                             open={dayOpen} 

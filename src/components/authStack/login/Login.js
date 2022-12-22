@@ -21,11 +21,11 @@ export default function Login({navigation}) {
 
       // onPress function passed to Continue button
       async function handlePress() {
+        try {
         setLoading(true)
        
         //Checks if user is already signed up    
         const res = await findUser(email)
-        
         //if user is not signed up, navigate to signup
         if(!res.data.success) {
             setLoading(false)
@@ -35,8 +35,11 @@ export default function Login({navigation}) {
         } else if(res.data.success) {
             setLoading(false)
             navigation.navigate('Signin', {email})
-        }    
-      }
+        }   
+    } catch(err) {
+        console.log(err)
+    }
+}
 
     //if isLoading === true, return the loading spinner
     if(isLoading) {

@@ -1,10 +1,11 @@
+import {Platform, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
-const ENDPOINT = "https://api-stag.budmember.com"
+const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
 
-const setToken = (headers = {}) => {
+const setToken = async (headers = {}) => {
     const newHeaders = { ...headers }
-    const token = AsyncStorage.getItem("userToken")
+    const token = await AsyncStorage.getItem("userToken")
     newHeaders["Authorization"] = `Bearer ${token}`
     return newHeaders
 }
@@ -12,10 +13,12 @@ const setToken = (headers = {}) => {
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  
     try {
+        const route = ENDPOINT + "/testRoute"
         const user = await axios.get(ENDPOINT + `/find-user/${email}`)
+        
         return user
     } catch (err) {
-        console.error(err)
+        console.log(err)
     }
 }
 
@@ -38,7 +41,8 @@ export const signUp = async (signUpObject) => {
     }
 }
 
-export const updateUser = async (updateDetails, headers) => {  
+export const updateUser = async (updateDetails, header) => {
+    const headers = header ? header : await setToken()
     try {
         const updateUserRes = await axios.patch(ENDPOINT + "/user", updateDetails,  {headers} )
         return updateUserRes
@@ -55,5 +59,17 @@ export const deleteNullSFEntry = async (email, headers) => {
     } catch (err) {
         console.log(err)
         return err.response;
+    }
+}
+
+
+export const fetchMyself = async () => {
+    try {
+        const headers = await setToken()
+        const user = await axios.get(ENDPOINT + "/user", { headers })
+        
+        return user
+    } catch (err) {
+        console.log(err)
     }
 }
