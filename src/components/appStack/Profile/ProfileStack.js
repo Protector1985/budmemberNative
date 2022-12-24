@@ -5,22 +5,26 @@ import EditProfile from './Screens/EditProfile';
 import Profile from './Screens/Profile';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyself, updateUser } from '../../../api/nodeApi';
+import { AntDesign } from '@expo/vector-icons'; 
+import fetchImage from '../lib/fetchImage';
+
 
 
 
 const Stack = createStackNavigator()
-export default function ProfileStack({navigation}) {
+export default function ProfileStack({navigation, userSlice, Email, FirstName, LastName, MobilePhone, Birthdate, currentActivePackage, avatarUri}) {
   const [loading, setLoading] = React.useState(false)
-  const dispatch = useDispatch();
-  //imports the global user State
-  const {Email, FirstName, LastName, MobilePhone, Birthdate, currentActivePackage } = useSelector((state) => state.userSlice._z)
 
   const [localFirst, setLocalFirst] = React.useState(FirstName);
   const [localLast, setLocalLast] = React.useState(LastName);
   const [localEmail, setLocalEmail] = React.useState(Email);
   const [localPhone, setLocalPhone] = React.useState(MobilePhone);
   const [localDob, setLocalDob] = React.useState(Birthdate);
-
+  const [image, setImage] = React.useState(null);
+  
+  //fetches the image URI from the backend and saves it to async storage
+ 
+  
 
   async function handleSave() {  
     setLoading(true)
@@ -74,7 +78,8 @@ export default function ProfileStack({navigation}) {
                       phone={MobilePhone}
                       birthDate={Birthdate}
                       membership={currentActivePackage}
-               />}
+                      image={avatarUri}
+                  />}
             </Stack.Screen>
             <Stack.Screen name="Edit Profile" 
                 options={{
@@ -104,6 +109,8 @@ export default function ProfileStack({navigation}) {
                     setPhone={setLocalPhone}
                     birthDate={localDob}
                     setBirtDate={setLocalDob}
+                    image={avatarUri}
+                   
                      /> }
             </Stack.Screen>
         </Stack.Navigator>
@@ -117,5 +124,6 @@ const styles = StyleSheet.create({
     color: "#007AFF",
     fontSize: 16,
     marginRight: 10
-  }
+  },
+  
 })

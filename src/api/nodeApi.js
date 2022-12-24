@@ -66,10 +66,20 @@ export const deleteNullSFEntry = async (email, headers) => {
 export const fetchMyself = async () => {
     try {
         const headers = await setToken()
-        const user = await axios.get(ENDPOINT + "/user", { headers })
-        
+        const user = await axios.get(ENDPOINT + "/user", { headers })    
         return user
     } catch (err) {
         console.log(err)
     }
+}
+
+export const sendAvatarPicture = async (file) => {
+    const headers = await setToken()
+    try {
+        const res = await axios.post(`${ENDPOINT}/sendAvatarPicture`, file, { headers });
+        return res
+    } catch (err) {
+        console.log(err);
+    }
+
 }

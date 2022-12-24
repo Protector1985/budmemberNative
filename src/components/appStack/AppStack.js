@@ -7,7 +7,9 @@ import { Button } from 'react-native';
 import DrawerContent from './DrawerContent/DrawerContent';
 import TabNavigator from "./TabNavigator/TabNavigator";
 import { fetchMyself } from '../../api/nodeApi.js';
-
+import fetchUserData from './lib/fetchUserData'
+import fetchImage from './lib/fetchImage.js';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 
 const Drawer = createDrawerNavigator();
@@ -15,21 +17,29 @@ const Drawer = createDrawerNavigator();
 
 export default function AppStack({navigation}) {
     const {userSlice} = useSelector((state) => state)
+    const {avatarUri} = userSlice
     const dispatch = useDispatch();
 
+
+
+    //------INIT - ALL STARTING STATE------
     useEffect(() => {
-        async function fetchData() {
-            const res = await fetchMyself();
-            if(res.data.success) {
-                dispatch(setMemberData(res.data.data))
-            }
-        }
-        fetchData();   
+        //fetches initial user state
+        fetchUserData(dispatch)
+        .then((res) => {
+            //fetches avatar picture
+            fetchImage(res.Email, dispatch, avatarUri)
+        })    
     },[])
+    //------INIT - ALL STARTING STATE------
 
     return (
+        <ActionSheetProvider>
         <Drawer.Navigator 
-            drawerContent={(props) => <DrawerContent {...props} />}
+            drawerContent={(props) => { 
+                Object.assign(props, userSlice)
+                return <DrawerContent {...props} />
+            }}
             screenOptions={{
             
           }}>
@@ -38,7 +48,10 @@ export default function AppStack({navigation}) {
                     headerShown: false,
                 }}
                  name="Map">
-                {(props)=> <TabNavigator firstEl="Map" {...props} />}
+                {(props)=> {
+                    Object.assign(props, userSlice)
+                    return <TabNavigator firstEl="Map" {...props} />
+                }}
             </Drawer.Screen>
 
             <Drawer.Screen
@@ -46,15 +59,22 @@ export default function AppStack({navigation}) {
                     headerShown: false,
                 }}
                 name="Profile" >
-                {(props)=> <TabNavigator firstEl="Profile" {...props} />}
+                {(props)=> {
+                    Object.assign(props, userSlice)
+                    return <TabNavigator firstEl="Profile" {...props} />}}
             </Drawer.Screen>
             <Drawer.Screen name="Billing">
-                {(props)=> <TabNavigator firstEl="Billing" {...props} />}
+                {(props)=> {
+                    Object.assign(props, userSlice)
+                    return <TabNavigator firstEl="Billing" {...props} />}}
             </Drawer.Screen>
             <Drawer.Screen name="ContactUs">
-                {(props)=> <TabNavigator firstEl="ContactUs" {...props} />}
+                {(props)=> {
+                    Object.assign(props, userSlice)
+                    return <TabNavigator firstEl="ContactUs" {...props} />}}
             </Drawer.Screen>
         </Drawer.Navigator>
+        </ActionSheetProvider>
     )
 }
 

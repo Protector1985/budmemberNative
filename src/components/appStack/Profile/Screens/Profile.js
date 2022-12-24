@@ -2,21 +2,44 @@ import React from 'react';
 import { StyleSheet, Text, View, ImageBackground, Image, TextInput } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import UserAvatar from 'react-native-user-avatar';
 import moment from 'moment';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useSelector } from 'react-redux';
 
 
-export default function Profile({ email, firstName, lastName, phone, birthDate, membership}) {
-
+export default function Profile({ email, firstName, lastName, phone, birthDate, membership, image}) {
+    const colors = useSelector((state) => state.userSlice.colorPalette)
 
     return (
         <SafeAreaView style={styles.container}>
-        <ImageBackground style={styles.imgContainer} source={require("../../../../assets/pictures/splash6.jpg")}>
-            <Image style={styles.profilePic} source={require("../../../../assets/pictures/profilePic.jpg")} />
-            <View style={styles.nameContainer}>
-                <Text style={styles.name}>{`${firstName} ${lastName}`}</Text>
-                <Text style={styles.membership}>{!membership ? "Not Subscribed" : membership}</Text>
+        <View style={{height: 200, position:"relative"}}>
+        <LinearGradient
+            style={{
+                flexDirection: "row",
+                width: undefined,
+                height: "100%",
+                // position: "relative",
+                top: -100,
+                paddingTop:110,
+                alignItems: "center",
+                
+                }}
+                colors={[colors['main'], colors['300']]}
+                start={{x: 0.5, y: 0}}
+                end={{x: 1, y: 0.7}}
+            >
+                
+            </LinearGradient>
+                <View style={styles.avatarContainer}>
+                        <UserAvatar style={styles.profilePic} size={97} name={`${firstName} ${lastName}`} src={image}  />
+                        <View style={styles.nameContainer}>
+                            <Text style={styles.name}>{`${firstName} ${lastName}`}</Text>
+                            <Text style={styles.membership}>{!membership ? "Not Subscribed" : membership}</Text>
+                        </View>
+                </View>
             </View>
-        </ImageBackground>
+            
             <ScrollView style={styles.inputContainer}>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Your Email</Text>
@@ -43,11 +66,13 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: undefined,
         height: 'auto',
-        position: "relative",
+        position: "absolute",
         top: -100,
         paddingTop:110,
         alignItems: "center",
+       
     },
+    avatarContainer: { top: -180, position: 'relative', flexDirection: "row", alignItems: 'center'},
     profilePic: {
         width: 100,
         height: 100,
@@ -56,6 +81,8 @@ const styles = StyleSheet.create({
         borderColor: "#FFF",
         marginBottom: -25,
         marginLeft:15,
+        zIndex:1000,
+        position: 'relative',
     },
     nameContainer: {
         flexDirection:"column",
@@ -79,6 +106,7 @@ const styles = StyleSheet.create({
         width: "90%",
         marginLeft: "auto",
         marginRight: "auto",
+        zIndex: -1,
     },
     inputSubContainer: {
         borderBottomColor: "#cecece",

@@ -3,22 +3,34 @@ import {
     DrawerContentScrollView,
     DrawerItemList,
   } from '@react-navigation/drawer';
-  import { FontAwesome } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
+import UserAvatar from 'react-native-user-avatar';
+import { useSelector } from 'react-redux';
+import { LinearGradient } from 'expo-linear-gradient';
 
   export default function DrawerContent(props) {
-    
+    const colors = useSelector((state) => state.userSlice.colorPalette)
+
     return(
         <DrawerContentScrollView style={styles.container}>
-            <ImageBackground 
-                source={require("../../../assets/pictures/splash6.jpg")} 
-                style={styles.backgroundContainer}
+        <LinearGradient
+        style={{
+            width: undefined, 
+            padding: 16, 
+            paddingTop: 80, 
+            position: "relative", 
+            marginTop: -60
+            }}
+            colors={[colors['main'], colors['300']]}
+            start={{x: 0.5, y: 0}}
+            end={{x: 1, y: 0.7}}
             >
-                <Image style={styles.profile} source={require("../../../assets/pictures/profilePic.jpg")} />
-                <Text style={styles.name}>Michael Braun</Text>
+            <UserAvatar style={styles.profile} size={76} name={`${props.FirstName} ${props.LastName}`} src={props.avatarUri}  />
+                <Text style={styles.name}>{`${props.FirstName} ${props.LastName}`}</Text>
                 <View style={{flexDirection:'row', alignItems:"center"}}>
                     <Text style={styles.savings}>$1045 Saved</Text>
                 </View>
-            </ImageBackground>
+            </LinearGradient>
             <View style={styles.container}>
                 <DrawerItemList {...props} />
             </View>

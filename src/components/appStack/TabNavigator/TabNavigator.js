@@ -20,21 +20,23 @@ import ProfileStack from '../Profile/ProfileStack';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator(props) {
+    const oldProps = props
     
     const {navigation, firstEl} = props
     //the first screen will always be returned in the tab stack
     //in order to show the tab bar across all screens we need to 
     //return the first screen conditionally
-    function returnFirstScreen() {
+    function returnFirstScreen(props) {
+        console.log(props)
         switch(firstEl) {
             case "Map":
-                return MapScreen
+                return <MapScreen {...props} />
             case "Profile":
-                return ProfileStack
+                return <ProfileStack {...props} />
             case "Billing":
-                return Billing
+                return <Billing {...props} />
             case "ContactUs":
-                return ContactUs
+                return <ContactUs {...props} />
         }
     }
   
@@ -50,13 +52,17 @@ export default function TabNavigator(props) {
           }}>
             <Tab.Screen
                 name="Map"
-                component={returnFirstScreen()}
+                
                 options={{
                     activeTintColor: "black",
                     tabBarShowLabel: false, 
                     tabBarIcon: (props) => <Entypo name="map" size={26} color="black" />
                 }}
-                />
+                >
+                    {(props) => {
+                        Object.assign(props, oldProps)
+                        return returnFirstScreen(props)}}
+                </Tab.Screen>
             <Tab.Screen
                 name="QR"
                 component={QrScanner}
