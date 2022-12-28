@@ -25,21 +25,20 @@ const initialState = {
     Apple_Pay_Subscription__c : null,
     avatarUri: null,
     colorPalette: {
-        "100": "#d5c2ff",
-        "200": "#b799ff",
-        "300": "#966dff",
-        "400": "#7749ff",
-        "50": "#f0e6ff",
-        "500": "#4f1cff",
-        "600": "#3b18ff",
-        "700": "#000cff",
-        "800": "#0002fb",
-        "900": "#0000f9",
-        "A100": "#a58aff",
-        "A200": "#5951ff",
-        "A400": "#0d29ff",
-        "A700": "#000cff",
-        "main": "#7400ff"
+        "100": "#b8e1ed",
+        "200": "#8dcde2",
+        "300": "#6cbad5",
+        "400": "#5bacce",
+        "50": "#e2f3f8",
+        "500": "#4f9fc6",
+        "600": "#4891b9",
+        "700": "#3f7fa6",
+        "800": "#3a6f92",
+        "900": "#2e506f",
+        "A100": "#3ca9e5",
+        "A200": "#007ac8",
+        "A400": "#00619e",
+        "A700": "#2e506f",
         },
     
   }
@@ -69,7 +68,8 @@ const userSlice = createSlice({
             state.Selected_Package_ID__c = action.payload.Selected_Package_ID__c, 
             state.Previous_Package_ID__c = action.payload.Previous_Package_ID__c, 
             state.currentActivePackage = action.payload.currentActivePackage, 
-            state.Apple_Pay_Subscription__c = action.payload.Apple_Pay_Subscription__c    
+            state.Apple_Pay_Subscription__c = action.payload.Apple_Pay_Subscription__c   
+            state.colorPalette = JSON.parse(action.payload.Color_Scheme__c)
         },
         setPictureUri(state, action) {
             state.avatarUri = action.payload
@@ -84,10 +84,13 @@ const userSlice = createSlice({
         },
         setColorPalette(state, action) {
             state.colorPalette = action.payload
+        },
+        setBirthDate(state, action) {
+            state.Birthdate = action.payload
         }
     }
 })
 
-export const { setMemberData, updateProfileData, setPictureUri, setColorPalette } = userSlice.actions;
+export const { setBirthDate, setMemberData, updateProfileData, setPictureUri, setColorPalette } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -83,3 +83,14 @@ export const sendAvatarPicture = async (file) => {
     }
 
 }
+
+export const colorScheme = async (colors, email) => {
+    const headers = await setToken()
+    try {
+        const res = await axios.post(`${ENDPOINT}/colorScheme`, {colors: JSON.stringify(colors), email: email}, { headers });
+        return res
+    } catch (err) {
+        console.log(err);
+    }
+}
+

@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
         width: "90%",
         marginLeft: "auto",
         marginRight: "auto",
-        zIndex: -1,
+        postion:'relative',
+        top: -50,
     },
     inputSubContainer: {
         borderBottomColor: "#cecece",
@@ -121,8 +122,7 @@ const styles = StyleSheet.create({
     textDisplay: {
         fontSize: 18,
         marginTop: 10,
-       
-        
+          
     }
     
     

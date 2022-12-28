@@ -14,7 +14,6 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 const Drawer = createDrawerNavigator();
 
-
 export default function AppStack({navigation}) {
     const {userSlice} = useSelector((state) => state)
     const {avatarUri} = userSlice
