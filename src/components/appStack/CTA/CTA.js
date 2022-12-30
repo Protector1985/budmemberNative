@@ -28,7 +28,7 @@ function IosButtons({navigation}) {
 
 function AndroidButtons({navigation}) {
     function handlePress() {
-        console.log(navigation)
+        navigation.navigate("Select Plan")
     }
     function handleCancel() {
         console.log("Cancelled")

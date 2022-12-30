@@ -14,15 +14,20 @@ import {Dimensions} from 'react-native';
 export default function Picker({navigation, email, setEmail, firstName, setFirstName, lastName, setLastName,phone,setPhone,birthDate,setBirtDate, image, setImage}) {
     const dispatch = useDispatch()
     const currentColor = useSelector((state) => state.userSlice.colorPalette) 
-    const [color, setColor] = React.useState(currentColor['main'] || "#2E306F")
+    const [color, setColor] = React.useState(
+        currentColor['main'] || 
+        "#2E306F"
+    )
     const {colorPalette, Email} = useSelector((state) => state.userSlice)
     let palette = new Matercolor(color).palette['analogous']['primary']
+    let palette2 = new Matercolor(color).palette['complementary']
+    let palette3 = new Matercolor(color).palette['triadic']
     
-
     
-    React.useEffect(() => { 
-        Object.assign(palette, {"main": color})
-        dispatch(setColorPalette(palette))
+    React.useEffect(() => {
+        const colors = {...palette, complementary:{...palette2}, triadic:{...palette3}} 
+        Object.assign(colors, {"main": color})
+        dispatch(setColorPalette(colors))
     }, [color])
 
     function submit() {
