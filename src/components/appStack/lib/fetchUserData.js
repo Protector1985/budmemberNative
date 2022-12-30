@@ -10,7 +10,6 @@ export default async function fetchData(dispatch) {
     const res = await fetchMyself();
     if(res.data.success) {
         dispatch(setMemberData(res.data.data))
-        console.log(res.data.data)
         return res.data.data
     }
    } catch(err) {

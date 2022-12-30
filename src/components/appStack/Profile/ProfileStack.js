@@ -25,7 +25,6 @@ export default function ProfileStack({navigation, userSlice, Email, FirstName, L
   const [localPhone, setLocalPhone] = React.useState(MobilePhone);
   const [image, setImage] = React.useState(null);
 
-  console.log(showDatePick)
   const dispatch = useDispatch()
   
   

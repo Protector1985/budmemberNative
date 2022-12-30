@@ -38,9 +38,7 @@ export default function Signup({navigation}) {
     const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
 
-    console.log(birthMonth)
-    console.log(birthYear);
-    console.log(dayOfBirth)
+   
       
       //Initialize dropdown values ----
         useEffect(() => {

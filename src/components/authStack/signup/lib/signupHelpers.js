@@ -9,7 +9,7 @@ function setHeader(token) {
 }
 
 async function submitUserData(firstName, lastName, birthDate, header){
-    console.log(header)
+   
     try {
       const updateObject = {
         onboardingStep: "3",

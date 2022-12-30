@@ -39,6 +39,7 @@ const initialState = {
         "A200": "#007ac8",
         "A400": "#00619e",
         "A700": "#2e506f",
+        "main": "#2E306F"
         },
     
   }
@@ -69,7 +70,7 @@ const userSlice = createSlice({
             state.Previous_Package_ID__c = action.payload.Previous_Package_ID__c, 
             state.currentActivePackage = action.payload.currentActivePackage, 
             state.Apple_Pay_Subscription__c = action.payload.Apple_Pay_Subscription__c   
-            state.colorPalette = JSON.parse(action.payload.Color_Scheme__c)
+            state.colorPalette = JSON.parse(action.payload.Color_Scheme__c) ? JSON.parse(action.payload.Color_Scheme__c) : state.colorPalette
         },
         setPictureUri(state, action) {
             state.avatarUri = action.payload

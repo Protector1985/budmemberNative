@@ -22,7 +22,6 @@ export default function Picker({navigation, email, setEmail, firstName, setFirst
     
     React.useEffect(() => { 
         Object.assign(palette, {"main": color})
-        console.log(palette)
         dispatch(setColorPalette(palette))
     }, [color])
 

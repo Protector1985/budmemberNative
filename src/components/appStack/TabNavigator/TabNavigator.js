@@ -12,6 +12,9 @@ import CustomTabBarButton from './CustomTabBarButton';
 import { DrawerActions } from '@react-navigation/native';
 import { FlipInEasyX } from 'react-native-reanimated';
 import ProfileStack from '../Profile/ProfileStack';
+import CTA from '../CTA/CTA';
+import SubscribeStack from '../subscribeNavigator/SubscribeStack';
+
 
 
 
@@ -27,7 +30,6 @@ export default function TabNavigator(props) {
     //in order to show the tab bar across all screens we need to 
     //return the first screen conditionally
     function returnFirstScreen(props) {
-        console.log(props)
         switch(firstEl) {
             case "Map":
                 return <MapScreen {...props} />
@@ -65,11 +67,12 @@ export default function TabNavigator(props) {
                 </Tab.Screen>
             <Tab.Screen
                 name="QR"
-                component={QrScanner}
+                //if already member, display QR. Else, open CTA
+                component={SubscribeStack}
                 options={{
                     animationEnabled: true,
                     tabBarShowLabel: false, 
-                    tabBarIcon: (props) => <AntDesign  name="qrcode" size={26} color="black" />,
+                    tabBarIcon: (props) => <AntDesign name="qrcode" size={26} color="black" />,
                    
                 }}
             />
