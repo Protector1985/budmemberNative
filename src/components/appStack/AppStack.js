@@ -6,10 +6,11 @@ import {setMemberData} from '../../store/userSlice.js'
 import { Button } from 'react-native';
 import DrawerContent from './DrawerContent/DrawerContent';
 import TabNavigator from "./TabNavigator/TabNavigator";
-import { fetchMyself } from '../../api/nodeApi.js';
+import { fetchMyself} from '../../api/nodeApi.js';
 import fetchUserData from './lib/fetchUserData'
 import fetchImage from './lib/fetchImage.js';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import fetchPlans from './lib/fetchPlans.js';
 
 
 const Drawer = createDrawerNavigator();
@@ -19,8 +20,6 @@ export default function AppStack({navigation}) {
     const {avatarUri} = userSlice
     const dispatch = useDispatch();
 
-
-
     //------INIT - ALL STARTING STATE------
     useEffect(() => {
         //fetches initial user state
@@ -28,6 +27,8 @@ export default function AppStack({navigation}) {
         .then((res) => {
             //fetches avatar picture
             fetchImage(res.Email, dispatch, avatarUri)
+            //fetches plans (packages) by store
+            fetchPlans(dispatch, res.OwnerId)
         })    
     },[])
     //------INIT - ALL STARTING STATE------

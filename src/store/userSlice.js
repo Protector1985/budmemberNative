@@ -6,7 +6,8 @@ const initialState = {
     lastChargeDate : null, 
     discountPercentage : null, 
     selectedPackage : null, 
-    packagePrice : null,  
+    packagePrice : null,
+    OwnerId: null,  
     Email : null, 
     FirstName : null, 
     LastName : null, 
@@ -24,7 +25,15 @@ const initialState = {
     currentActivePackage : null, 
     Apple_Pay_Subscription__c : null,
     avatarUri: null,
-    colorPalette: {"100": "#b8e1ed", "200": "#8dcde2", "300": "#6cbad5", "400": "#5bacce", "50": "#e2f3f8", "500": "#4f9fc6", "600": "#4891b9", "700": "#3f7fa6", "800": "#3a6f92", "900": "#2e506f", "A100": "#3ca9e5", "A200": "#007ac8", "A400": "#00619e", "A700": "#2e506f", "complementary": {"100": "#e7f0c6", "200": "#d7e8a2", "300": "#c9de7f", "400": "#bfd766", "50": "#f5fae8", "500": "#b5d04f", "600": "#aabf49", "700": "#9aa940", "800": "#8a9239", "900": "#6f6d2e", "A100": "#dddfb0", "A200": "#b1c178", "A400": "#959c39", "A700": "#6f6d2e"}, "main": "#2E306F"}
+    colorPalette: {
+        main: '#2A1B6E',
+        mainLight: "#2E306F",
+        cards:"#bfbbd4",
+        accent: "#2CA491",
+        accentLight: "#86BDB2",
+        accentSecondary: "#5EBC98",
+    }
+    // colorPalette: {"100": "#b8e1ed", "200": "#8dcde2", "300": "#6cbad5", "400": "#5bacce", "50": "#e2f3f8", "500": "#4f9fc6", "600": "#4891b9", "700": "#3f7fa6", "800": "#3a6f92", "900": "#2e506f", "A100": "#3ca9e5", "A200": "#007ac8", "A400": "#00619e", "A700": "#2e506f", "complementary": {"100": "#e7f0c6", "200": "#d7e8a2", "300": "#c9de7f", "400": "#bfd766", "50": "#f5fae8", "500": "#b5d04f", "600": "#aabf49", "700": "#9aa940", "800": "#8a9239", "900": "#6f6d2e", "A100": "#dddfb0", "A200": "#b1c178", "A400": "#959c39", "A700": "#6f6d2e"}, "main": "#2E306F"}
     
   }
 
@@ -35,6 +44,7 @@ const userSlice = createSlice({
         setMemberData(state, action) {
             state.Membership_Status__c = action.payload.Membership_Status__c
             state.lastChargeDate = action.payload.lastChargeDate, 
+            state.OwnerId = action.payload.OwnerId,
             state.discountPercentage = action.payload.discountPercentage, 
             state.selectedPackage = action.payload.selectedPackage, 
             state.packagePrice = action.payload.packagePrice,  

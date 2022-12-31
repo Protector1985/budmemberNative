@@ -25,7 +25,7 @@ export default function Profile({ email, firstName, lastName, phone, birthDate, 
                 alignItems: "center",
                 
                 }}
-                colors={[colors['main'], colors['300']]}
+                colors={[colors.main, colors.mainLight]}
                 start={{x: 0.5, y: 0}}
                 end={{x: 1, y: 0.7}}
             >

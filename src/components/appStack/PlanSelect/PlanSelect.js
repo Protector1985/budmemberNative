@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, Dimensions, Platform } from "react-native"
+import { View, StyleSheet, Text, Dimensions, Platform, FlatList } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import Carousel from 'react-native-reanimated-carousel';
 import Animated, {
@@ -9,20 +9,22 @@ import Animated, {
 } from 'react-native-reanimated';
 import { withAnchorPoint } from "../lib/withAnchorPoint";
 import { LinearGradient } from 'expo-linear-gradient';
-import { useSelector } from "react-redux";
-import { Button } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+
 import { TouchableOpacity } from "react-native-gesture-handler";
-import {ExpandingDot} from "react-native-animated-pagination-dots";
+import { LiquidLike } from 'react-native-animated-pagination-dots';
+import { setSelectedPlan } from '../../../store/membershipPlanSlice';
 
 
-function Card({animationValue, index, colorPalette}) {
+function Card({animationValue, index, colorPalette, item}) {
     const WIDTH= Dimensions.get('window').width / 1.1;
     const HEIGHT = Dimensions.get('window').height / 1.5;
     const cs = useSelector((state) => state.userSlice?.colorPalette)
     // const cs = useSelector((state) => state.userSlice?.colorPalette["triadic"]['secondary'])
-    const colors = [cs["100"], cs["200"], cs["300"]]
+    const {Name, Package_Amount__c, Features__c} = item
+    const featuresArr = Features__c.split(";")
     
-  
+    
     const cardStyle = useAnimatedStyle(() => {
         const scale = interpolate(
             animationValue.value,
@@ -74,7 +76,7 @@ function Card({animationValue, index, colorPalette}) {
         <Animated.View
             style={[
                 {
-                    backgroundColor: cs["50"],
+                    backgroundColor: cs.cards,
                     alignSelf: 'center',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -92,7 +94,26 @@ function Card({animationValue, index, colorPalette}) {
                 },
                 cardStyle,
             ]}
+        >   
+        <View style={styles.cardTop}>
+            <Text style={styles.cardHeadline}>{Name}</Text>
+            <Text style={styles.cardPrice}>{`$${Package_Amount__c}/Month`}</Text>
+        </View>
+       
+        <View style={styles.cardBottom}>
+        <FlatList
+         bounces={false}
+          data={featuresArr}
+          renderItem={({ item }) => {
+            return (
+              <View style={{ width: "92%",flexDirection: "row", marginTop: "10%"}}>
+                <Text style={{color: "#2A1B6E",fontSize: 19, marginTop:-3}}>{`\u29BF`} </Text><Text style={{fontWeight: "500",color: "#2A1B6E", fontSize: 16 }}>{item}</Text>
+              </View>
+            );
+          }}
         />
+        </View>
+        </Animated.View>
 
     </Animated.View>
     )
@@ -102,37 +123,32 @@ function Card({animationValue, index, colorPalette}) {
 
 export default function PlanSelect() {
     const {colorPalette} = useSelector((state) => state.userSlice)
+    const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
+    const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
+    const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
-
-    const scrollX = React.useRef(new Animated.Value(0)).current;
-    const cs = useSelector((state) => state.userSlice?.colorPalette["complementary"])
+    
+    console.log(selection)
+   
     
 
-    const carouselItems = [
-        {
-            title:"Item 3",
-            text: "Text 3",
-        },
-        {
-            title:"Item 4",
-            text: "Text 4",
-        },
-        {
-            title:"Item 5",
-            text: "Text 5",
-        },
-    ]
+    const carouselItems = membershipPlans
+    
+    React.useEffect(() => {
+        dispatch(setSelectedPlan(carouselItems[0].Id))
+    },[])
+   
     return (
-       
+        
             <LinearGradient 
-                colors={[colorPalette['500'], colorPalette['400']]}
+                colors={[colorPalette.main, colorPalette.mainLight]}
                 start={{x: 0, y: 0}}
                 end={{x: 0, y: 1}}
                 style={styles.masterContainer}
             >
            
                 <View style={styles.headerContainer}>
-                    <Text style={[styles.headline, {color:cs["50"]}]}>Select your Plan</Text>
+                    <Text style={[styles.headline, {color:"white"}]}>Select your Plan</Text>
                 </View>
                 <View style={styles.cardContainer}>
                 <Carousel
@@ -144,17 +160,18 @@ export default function PlanSelect() {
                     withAnimation={{
                         type: 'spring',
                         config: {
-                            damping: 12,
+                            damping: 13,
                         },
                     }}
                     scrollAnimationDuration={1000}
-                    onSnapToItem={(index) => console.log('current index:', index)}
-                    renderItem={({ index, animationValue }) => {
+                    onSnapToItem={(index) => dispatch(setSelectedPlan(carouselItems[index].Id))}
+                    renderItem={({ index, animationValue, item }) => {
                         return <Card 
                                 key={index}
                                 index={index} 
                                 animationValue={animationValue} 
                                 colorPalette={colorPalette}
+                                item={item}
                                 
                                 />
                     }
@@ -162,15 +179,18 @@ export default function PlanSelect() {
                     }
                     />            
                 </View>
-
+                
+                    
+                   
+               
                 
 
                 <View style={styles.buttonContainer}>
 
                     {Platform.OS === "ios"? 
-                        <IosButton textColor={cs["50"]} color={colorPalette["A700"]} />
+                        <IosButton textColor="white" color={colorPalette.accent} />
                     :
-                        <AndroidButton textColor={cs["50"]} color={colorPalette["A700"]} />
+                        <AndroidButton textColor="white" color={colorPalette.accent} />
                     }
                 
                 </View>
@@ -181,7 +201,7 @@ export default function PlanSelect() {
 }
 
 function IosButton({color, textColor}) {
-    console.log(textColor)
+    
     return(
         <TouchableOpacity style={[styles.btn,{backgroundColor: color}]}>
             <Text style={[styles.btnText, {color: textColor}]}>Select</Text>
@@ -241,5 +261,29 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
     },
+    cardTop: {
+        flex:1,
+        width: "100%",
+        justifyContent: "space-around",
+        alignItems: "center",
+        paddingTop: "5%"
+    },
+   
+    cardBottom: {
+        flex: 4,
+        width: "100%",
+        alignItems: "space-around"
+        
+    },
+    cardHeadline: {
+        fontSize: 25,
+        color: "#2A1B6E",
+        fontWeight: "500"
+    },
+    cardPrice: {
+        fontSize: 20,
+        fontWeight: "500",
+        color: "#424049"
+    }
 })
 

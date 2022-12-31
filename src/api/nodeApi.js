@@ -1,6 +1,7 @@
 import {Platform, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
+import { VideoExportPreset } from 'expo-image-picker';
 const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
 
 const setToken = async (headers = {}) => {
@@ -52,15 +53,7 @@ export const updateUser = async (updateDetails, header) => {
     }
 }
 
-export const deleteNullSFEntry = async (email, headers) => {  
-    try {
-        const deletionResponse = await axios.post(ENDPOINT + "/deleteNullSf", {email: email},  {headers} )
-        return deletionResponse
-    } catch (err) {
-        console.log(err)
-        return err.response;
-    }
-}
+
 
 
 export const fetchMyself = async () => {
@@ -91,6 +84,17 @@ export const colorScheme = async (colors, email) => {
         return res
     } catch (err) {
         console.log(err);
+    }
+}
+
+export const fetchPackages = async () => {
+    const headers = await setToken();
+   
+    try {
+        const res = await axios.post(`${ENDPOINT}/packagesByStore`, {}, { headers })
+        return res
+    } catch(err) {
+        console.log(err)
     }
 }
 
