@@ -44,6 +44,7 @@ export const signUp = async (signUpObject) => {
 
 export const updateUser = async (updateDetails, header) => {
     const headers = header ? header : await setToken()
+    console.log(updateDetails)
     try {
         const updateUserRes = await axios.patch(ENDPOINT + "/user", updateDetails,  {headers} )
         return updateUserRes
@@ -98,3 +99,22 @@ export const fetchPackages = async () => {
     }
 }
 
+export const findMemberByPhone = async (memberObj) => {
+    const headers = await setToken();
+    try {
+        const res = axios.post(`${ENDPOINT}/user/findMemberByPhone`, memberObj ,{ headers })
+        return res
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const phoneNumberVerification = async (verifyObject) => {
+    try {
+        const headers = await setToken()
+        const verifyResponse = await axios.post(ENDPOINT + '/twilio/validate-code', verifyObject, { headers })
+        return verifyResponse
+    } catch (err) {
+        console.error(err)
+    }
+}

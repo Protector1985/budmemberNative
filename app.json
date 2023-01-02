@@ -33,6 +33,11 @@
     },
     "plugins": [
       "react-native-compressor"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "67dadd11-ebc9-4a1a-9776-9a229baa2d72"
+      }
+    }
   }
 }

@@ -4,7 +4,7 @@ export default function Spinner() {
 
     return(
         <View style={styles.masterContainer}>
-        <ActivityIndicator size={'large'} />
+            <ActivityIndicator size={'large'} />
         </View>
     )
 }

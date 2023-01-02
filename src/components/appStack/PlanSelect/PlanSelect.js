@@ -121,14 +121,14 @@ function Card({animationValue, index, colorPalette, item}) {
 
 }
 
-export default function PlanSelect() {
+export default function PlanSelect({navigation}) {
     const {colorPalette} = useSelector((state) => state.userSlice)
     const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
     const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
-    console.log(selection)
+    
    
     
 
@@ -188,9 +188,9 @@ export default function PlanSelect() {
                 <View style={styles.buttonContainer}>
 
                     {Platform.OS === "ios"? 
-                        <IosButton textColor="white" color={colorPalette.accent} />
+                        <IosButton navigation={navigation} textColor="white" color={colorPalette.accent} />
                     :
-                        <AndroidButton textColor="white" color={colorPalette.accent} />
+                        <AndroidButton navigation={navigation} textColor="white" color={colorPalette.accent} />
                     }
                 
                 </View>
@@ -200,19 +200,25 @@ export default function PlanSelect() {
     )
 }
 
-function IosButton({color, textColor}) {
-    
+function IosButton({color, textColor, navigation}) {
+    function handleNavigation() {
+        navigation.navigate("Verify Phone Number")
+    }
+
     return(
-        <TouchableOpacity style={[styles.btn,{backgroundColor: color}]}>
+        <TouchableOpacity onPress={handleNavigation} style={[styles.btn,{backgroundColor: color}]}>
             <Text style={[styles.btnText, {color: textColor}]}>Select</Text>
         </TouchableOpacity>
     )
 }
 
-function AndroidButton(color, textColor) {
+function AndroidButton({color, textColor, navigation}) {
+    function handleNavigation() {
+        navigation.navigate("Verify Phone Number")
+    }
     return(
-        <TouchableOpacity style={[styles.btn,{backgroundColor: color, color: textColor}]}>
-            <Text style={styles.btnText}>Select</Text>
+        <TouchableOpacity onPress={handleNavigation} style={[styles.btn,{backgroundColor: color, color: textColor}]}>
+            <Text style={[styles.btnText, {color: textColor}]}>Select</Text>
         </TouchableOpacity>
     )
 }

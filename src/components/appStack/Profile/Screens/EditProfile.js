@@ -157,11 +157,11 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
                         backgroundColor: "transparent",
                         marginBottom: 0
                         }}
-                        colors={[colors['main'], colors['300']]}
+                        colors={[colors.main, colors.mainLight]}
                         start={{x: 0.5, y: 0}}
                         end={{x: 1, y: 0.7}}
                         >
-                            <ChooseColorPalette colorSelection={handleColorSelection} />
+                            
                             <UserAvatar style={styles.profilePic} size={145} name={`${firstName} ${lastName}`} src={image}  />
                             <EditPicture pickImage={pickImage} />
                             
@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         borderColor: "#FFF",
         marginBottom: 20,
+        marginLeft: 40,
         
         
     },
@@ -332,5 +333,8 @@ const styles = StyleSheet.create({
 
     
 })
+
+
+// <ChooseColorPalette colorSelection={handleColorSelection} />
 
 

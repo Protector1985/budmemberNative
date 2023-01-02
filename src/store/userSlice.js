@@ -82,10 +82,13 @@ const userSlice = createSlice({
         },
         setBirthDate(state, action) {
             state.Birthdate = action.payload
+        },
+        setPhoneNumber(state,action) {
+            state.MobilePhone = action.payload
         }
     }
 })
 
-export const { setBirthDate, setMemberData, updateProfileData, setPictureUri, setColorPalette } = userSlice.actions;
+export const {setPhoneNumber, setBirthDate, setMemberData, updateProfileData, setPictureUri, setColorPalette } = userSlice.actions;
 
 export default userSlice.reducer;
