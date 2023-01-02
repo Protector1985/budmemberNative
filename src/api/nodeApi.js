@@ -2,7 +2,9 @@ import {Platform, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { VideoExportPreset } from 'expo-image-picker';
-const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
+// const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
+
+const ENDPOINT = "https://api-stag.budmember.com"
 
 const setToken = async (headers = {}) => {
     const newHeaders = { ...headers }

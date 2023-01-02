@@ -30,6 +30,7 @@ export default function TabNavigator(props) {
     //in order to show the tab bar across all screens we need to 
     //return the first screen conditionally
     function returnFirstScreen(props) {
+        console.log(firstEl)
         switch(firstEl) {
             case "Map":
                 return <MapScreen {...props} />
@@ -54,14 +55,16 @@ export default function TabNavigator(props) {
           }}>
             <Tab.Screen
                 name="Map"
-                
                 options={{
                     activeTintColor: "black",
                     tabBarShowLabel: false, 
-                    tabBarIcon: (props) => <Entypo name="map" size={26} color="black" />
+                    tabBarButton: (props) => {
+                        return <CustomTabBarButton {...props} name="MAP" navigation={navigation} pictureEl={<Entypo name="map" style={styles.icon} size={26} color="black" />} />},
+                   
                 }}
                 >
                     {(props) => {
+                        
                         Object.assign(props, oldProps)
                         return returnFirstScreen(props)}}
                 </Tab.Screen>

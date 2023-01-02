@@ -11,6 +11,8 @@ import fetchUserData from './lib/fetchUserData'
 import fetchImage from './lib/fetchImage.js';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import fetchPlans from './lib/fetchPlans.js';
+import Billing from './Billing/Billing.js';
+import ContactUs from './ContactUs/ContactUs.js';
 
 
 const Drawer = createDrawerNavigator();
@@ -63,20 +65,26 @@ export default function AppStack({navigation}) {
                     Object.assign(props, userSlice)
                     return <TabNavigator firstEl="Profile" {...props} />}}
             </Drawer.Screen>
-            <Drawer.Screen name="Billing">
-                {(props)=> {
-                    Object.assign(props, userSlice)
-                    return <TabNavigator firstEl="Billing" {...props} />}}
-            </Drawer.Screen>
-            <Drawer.Screen name="ContactUs">
-                {(props)=> {
-                    Object.assign(props, userSlice)
-                    return <TabNavigator firstEl="ContactUs" {...props} />}}
-            </Drawer.Screen>
+           
         </Drawer.Navigator>
         </ActionSheetProvider>
     )
 }
 
+
+
+// <Drawer.Screen 
+// options={{
+//     headerShown: true,
+// }} name="Billing">
+//     {(props)=> {
+//         Object.assign(props, userSlice)
+//         return <Billing />}}
+// </Drawer.Screen>
+// <Drawer.Screen name="ContactUs">
+//     {(props)=> {
+//         Object.assign(props, userSlice)
+//         return <ContactUs/>}}
+// </Drawer.Screen>
 
 

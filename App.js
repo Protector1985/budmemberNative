@@ -4,8 +4,6 @@ import "@expo/match-media";
 import {useMediaQuery} from 'react-responsive';
 import { AuthProvider } from './src/context/AuthContext';
 import AppNav from './src/navigation/AppNav';
-import Amplify from 'aws-amplify'
-import config from './src/aws-exports'
 import store from './src/store/store.js'
 import { Provider } from 'react-redux'
 

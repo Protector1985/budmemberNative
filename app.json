@@ -19,14 +19,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.protector1985.budmemberNative"
+      "bundleIdentifier": "com.native.budmember"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.protector1985.budmemberNative"
+      "package": "com.native.budmember"
     },
     "web": {
       "favicon": "./assets/favicon.png"

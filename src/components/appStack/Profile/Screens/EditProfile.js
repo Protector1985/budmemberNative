@@ -23,8 +23,9 @@ import { setBirthDate } from '../../../../store/userSlice';
 import { setShowDatePick } from '../../../../store/systemSlice';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
-const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
+// const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
 
+const ENDPOINT = "https://api-stag.budmember.com"
 
 function EditPicture({pickImage}) {
   

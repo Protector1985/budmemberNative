@@ -135,7 +135,7 @@ export default function PlanSelect({navigation}) {
     const carouselItems = membershipPlans
     
     React.useEffect(() => {
-        dispatch(setSelectedPlan(carouselItems[0].Id))
+        dispatch(setSelectedPlan(carouselItems[0]?.Id))
     },[])
    
     return (
