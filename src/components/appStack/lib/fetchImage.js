@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useDispatch, useSelector } from 'react-redux';
 import { setPictureUri } from '../../../store/userSlice';
+import ENDPOINT from '../../../../endpoint';
 // const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
 
-const ENDPOINT = "https://api-stag.budmember.com"
+// const ENDPOINT = "https://api-stag.budmember.com"
 
 export default async function fetchImage(email, dispatch, hook) {
     

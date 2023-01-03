@@ -2,7 +2,7 @@
   "expo": {
     "name": "budmemberNative",
     "slug": "budmemberNative",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,7 +19,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.native.budmember"
+      "bundleIdentifier": "com.native.budmember",
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,7 +33,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "react-native-compressor"
+      "react-native-compressor",
+      "react-native-vision-camera"
     ],
     "extra": {
       "eas": {
