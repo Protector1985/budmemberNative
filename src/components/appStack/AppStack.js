@@ -13,6 +13,7 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import fetchPlans from './lib/fetchPlans.js';
 import Billing from './Billing/Billing.js';
 import ContactUs from './ContactUs/ContactUs.js';
+import fetchCognitoUser from './lib/fetchCognitoUser.js';
 
 
 const Drawer = createDrawerNavigator();
@@ -31,6 +32,8 @@ export default function AppStack({navigation}) {
             fetchImage(res.Email, dispatch, avatarUri)
             //fetches plans (packages) by store
             fetchPlans(dispatch, res.OwnerId)
+            //fetches cognito information
+            fetchCognitoUser(dispatch, res.Email)
         })    
     },[])
     //------INIT - ALL STARTING STATE------

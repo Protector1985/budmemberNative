@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.native.budmember",
-      "buildNumber": "4"
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {

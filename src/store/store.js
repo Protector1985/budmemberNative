@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import billingSlice from './billingSlice'
+import cognitoDataSlice from './cognitoDataSlice'
 import membershipPlanSlice from './membershipPlanSlice'
+import paymentInfoSlice from './paymentInfoSlice'
 import systemSlice from './systemSlice'
 import userSlice from './userSlice'
 
 const store = configureStore({
   reducer: {
+    cognitoDataSlice: cognitoDataSlice,
+    billingSlice: billingSlice,
+    paymentInfoSlice:paymentInfoSlice,
     membershipPlanSlice: membershipPlanSlice,
     userSlice : userSlice,
     systemSlice: systemSlice

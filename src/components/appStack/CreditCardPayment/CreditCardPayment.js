@@ -9,9 +9,11 @@ import {
 import LottieView from 'lottie-react-native'
 import { FormProvider, useForm } from 'react-hook-form'
 import CreditCardForm, { Button, FormModel } from 'rn-credit-card'
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setCCDetails} from '../../../store/paymentInfoSlice';
 export default function CreditCardPayment({navigation}) {
-    
+  
+  const dispatch = useDispatch();
     const formMethods = useForm({
         // to trigger the validation on the blur event
         mode: 'onBlur',
@@ -23,10 +25,14 @@ export default function CreditCardPayment({navigation}) {
           zip: '',
         },
       })
-      const {  formState } = formMethods
-      function handleSubmit() {
+      const {  formState, getValues } = formMethods
+   
+      function handleSubmit(e) {
+        const values = getValues()
+        dispatch(setCCDetails(values))
         navigation.navigate("Billing Information")
       }
+      
       return (
         <FormProvider {...formMethods}>
           <SafeAreaView style={styles.container}>

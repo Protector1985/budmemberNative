@@ -122,3 +122,23 @@ export const phoneNumberVerification = async (verifyObject) => {
         console.error(err)
     }
 }
+
+export const createNewSubscription = async (newSubscriptionObject) => {
+    try {
+        const headers = await setToken()
+        const newSubCreationRes = await axios.post(ENDPOINT + "/subscription", newSubscriptionObject, { headers })
+        return newSubCreationRes
+    } catch (err) {
+        return err.response;
+    }
+}
+
+export const getCognitoUser = async (email) => {
+    try {
+        const headers = await setToken()
+        const cognito = await axios.post(ENDPOINT + "/getCognitoUser", {email: email}, { headers })
+        return cognito
+    } catch (err) {
+        return err.response;
+    }
+}
