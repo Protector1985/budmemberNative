@@ -3,11 +3,12 @@ import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
 
-export default function Alert({visible, type, message, setVisible, navigation, location}) {
+export default function Alert({callBack, visible, type, message, setVisible, navigation, location}) {
   
     function handlePress() {
         switch(type) {
           case "SUCCESS":
+            callBack ? callBack() : null
             return navigation.navigate(location), setVisible(false);
           case "ERROR":
             return setVisible(false);

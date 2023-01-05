@@ -10,9 +10,9 @@ export default async function fetchPlans(dispatch, OwnerId) {
     const res = await fetchPackages(OwnerId);
     if(res.data.success) {
         dispatch(setMembershipPlans(res.data.data))
-        return res.data.data
+        return "SUCCESS"
     }
    } catch(err) {
-    console.log(err)
+     return "ERROR"
    } 
 }

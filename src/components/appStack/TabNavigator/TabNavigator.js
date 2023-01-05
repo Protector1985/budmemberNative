@@ -25,15 +25,14 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator(props) {
     const oldProps = props
     
-    const {navigation, firstEl} = props
+    const {navigation, firstEl, initProgress} = props
     //the first screen will always be returned in the tab stack
     //in order to show the tab bar across all screens we need to 
     //return the first screen conditionally
     function returnFirstScreen(props) {
-        console.log(firstEl)
         switch(firstEl) {
             case "Map":
-                return <MapScreen {...props} />
+                return <MapScreen initProgress={initProgress} {...props} />
             case "Profile":
                 return <ProfileStack {...props} />
             case "Billing":

@@ -14,30 +14,18 @@ import fetchPlans from './lib/fetchPlans.js';
 import Billing from './Billing/Billing.js';
 import ContactUs from './ContactUs/ContactUs.js';
 import fetchCognitoUser from './lib/fetchCognitoUser.js';
+import useInitData from './lib/useInitData.js';
+
 
 
 const Drawer = createDrawerNavigator();
 
 export default function AppStack({navigation}) {
     const {userSlice} = useSelector((state) => state)
-    const {avatarUri} = userSlice
-    const dispatch = useDispatch();
+    const {initProgress, fetchAllData} = useInitData()
 
-    //------INIT - ALL STARTING STATE------
-    useEffect(() => {
-        //fetches initial user state
-        fetchUserData(dispatch)
-        .then((res) => {
-            //fetches avatar picture
-            fetchImage(res.Email, dispatch, avatarUri)
-            //fetches plans (packages) by store
-            fetchPlans(dispatch, res.OwnerId)
-            //fetches cognito information
-            fetchCognitoUser(dispatch, res.Email)
-        })    
-    },[])
-    //------INIT - ALL STARTING STATE------
-
+    useEffect(() => fetchAllData(), [])
+    
     return (
         <ActionSheetProvider>
         <Drawer.Navigator 
@@ -55,7 +43,7 @@ export default function AppStack({navigation}) {
                  name="Map">
                 {(props)=> {
                     Object.assign(props, userSlice)
-                    return <TabNavigator firstEl="Map" {...props} />
+                    return <TabNavigator firstEl="Map" initProgress={initProgress} {...props} />
                 }}
             </Drawer.Screen>
 

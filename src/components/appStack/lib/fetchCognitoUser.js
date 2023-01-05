@@ -15,9 +15,9 @@ export default async function fetchCognitoUser(dispatch, email) {
         }
        
         dispatch(setCognitoData(obj))
-        return res.data.data
+        return "SUCCESS"
     }
    } catch(err) {
-    console.log(err)
+     return "ERROR"
    } 
 }

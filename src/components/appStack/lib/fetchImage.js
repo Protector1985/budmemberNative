@@ -10,7 +10,7 @@ export default async function fetchImage(email, dispatch, hook) {
     
     if(email) {
       const resp = await fetch(`${ENDPOINT}/avatarPicture/${email}avatarPicture.png`)
-        const imageBlob = await resp.blob();
+      const imageBlob = await resp.blob();
         const reader = new FileReader();
         reader.readAsDataURL(imageBlob);
         reader.onloadend = () => {
@@ -18,7 +18,9 @@ export default async function fetchImage(email, dispatch, hook) {
         if(hook != base64data) {
             AsyncStorage.setItem("pic", base64data)
             dispatch(setPictureUri( base64data))
+            return "SUCCESS"
         }
+        return "SUCCESS"
     };
     }
 }

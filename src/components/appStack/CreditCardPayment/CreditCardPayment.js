@@ -66,6 +66,7 @@ export default function CreditCardPayment({navigation}) {
     const styles = StyleSheet.create({
         container: {
           flex: 1,
+          backgroundColor: "white",
         },
         avoider: {
           flex: 1,

@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity,StyleSheet} from "react-native"
+import { SafeAreaView, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity,StyleSheet, ActivityIndicator} from "react-native"
 import React from 'react';
 
 import { FloatingLabelInput } from 'react-native-floating-label-input';
@@ -6,9 +6,12 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector,useDispatch } from "react-redux";
 import { setBillingInfo } from "../../../store/billingSlice";
 import { createNewSubscription } from "../../../api/nodeApi";
+import Alert from "../../utils/Alert";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import useInitData from "../lib/useInitData";
 
 
-export default function BillingForm() {
+export default function BillingForm({navigation}) {
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
     const billingInformation = useSelector((state) => state.billingSlice)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
@@ -21,11 +24,17 @@ export default function BillingForm() {
     const items = [{label: 'CA', value: 'CA'}]
     const [state, setState] = React.useState(items[0])
     const [loading, setLoading] = React.useState(false);
-  
+    const [alertOpen, setAlertOpen] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState("")
+    const [alertType, setAlertType] = React.useState("")
+    const {fetchAllDataUpdate} = useInitData();
+
+    //submits data package to the backend for signup
     async function dataSubmission(){
         const fullname = paymentInfo.holderName.trim().split(" ");
         const firstName = fullname.shift();
         const lastName = fullname.join(" ");
+        
 
         try {
           setLoading(true);
@@ -49,11 +58,19 @@ export default function BillingForm() {
           };
           
           const res = await createNewSubscription(updateObject);
-          
+          //if credit card charge was successful
           if (res?.data?.success) {
             //update token for new field in the token
-            
-            
+            AsyncStorage.setItem("userToken", res.data.token)
+            setAlertOpen(true);
+            setAlertMessage("Thank your for signing up!")
+            setAlertType("SUCCESS")
+     
+        //if credit card charge was not successful
+          }else {
+            setAlertOpen(true);
+            setAlertMessage(res.data.msg)
+            setAlertType("ERROR")
             
           }
         } catch (error) {
@@ -68,11 +85,8 @@ export default function BillingForm() {
     async function handleSubmit(){
         try {
             setLoading(true);
-        
-       
-          dataSubmission()
-        
-
+            //conditional logic for update etc here
+            dataSubmission()
         } catch(err) {
             console.log(err)
         }
@@ -80,9 +94,11 @@ export default function BillingForm() {
     }
 
 
-    
+
     return (
         <SafeAreaView style={styles.container} >
+        <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
+        <Alert callBack={fetchAllDataUpdate} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
             <KeyboardAvoidingView style={styles.inputContainer}>
             <View style={styles.inputSub}>
                 <FloatingLabelInput
@@ -127,7 +143,7 @@ export default function BillingForm() {
                 />
             </View>
             <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={handleSubmit} style={[styles.btn, {backgroundColor: colorPalette.accent}]}>
+                <TouchableOpacity disabled={loading} onPress={handleSubmit} style={[styles.btn, {backgroundColor: colorPalette.accent}]}>
                     <Text style={styles.btnText}>Sign Up</Text>
                 </TouchableOpacity>
             </View>
@@ -139,6 +155,7 @@ export default function BillingForm() {
 
     )
 }
+
 
 const styles= StyleSheet.create({
     container: {

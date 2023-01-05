@@ -1,12 +1,14 @@
 import {View, StyleSheet} from 'react-native';
 import MapView from 'react-native-maps';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import ProgressBar from '../ProgressBar/ProgressBar';
 const Drawer = createDrawerNavigator();
 
-export default function MapScreen() {
-   
+export default function MapScreen({initProgress}) {
+   console.log(initProgress)
     return (
         <View style={styles.masterContainer}>
+        <ProgressBar initProgress={initProgress} />
             <MapView
                 style={styles.map}
                 initialRegion={{
