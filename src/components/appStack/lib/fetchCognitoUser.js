@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux";
 import { fetchPackages, getCognitoUser } from "../../../api/nodeApi";
 import { setCognitoData } from "../../../store/cognitoDataSlice";
 import { setMembershipPlans } from "../../../store/membershipPlanSlice";
+import { setOnboardingStep } from "../../../store/systemSlice";
 
 
 export default async function fetchCognitoUser(dispatch, email) {
@@ -15,6 +16,7 @@ export default async function fetchCognitoUser(dispatch, email) {
         }
        
         dispatch(setCognitoData(obj))
+        dispatch(setOnboardingStep(obj["custom:onBoardingStatus"]))
         return "SUCCESS"
     }
    } catch(err) {

@@ -129,8 +129,6 @@ export default function PlanSelect({navigation}) {
     const width = Dimensions.get('window').width;
     
     
-   
-    
 
     const carouselItems = membershipPlans
     
@@ -201,8 +199,23 @@ export default function PlanSelect({navigation}) {
 }
 
 function IosButton({color, textColor, navigation}) {
+
+    const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
+    function returnPath() {
+        switch(currentOnboardingStep){
+          case "3": 
+            return navigation.navigate("Verify Phone Number")
+          case "4": 
+            return navigation.navigate("Enter Code")
+          case "5":
+            return navigation.navigate("Payment Information")
+            default:
+                return navigation.navigate("Select Plan")
+        }
+      }
+
     function handleNavigation() {
-        navigation.navigate("Verify Phone Number")
+        return returnPath()
     }
 
     return(

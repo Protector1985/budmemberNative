@@ -15,6 +15,7 @@ const setToken = async (headers = {}) => {
     return newHeaders
 }
 
+
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  
     try {

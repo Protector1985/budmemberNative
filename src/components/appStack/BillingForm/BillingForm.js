@@ -9,6 +9,7 @@ import { createNewSubscription } from "../../../api/nodeApi";
 import Alert from "../../utils/Alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInitData from "../lib/useInitData";
+import { states } from "./states";
 
 
 export default function BillingForm({navigation}) {
@@ -21,13 +22,20 @@ export default function BillingForm({navigation}) {
     const [city, setCity] = React.useState("");
     const [zip, setZip] = React.useState("");
     const [open, setOpen] = React.useState(false);
-    const items = [{label: 'CA', value: 'CA'}]
-    const [state, setState] = React.useState(items[0])
+    
+    const [state, setState] = React.useState(states[0])
     const [loading, setLoading] = React.useState(false);
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
     const {fetchAllDataUpdate} = useInitData();
+
+
+
+
+
+
+
 
     //submits data package to the backend for signup
     async function dataSubmission(){
@@ -68,6 +76,7 @@ export default function BillingForm({navigation}) {
      
         //if credit card charge was not successful
           }else {
+            console.log(res.data)
             setAlertOpen(true);
             setAlertMessage(res.data.msg)
             setAlertType("ERROR")
@@ -120,6 +129,19 @@ export default function BillingForm({navigation}) {
                         onChangeText={value => setCity(value)}        
                 />
             </View>
+
+            <View style={styles.inputSub}>
+                <DropDownPicker
+                    style={styles.dropdown}
+                    dropDownDirection={"TOP"}
+                    open={open}
+                    value={state}
+                    items={states}
+                    setOpen={setOpen}
+                    setValue={setState}
+                    // setItems={setItems}
+                />
+            </View>
             
             <View style={styles.inputSub}>
             <FloatingLabelInput
@@ -129,18 +151,6 @@ export default function BillingForm({navigation}) {
                 value={zip}
                 onChangeText={value => setZip(value)}        
             />
-            </View>
-            <View style={styles.inputSub}>
-                <DropDownPicker
-                    style={styles.dropdown}
-                    dropDownDirection={"TOP"}
-                    open={open}
-                    value={state}
-                    items={items}
-                    setOpen={setOpen}
-                    setValue={setState}
-                    // setItems={setItems}
-                />
             </View>
             <View style={styles.btnContainer}>
                 <TouchableOpacity disabled={loading} onPress={handleSubmit} style={[styles.btn, {backgroundColor: colorPalette.accent}]}>

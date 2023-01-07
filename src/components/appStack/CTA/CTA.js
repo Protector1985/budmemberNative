@@ -8,9 +8,28 @@ import { useSelector } from 'react-redux';
 
 
 function IosButtons({navigation}) {
-    const {colorPalette} = useSelector((state) => state.userSlice)
+    const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
+
+    const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
+ 
+  function returnPath() {
+    if(!Selected_Package_ID__c) {
+        return navigation.navigate("Select Plan")
+    } else {
+    switch(currentOnboardingStep){
+      case "3": 
+        return navigation.navigate("Verify Phone Number")
+      case "4": 
+        return navigation.navigate("Enter Code")
+      case "5":
+        return navigation.navigate("Payment Information")
+        default:
+            return navigation.navigate("Select Plan")
+    }
+    }
+  }
     function handlePress() {
-        navigation.navigate("Select Plan")
+        return returnPath()
     }
 
     function handleCancel() {
@@ -30,8 +49,27 @@ function IosButtons({navigation}) {
 }
 
 function AndroidButtons({navigation}) {
+    const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
+    const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
+ 
+    function returnPath() {
+        if(!Selected_Package_ID__c) {
+            return navigation.navigate("Select Plan")
+        } else {
+        switch(currentOnboardingStep){
+          case "3": 
+            return navigation.navigate("Verify Phone Number")
+          case "4": 
+            return navigation.navigate("Enter Code")
+          case "5":
+            return navigation.navigate("Payment Information")
+            default:
+                return navigation.navigate("Select Plan")
+        }
+        }
+      }
     function handlePress() {
-        navigation.navigate("Select Plan")
+        return returnPath()
     }
     function handleCancel() {
         navigation.goBack()

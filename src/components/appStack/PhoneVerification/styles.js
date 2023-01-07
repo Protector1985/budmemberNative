@@ -80,6 +80,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '700',
   },
+  centerContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems:"center"
+  },
+  resendText: {
+   fontSize: 16
+  }
 });
 
 export default styles;

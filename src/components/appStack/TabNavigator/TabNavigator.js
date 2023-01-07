@@ -14,6 +14,7 @@ import { FlipInEasyX } from 'react-native-reanimated';
 import ProfileStack from '../Profile/ProfileStack';
 import CTA from '../CTA/CTA';
 import SubscribeStack from '../subscribeNavigator/SubscribeStack';
+import { useSelector } from 'react-redux';
 
 
 
@@ -24,7 +25,8 @@ const Tab = createBottomTabNavigator();
 
 export default function TabNavigator(props) {
     const oldProps = props
-    
+    const {Membership_Status__c} = useSelector((state) => state.userSlice)
+    console.log(Membership_Status__c)
     const {navigation, firstEl, initProgress} = props
     //the first screen will always be returned in the tab stack
     //in order to show the tab bar across all screens we need to 
@@ -70,7 +72,7 @@ export default function TabNavigator(props) {
             <Tab.Screen
                 name="QR"
                 //if already member, display QR. Else, open CTA
-                component={SubscribeStack}
+                component={Membership_Status__c === "Active" ? QrScanner : SubscribeStack}
                 options={{
                     animationEnabled: true,
                     tabBarShowLabel: false, 

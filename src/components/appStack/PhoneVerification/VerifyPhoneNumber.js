@@ -1,4 +1,4 @@
-import {Animated, Image, SafeAreaView, Text, View, ActivityIndicator} from 'react-native';
+import {Animated, Image, SafeAreaView, Text, View, ActivityIndicator, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 
 import {
@@ -53,8 +53,36 @@ function VerifyPhoneNumber({navigation}){
   const [alertMessage, setAlertMessage] = useState("")
   const [alertType, setAlertType] = useState("")
   const [alertOpen, setAlertOpen] = useState(false)
-  const {colorPalette} = useSelector((state) => state.userSlice)
-  const {MobilePhone, Email} = useSelector((state) => state.userSlice)
+  const {colorPalette, MobilePhone, Email} = useSelector((state) => state.userSlice)
+
+  function sanitizeNumber(MobilePhone) {
+    var cleaned = ('' + MobilePhone).replace(/\D/g, '')
+    
+    var match = cleaned.match(/^(1|)?(\d{3})(\d{3})(\d{4})$/)
+    if (match) {
+            const number = [ '(', match[2], ') ', match[3], '-', match[4]].join('');
+        return number
+    } 
+    return MobilePhone
+}
+
+  async function handleResend() {
+    setLoading(true)
+    try {
+      const usr = await updateUser({
+        update: { MobilePhone: MobilePhone },
+        onboardingStep: '4',
+      });
+      if(usr.data.success) {
+        setTimeout(() => {
+          setLoading(false)
+        }, 3000)
+      }
+    } catch(err) {
+      console.log(err)
+    }
+    
+  }
 
   async function handlePress() {
     try {
@@ -137,8 +165,23 @@ function VerifyPhoneNumber({navigation}){
       <Image style={styles.icon} source={require("../../../assets/pictures/lock.png")} />
       <Text style={styles.subTitle}>
         Please enter the verification code{'\n'}
-        we sent you
+        we sent to {`${sanitizeNumber(MobilePhone)}`}{'\n'}{'\n'}
       </Text>
+        <View style={styles.centerContainer}>
+        <View style={styles.btnWrapper}>
+            <TouchableOpacity onPress={() => navigation.navigate("Verify Phone Number")}>
+              <Text style={[styles.resendText, {color: colorPalette.accent}]}>Change Phone Number</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.btnWrapper, {marginTop: 15}]}>
+            <TouchableOpacity onPress={handleResend}>
+              <Text style={[styles.resendText, {color: colorPalette.accent}]}>Resend Code</Text>
+            </TouchableOpacity>
+          </View>
+          
+          
+        </View>
+      
 
       <CodeField
         ref={ref}
@@ -161,3 +204,4 @@ function VerifyPhoneNumber({navigation}){
 };
 
 export default VerifyPhoneNumber;
+

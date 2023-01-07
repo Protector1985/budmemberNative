@@ -22,6 +22,7 @@ export default function useInitData() {
         })
         fetchUserData(dispatch)
         .then(async (res) => {
+            if(res) {
             setInitState({
                 progress: 0.25,
                 stepsLeft: 3,
@@ -49,6 +50,9 @@ export default function useInitData() {
                 stepsLeft: 0,
                 message: "Finishing!"
             })
+        } else {
+            //logout
+        }
         })    
     }
 

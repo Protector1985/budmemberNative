@@ -17,23 +17,25 @@ function Button({loading, setLoading, phoneNumber, setAlertOpen, setAlertMessage
     let submissionNumber = ''
     const dispatch = useDispatch();
     if( phoneNumber[0] === "1") {
-    
         submissionNumber = `+${phoneNumber}`
     } else {
         submissionNumber = `+1${phoneNumber}`
     }
 
-   
+    // const member = await findMemberByPhone(searchObj)
+    // if(!member.data.exists) {
     
     async function handleSubmit() {
         try {
             setLoading(true)
             const res = await findMemberByPhone({phone: submissionNumber})
-            
-            //if the user is not in the system
-            if(res.data.success) {
-                console.log("Found")
-
+            console.log(res.data)
+            //if the user is already in the system
+            if(res.data.exists) {
+                setLoading(false)
+                setAlertMessage("This phone number is already registered")
+                setAlertType("ERROR")
+                setAlertOpen(true)
             } else {
                 const usr = await updateUser({
                     update: { MobilePhone: submissionNumber },
