@@ -143,3 +143,44 @@ export const getCognitoUser = async (email) => {
         return err.response;
     }
 }
+
+export const fetchDispensaries = async (lat, lng, radius, searchQuery) => {
+    try {
+        const dispensaries = await axios.get(
+            `${ENDPOINT}/dispensaries/?lat=${lat}&lng=${lng}&radius=${radius}&searchQuery=${searchQuery}`
+        );
+        return dispensaries;
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const fetchAllDispensaries = async () => {
+    try {
+        const allDispensaries = await axios.get(ENDPOINT + "/alldispensaries")
+        return allDispensaries
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+export const fetchDispensary = async (dispensaryId) => {
+    try {
+        const dispensary = await axios.get(ENDPOINT + `/dispensary/${dispensaryId}`)
+        return dispensary
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+
+export const fetchDispensaryDetails = async (data) => {
+    try{
+        const headers = await setToken()
+        const details = await axios.get(ENDPOINT + `/user/dispensary/${data.Id}`,{headers})
+        return details
+    }catch(err){
+        console.log(err.response)
+        return err.response
+    }
+}

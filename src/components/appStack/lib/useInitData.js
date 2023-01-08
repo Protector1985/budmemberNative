@@ -1,9 +1,11 @@
 import {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import fetchCognitoUser from './fetchCognitoUser'
+import fetchDispensaries from './fetchDispensaries'
 import fetchImage from './fetchImage'
 import fetchPlans from './fetchPlans'
 import fetchUserData from './fetchUserData'
+import getLocation from './getLocation'
 
 export default function useInitData() {
     const {userSlice} = useSelector((state) => state)
@@ -14,12 +16,22 @@ export default function useInitData() {
    
 
     function fetchData() {
-        //fetches initial user state
+        
+        //gets location
         setInitState({
             progress: 0.10,
             stepsLeft: 4,
+            message: "Getting permissions/fetching dispensaries"
+        })
+        getLocation(dispatch)
+        fetchDispensaries(dispatch)
+        //fetches initial user state
+        setInitState({
+            progress: 0.20,
+            stepsLeft: 4,
             message: "Checking for your data on our servers"
         })
+        
         fetchUserData(dispatch)
         .then(async (res) => {
             if(res) {

@@ -4,7 +4,7 @@ import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import MapView from 'react-native-maps';
 import MapScreen from '../MapScreen/MapScreen';
-import QrScanner from '../QrScanner/QrScanner'
+import QrCode from "../QrCode/QrCode"
 import Profile from '../Profile/Screens/Profile'
 import Billing from '../Billing/Billing';
 import ContactUs from '../ContactUs/ContactUs';
@@ -16,6 +16,8 @@ import CTA from '../CTA/CTA';
 import SubscribeStack from '../subscribeNavigator/SubscribeStack';
 import { useSelector } from 'react-redux';
 
+import QrCodeStack from '../QrCode/QrCodeStack';
+
 
 
 
@@ -26,7 +28,6 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator(props) {
     const oldProps = props
     const {Membership_Status__c} = useSelector((state) => state.userSlice)
-    console.log(Membership_Status__c)
     const {navigation, firstEl, initProgress} = props
     //the first screen will always be returned in the tab stack
     //in order to show the tab bar across all screens we need to 
@@ -72,7 +73,7 @@ export default function TabNavigator(props) {
             <Tab.Screen
                 name="QR"
                 //if already member, display QR. Else, open CTA
-                component={Membership_Status__c === "Active" ? QrScanner : SubscribeStack}
+                component={Membership_Status__c === "Active" ? QrCodeStack : SubscribeStack}
                 options={{
                     animationEnabled: true,
                     tabBarShowLabel: false, 
@@ -82,7 +83,7 @@ export default function TabNavigator(props) {
             />
             <Tab.Screen
                 name="Menu"
-                component={QrScanner}
+                component={QrCode}
                 options={{
                 tabBarButton: (props) => {
                     return <CustomTabBarButton {...props} name="MENU" navigation={navigation} pictureEl={<AntDesign style={styles.icon}  name="menuunfold" size={26} color="black" />} />},
