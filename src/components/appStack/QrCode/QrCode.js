@@ -2,34 +2,38 @@ import QRCode from 'react-native-qrcode-svg';
 import { AntDesign } from '@expo/vector-icons'
 import { Text, SafeAreaView, StyleSheet, Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
+import SideDrawer from '../SideDrawer/SideDrawer';
 
 
-export default function QrCode({navigation}) {
+export default function QrCode(props) {
+  const {navigation} = props
+  const menu = <SideDrawer navigation={navigation} />
   const {sub} = useSelector((state) => state.cognitoDataSlice.cognitoData);
+  const {open} = useSelector((state)=> state.drawerSlice)
   const {colorPalette} = useSelector((state) => state.userSlice)
   const size = Dimensions.get("window").width * 0.6;
 
- 
     return (
-      <SafeAreaView style={styles.container}>
-        <Image style={styles.logo} source={require("../../../assets/pictures/logo_white.png")} />
-        <Text style={styles.text}>Show this QR code to the Budtender when ready: </Text>
-        <QRCode
-          size={size}
-          value={sub}
-        />
-        <View style={styles.btnHoldingContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Subscription Data")} style={[styles.btn, {backgroundColor: colorPalette.accent}]} >
-            <View style={styles.btnWriting}>
-              <Text style={styles.subsData}>Subscription Data</Text>
-              <AntDesign style={styles.arrows} name="doubleright" size={22} color="black" />
-            </View>
-          </TouchableOpacity>
-        </View>
-        
       
-      </SafeAreaView>
-       
+        <SafeAreaView style={styles.container}>
+  
+          <Image style={styles.logo} source={require("../../../assets/pictures/logo_white.png")} />
+          <Text style={styles.text}>Show this QR code to the Budtender when ready: </Text>
+          <QRCode
+            size={size}
+            value={sub}
+          />
+          <View style={styles.btnHoldingContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate("Subscription Data")} style={[styles.btn, {backgroundColor: colorPalette.accent}]} >
+              <View style={styles.btnWriting}>
+                <Text style={styles.subsData}>Subscription Data</Text>
+                <AntDesign style={styles.arrows} name="doubleright" size={22} color="black" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+        </SafeAreaView>
+      
     )
 }
 

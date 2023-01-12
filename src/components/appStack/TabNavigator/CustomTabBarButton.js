@@ -1,15 +1,16 @@
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import { DrawerActions } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
+import {useSelector, useDispatch} from 'react-redux'
+import { toggleDrawer } from '../../../store/drawerSlice';
 
-export default function CustomTabBarButton({navigation, pictureEl, name}) {
-
+export default function CustomTabBarButton(props) {
+    const {drawerProps, navigation, pictureEl, name} = props
+    const dispatch = useDispatch();
+   
+   
       function handlePress(){
-        if(name === "MAP") {
-            navigation.navigate("Map",{screen: "Map"})
-        } else {
-            navigation.dispatch(DrawerActions.openDrawer())
-        }
+            dispatch(toggleDrawer(true))
       }
 
     return(

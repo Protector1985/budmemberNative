@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 export default function Shortcut({iconName, name, callback}) {
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity onPress={callback} style={styles.btn}>
                 <MaterialIcons name={iconName} size={40} color="#399cbd" />
                 <Text style={styles.text}>{name}</Text>
             </TouchableOpacity>  

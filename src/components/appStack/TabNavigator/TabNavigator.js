@@ -17,6 +17,8 @@ import SubscribeStack from '../subscribeNavigator/SubscribeStack';
 import { useSelector } from 'react-redux';
 
 import QrCodeStack from '../QrCode/QrCodeStack';
+import SideDrawer from '../SideDrawer/SideDrawer';
+import SideMenu from 'react-native-side-menu';
 
 
 
@@ -25,29 +27,20 @@ import QrCodeStack from '../QrCode/QrCodeStack';
 
 const Tab = createBottomTabNavigator();
 
-export default function TabNavigator(props) {
-    const oldProps = props
-    const {Membership_Status__c} = useSelector((state) => state.userSlice)
-    const {navigation, firstEl, initProgress} = props
-    //the first screen will always be returned in the tab stack
-    //in order to show the tab bar across all screens we need to 
-    //return the first screen conditionally
-    function returnFirstScreen(props) {
-        switch(firstEl) {
-            case "Map":
-                return <MapScreen initProgress={initProgress} {...props} />
-            case "Profile":
-                return <ProfileStack {...props} />
-            case "Billing":
-                return <Billing {...props} />
-            case "ContactUs":
-                return <ContactUs {...props} />
-        }
-    }
+export default function TabNavigator({initProgress, firstEl, returnNav}) {
   
+
+    const {Membership_Status__c} = useSelector((state) => state.userSlice)
+    const {open} = useSelector((state)=> state.drawerSlice)
+  
+    
+    
     return(
+  
+        
         <Tab.Navigator style={styles.bottomContainer} screenOptions={{
             headerShown: false,
+            unmountOnBlur: true,
             tabBarStyle: {
                 display:"flex",
                 flexDirection:"row",
@@ -60,35 +53,127 @@ export default function TabNavigator(props) {
                 options={{
                     activeTintColor: "black",
                     tabBarShowLabel: false, 
-                    tabBarButton: (props) => {
-                        return <CustomTabBarButton {...props} name="MAP" navigation={navigation} pictureEl={<Entypo name="map" style={styles.icon} size={26} color="black" />} />},
-                   
+                    tabBarIcon: (props) => <Entypo name="map" style={styles.icon} size={26} color="black" />,
                 }}
                 >
                     {(props) => {
-                        
-                        Object.assign(props, oldProps)
-                        return returnFirstScreen(props)}}
+                        const menu = <SideDrawer navigation={props.navigation} />
+                        return(
+                            <SafeAreaView style={{flex: 1}}>
+                                <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                    <MapScreen initProgress={initProgress} {...props} />
+                                </SideMenu>
+                            </SafeAreaView>
+                            
+                        )}}
                 </Tab.Screen>
             <Tab.Screen
                 name="QR"
-                //if already member, display QR. Else, open CTA
-                component={Membership_Status__c === "Active" ? QrCodeStack : SubscribeStack}
                 options={{
+                    unmountOnBlur:true,
                     animationEnabled: true,
                     tabBarShowLabel: false, 
                     tabBarIcon: (props) => <AntDesign name="qrcode" size={26} color="black" />,
                    
                 }}
-            />
+            >
+                {(props) => {
+                    const menu = <SideDrawer navigation={props.navigation} />
+                    return (
+                        Membership_Status__c === "Active" ?
+                        <SafeAreaView style={{flex: 1}}>
+                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                <QrCodeStack {...props} />
+                            </SideMenu>
+                        </SafeAreaView>
+                            :
+                        <SafeAreaView style={{flex: 1}}>
+                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                <SubscribeStack {...props} />
+                            </SideMenu>
+                        </SafeAreaView> 
+                    )  
+                }}
+
+                </Tab.Screen>
             <Tab.Screen
                 name="Menu"
-                component={QrCode}
+                component={MapScreen}
                 options={{
-                tabBarButton: (props) => {
-                    return <CustomTabBarButton {...props} name="MENU" navigation={navigation} pictureEl={<AntDesign style={styles.icon}  name="menuunfold" size={26} color="black" />} />},
+                    unmountOnBlur:true,
+                    animationEnabled: true,
+                    tabBarShowLabel: false, 
+                    tabBarButton: (props) => {
+                        return <CustomTabBarButton name="MENU" pictureEl={<AntDesign style={styles.icon}  name="menuunfold" size={26} color="black" />} />},
+                
                 }}
-            />
+             />
+            
+            
+            <Tab.Screen
+                name="Billing"
+               
+                options={{
+                    unmountOnBlur:true,
+                    animationEnabled: true,
+                    tabBarShowLabel: false, 
+                    tabBarItemStyle:{ display: "none"},
+                                        
+                }}
+            >
+            {(props) => {
+                const menu = <SideDrawer navigation={props.navigation} />
+                return(
+                    <SafeAreaView style={{flex: 1}}>
+                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <Billing {...props} />
+                        </SideMenu>
+                    </SafeAreaView>
+                    
+                )}}
+            </Tab.Screen>
+            <Tab.Screen
+                name="Profile"
+                options={{
+                    unmountOnBlur:true,
+                    animationEnabled: true,
+                    tabBarShowLabel: false, 
+                    tabBarItemStyle:{ display: "none"},
+                                        
+                }}
+            >
+            {(props) => {
+                const menu = <SideDrawer navigation={props.navigation} />
+                return(
+                    <SafeAreaView style={{flex: 1}}>
+                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <Profile {...props} />
+                        </SideMenu>
+                    </SafeAreaView>
+                    
+                )}}
+            </Tab.Screen>
+            <Tab.Screen
+                name="Contact Us"
+                options={{
+                    unmountOnBlur:true,
+                    animationEnabled: true,
+                    tabBarShowLabel: false, 
+                    tabBarItemStyle:{ display: "none"},
+                                        
+                }}
+            >
+            {(props) => {
+                const menu = <SideDrawer navigation={props.navigation} />
+                return(
+                    <SafeAreaView style={{flex: 1}}>
+                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <ContactUs {...props} />
+                        </SideMenu>
+                    </SafeAreaView>
+                    
+                )}}
+            </Tab.Screen>
         </Tab.Navigator>
         
     )

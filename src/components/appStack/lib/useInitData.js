@@ -16,7 +16,7 @@ export default function useInitData() {
    
 
     function fetchData() {
-        
+        try {
         //gets location
         setInitState({
             progress: 0.10,
@@ -65,7 +65,10 @@ export default function useInitData() {
         } else {
             //logout
         }
-        })    
+     })    
+    }catch(err) {
+        console.log(err)
+    }
     }
 
     function fetchDataUpdate() {

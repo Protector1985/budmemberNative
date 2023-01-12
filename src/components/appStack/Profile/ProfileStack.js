@@ -81,6 +81,7 @@ export default function ProfileStack({navigation, userSlice, Email, FirstName, L
                 name="Profile" 
             >
             {() => <Profile 
+                      navigation={navigation}
                       email={Email} 
                       firstName={FirstName} 
                       lastName={LastName} 

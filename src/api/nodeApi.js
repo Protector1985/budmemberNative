@@ -28,6 +28,17 @@ export const findUser = async (email) => {
     }
 }
 
+//sends contact email
+export const userContact = async (data) => {
+    try{
+        const headers = await setToken()
+        const contact = await axios.post(ENDPOINT + "/user/contact",data,{headers});
+        return contact
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 //user signin via email and password : Obj{email, password}
 export const signIn = async (signInObject) => {
     try {

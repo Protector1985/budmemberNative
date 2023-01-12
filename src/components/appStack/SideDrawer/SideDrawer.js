@@ -1,42 +1,41 @@
-import {View, Text, ImageBackground, StyleSheet, Image, TouchableOpacity, SafeAreaView} from 'react-native';
-
-import { FontAwesome } from '@expo/vector-icons'; 
+import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import MenuDrawer from 'react-native-side-drawer'
 import UserAvatar from 'react-native-user-avatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
-import Profile from '../Profile/Screens/Profile';
-import Billing from '../Billing/Billing';
-
-
+import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
+const height = Dimensions
 
 function DrawerItem({navigation, screenName, screenLink}) {
-        
-        function handleNavigation() {
- 
-            navigation.jumpTo(screenName,{screen: screenLink})
-        }
-    return (
-        <View>
-            <TouchableOpacity onPress={handleNavigation}>
-                <Text style={styles.txt}>{screenName}</Text>
-            </TouchableOpacity>
-        
-        </View>
-    )
+    const dispatch = useDispatch()
+    
+    function handleNavigation() {
+        dispatch(closeDrawer())
+        navigation.navigate(screenName,{screen: screenLink})
+    }
+return (
+    <View style={styles.itemBtnContainer}>
+        <TouchableOpacity onPress={handleNavigation}>
+            <Text style={styles.txt}>{screenName}</Text>
+        </TouchableOpacity>
+    
+    </View>
+)
 }
 
-  export default function DrawerContent(props) {
+export default function SideDrawer(props) {
     const colors = useSelector((state) => state.userSlice.colorPalette)
-    const {open} = useSelector((state)=> state.drawerSlice)
-    return(
-        <SafeAreaView style={styles.container}>
+
+return(
+        <ScrollView style={styles.container}>
         <LinearGradient
         style={{
             width: undefined, 
             padding: 16, 
             paddingTop: 80, 
             position: "relative", 
-            marginTop: -60
+            marginTop: -60,
+            marginBottom:15,
             }}
             colors={[colors.main, colors.mainLight]}
             start={{x: 0.5, y: 0}}
@@ -48,27 +47,30 @@ function DrawerItem({navigation, screenName, screenLink}) {
                     <Text style={styles.savings}>$1045 Saved</Text>
                 </View>
             </LinearGradient>
-            <View style={styles.listContainer}>
+            <View style={styles.listItems}>
                 <DrawerItem {...props} screenName="Profile" />
                 <DrawerItem {...props} screenName="Billing" />
+                <DrawerItem {...props} screenName="Contact Us" />
             </View>
-        </SafeAreaView>
+        </ScrollView>
     )
   }
+
+ 
 
   const styles = StyleSheet.create({
     container: {
         flex: 1,
-        zIndex: 1000000,
     },
-    listContainer: {
-        width: "100%",
+    listItems: {
         alignItems: "center",
-        justifyContent: "center",
-        backgroundColor:"blue"
     },
     txt: {
-        fontSize: 20,
+        fontSize: 18,
+        color: "#222222",
+    },
+    itemBtnContainer: {
+        marginTop:15,
     },
     backgroundContainer: {
         width: undefined, 

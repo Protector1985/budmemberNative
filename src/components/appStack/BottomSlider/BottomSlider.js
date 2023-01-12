@@ -1,12 +1,16 @@
 import React from 'react';
-import { Dimensions, Image, View, ScrollView, StyleSheet, Text, ActivityIndicator } from 'react-native';
+import { Dimensions, Image, View, ScrollView, StyleSheet, Text, Share, Platform } from 'react-native';
 import * as geolib from 'geolib';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import Shortcut from './Shortcut';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { getForegroundPermissionsAsync } from 'expo-location';
 import moment from 'moment/moment';
+import initCall from '../../utils/initCall';
+import openMap, {createMapLink} from 'react-native-open-maps';
+
 const height = Dimensions.get("window").height
+
 
 export default function BottomSlider({sliderData, homeLatitude, homeLongitude, hours}) {
     const {Name, Image_URL__c, BillingStreet, BillingState, BillingPostalCode, Geo_Point__Latitude__s, Geo_Point__Longitude__s, openHours} = sliderData;
@@ -32,6 +36,7 @@ export default function BottomSlider({sliderData, homeLatitude, homeLongitude, h
         }
     },[Geo_Point__Latitude__s, Geo_Point__Longitude__s])
     
+
    React.useEffect(() => {
         const obj = {}
         if(hours) {
@@ -39,26 +44,34 @@ export default function BottomSlider({sliderData, homeLatitude, homeLongitude, h
                 obj[day.Day_of_week__c] = {open: moment(day.Open_Time__c, "HH:mm").format("hh:mma"), close: moment(day.Close_Time__c, "HH:mm").format("hh:mma")}
                
             })
+
             setStructuredHours(obj)
             obj[moment().format("dddd")].open
             var format = 'hh:mma'
 
-          
-            
             beforeTime = moment(obj[moment().format("dddd")].open, format),
             afterTime = moment(obj[moment().format("dddd")].close, format);
             const isOpen = moment().isBetween(beforeTime, afterTime);
-            setStoreOpen(isOpen)
-            
-        }
-    
+            setStoreOpen(isOpen)    
+        } 
    },[hours])
     
-//    function determineOpen() {
-//     if(structuredHours[moment().format("dddd")].open !== null) {
-//         console.log(structuredHours[moment().format("dddd")])
-//     }
-//    }
+   function onShare() {
+    try {
+        const shareResult = Share.share({
+            url: "https://app.budmember.com",
+            message: `Check out ${Name} on Budmember`
+        })
+        // if(shareResult.action === Share.sharedAction) {
+        //     console.log("Successfully shared")
+        // }else if(shareResult.action === Share.dismissedAction) {
+
+        // }
+    } catch(err) {
+        console.log(err)
+    }
+   }
+
     return (
         <BottomSheet sliderMaxHeight={height} isOpen={true}>
           <ScrollView>
@@ -76,9 +89,17 @@ export default function BottomSlider({sliderData, homeLatitude, homeLongitude, h
                 </View>
             </View>
             <View style={styles.shortcutContainer}>
-                <Shortcut name="Directions" iconName="directions" />
-                <Shortcut name="Phone" iconName="phone-in-talk"/>
-                <Shortcut name="Share" iconName="share"/>
+                <Shortcut callback={() => {
+                    if(Platform.OS === "ios") {
+                        openMap({provider: "apple", end: `${BillingStreet} ${BillingState} ${BillingPostalCode}`})
+                    } else if(Platform.OS === "android") {
+                        openMap({provider: "google", end: `${BillingStreet} ${BillingState} ${BillingPostalCode}`})
+                    } else {
+                        openMap({end: `${BillingStreet} ${BillingState} ${BillingPostalCode}`})
+                    }
+                }} name="Directions" iconName="directions" />
+                <Shortcut callback={() => initCall("7609023304")} name="Phone" iconName="phone-in-talk"/>
+                <Shortcut callback={onShare} name="Share" iconName="share"/>
             </View>
             <View style={styles.hoursContainer}>
                 <Text style={storeOpen ? styles.openNow : styles.closedNow}>{storeOpen ? "Open Now" : "Store Closed"}</Text>
@@ -90,12 +111,9 @@ export default function BottomSlider({sliderData, homeLatitude, homeLongitude, h
                     <Text style={styles.hour}>{`Friday: ${structuredHours.Friday.open} - ${structuredHours.Friday.close}`}</Text>
                     <Text style={styles.hour}>{`Saturday: ${structuredHours.Saturday.open} - ${structuredHours.Saturday.close}`}</Text>
                     <Text style={styles.hour}>{`Sunday: ${structuredHours.Sunday.open} - ${structuredHours.Sunday.close}`}</Text>
-                
-                </View>
-                
+                </View> 
             </View>
           </ScrollView>
-            
         </BottomSheet>
     )
 }
@@ -129,12 +147,12 @@ const styles = StyleSheet.create({
         marginTop: 30
     },
     hourSub: {
-        alignItems:"flex-end"
+        alignItems:"flex-end",
+        marginBottom: 25,
     },
     hour: {
         fontSize: 16,
         marginTop: 7,
-
     },
     openNow: {
         fontSize: 23,

@@ -39,7 +39,6 @@ export default function Picker({navigation, email, setEmail, firstName, setFirst
     return (
 
         <SafeAreaView style={styles.container}>
-    
             <LinearGradient
                     style={{
                         flexDirection: "row",

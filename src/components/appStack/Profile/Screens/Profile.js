@@ -6,13 +6,18 @@ import UserAvatar from 'react-native-user-avatar';
 import moment from 'moment';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from 'react-redux';
+import SideDrawer from '../../SideDrawer/SideDrawer';
+import SideMenu from 'react-native-side-menu';
 
 
-export default function Profile({ email, firstName, lastName, phone, birthDate, membership, image}) {
+export default function Profile({ email, firstName, lastName, phone, birthDate, membership, image, navigation}) {
     const colors = useSelector((state) => state.userSlice.colorPalette)
-
+    const {open} = useSelector((state)=> state.drawerSlice)
+    const menu = <SideDrawer navigation={navigation} />
+    
     return (
         <SafeAreaView style={styles.container}>
+        
         <View style={{height: 200, position:"relative"}}>
         <LinearGradient
             style={{
@@ -60,7 +65,8 @@ export default function Profile({ email, firstName, lastName, phone, birthDate, 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor:"white",
     },
     imgContainer: {
         flexDirection: "row",
