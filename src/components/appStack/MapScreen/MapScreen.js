@@ -21,7 +21,6 @@ export default function MapScreen({navigation, initProgress}) {
    const {dispensaries} = useSelector((state) => state.dispensariesSlice)
    const {open} = useSelector((state)=> state.drawerSlice)
    const [hours, setHours] = React.useState()
-   
    const menu = <SideDrawer navigation={navigation} />
    
 

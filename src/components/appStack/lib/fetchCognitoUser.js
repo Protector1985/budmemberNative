@@ -5,7 +5,7 @@ import { setMembershipPlans } from "../../../store/membershipPlanSlice";
 import { setOnboardingStep } from "../../../store/systemSlice";
 
 
-export default async function fetchCognitoUser(dispatch, email) {
+export default async function fetchCognitoUser(dispatch, email, membershipStatus) {
    try {
     const res = await getCognitoUser(email);
     if(res.data.success) {
@@ -16,7 +16,17 @@ export default async function fetchCognitoUser(dispatch, email) {
         }
        
         dispatch(setCognitoData(obj))
-        dispatch(setOnboardingStep(obj["custom:onBoardingStatus"]))
+        
+        //decides if this is a reactivation, new subscription or update
+        //this is stored in onboarding step
+        if(membershipStatus === "Inactive" && !obj["custom:authorizeSubId"]) {
+          dispatch(setOnboardingStep(obj["custom:onBoardingStatus"]))
+        } else if(membershipStatus === "Inactive" && obj["custom:authorizeSubId"]) {
+          dispatch(setOnboardingStep("reactivation"))
+        } else {
+          dispatch(setOnboardingStep("update"))
+        }
+        
         return "SUCCESS"
     }
    } catch(err) {

@@ -178,11 +178,6 @@ export default function PlanSelect({navigation}) {
                     />            
                 </View>
                 
-                    
-                   
-               
-                
-
                 <View style={styles.buttonContainer}>
 
                     {Platform.OS === "ios"? 
@@ -203,12 +198,16 @@ function IosButton({color, textColor, navigation}) {
     const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
     function returnPath() {
         switch(currentOnboardingStep){
-          case "3": 
-            return navigation.navigate("Verify Phone Number")
-          case "4": 
-            return navigation.navigate("Enter Code")
-          case "5":
-            return navigation.navigate("Payment Information")
+            case "update":
+                return navigation.navigate("Payment Information")
+            case "reactivation":
+                return navigation.navigate("Payment Information")
+            case "3": 
+                return navigation.navigate("Verify Phone Number")
+            case "4": 
+                return navigation.navigate("Enter Code")
+            case "5":
+                return navigation.navigate("Payment Information")
             default:
                 return navigation.navigate("Select Plan")
         }

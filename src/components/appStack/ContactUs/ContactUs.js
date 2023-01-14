@@ -19,7 +19,6 @@ export default function ContactUs({navigation}) {
     
 
     function sendWhatsApp(){
-        console.log("Clicked")
         try {
         let phoneWithCountryCode = "14242832035";
         let mobile = Platform.OS == "ios" ? phoneWithCountryCode : "+" + phoneWithCountryCode;

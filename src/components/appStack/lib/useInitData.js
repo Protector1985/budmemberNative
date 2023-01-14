@@ -9,6 +9,7 @@ import getLocation from './getLocation'
 
 export default function useInitData() {
     const {userSlice} = useSelector((state) => state)
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {avatarUri} = userSlice
     const dispatch = useDispatch()
     const [initState, setInitState] = useState({})
@@ -24,7 +25,7 @@ export default function useInitData() {
             message: "Getting permissions/fetching dispensaries"
         })
         getLocation(dispatch)
-        fetchDispensaries(dispatch)
+        fetchDispensaries(dispatch, cognitoData)
         //fetches initial user state
         setInitState({
             progress: 0.20,
@@ -56,7 +57,7 @@ export default function useInitData() {
                 message: "You have tons of options! Finishing up your profile!"
             })
             //fetches cognito information
-            const cognitoFetched = fetchCognitoUser(dispatch, res.Email)
+            const cognitoFetched = fetchCognitoUser(dispatch, res.Email, res.Membership_Status__c)
             setInitState({
                 progress: 0.99,
                 stepsLeft: 0,

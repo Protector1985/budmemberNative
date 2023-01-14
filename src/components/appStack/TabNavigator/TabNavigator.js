@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 import QrCodeStack from '../QrCode/QrCodeStack';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
+import Reactivation from '../Reactivation/Reactivation';
 
 
 
@@ -30,10 +31,45 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator({initProgress, firstEl, returnNav}) {
   
 
-    const {Membership_Status__c} = useSelector((state) => state.userSlice)
+    const {Membership_Status__c} = useSelector((state) => state.userSlice);
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {open} = useSelector((state)=> state.drawerSlice)
   
+    console.log(cognitoData["custom:authorizeSubId"])
+
     
+
+    function returnStack(menu) {
+        try {
+            if(Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"]) {
+                return (
+                        <SafeAreaView style={{flex: 1}}>
+                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                <QrCodeStack {...props} />
+                            </SideMenu>
+                        </SafeAreaView>
+                )
+            } else if(Membership_Status__c === "Inactive" && !cognitoData["custom:authorizeSubId"]) {
+                return (
+                    <SafeAreaView style={{flex: 1}}>
+                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <SubscribeStack {...props} />
+                        </SideMenu>
+                    </SafeAreaView> 
+                )
+            }else if(Membership_Status__c === "Inactive" && cognitoData["custom:authorizeSubId"]) {
+                return (
+                    <SafeAreaView style={{flex: 1}}>
+                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <SubscribeStack />
+                        </SideMenu>
+                    </SafeAreaView> 
+                )
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    }
     
     return(
   
@@ -80,18 +116,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 {(props) => {
                     const menu = <SideDrawer navigation={props.navigation} />
                     return (
-                        Membership_Status__c === "Active" ?
-                        <SafeAreaView style={{flex: 1}}>
-                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
-                                <QrCodeStack {...props} />
-                            </SideMenu>
-                        </SafeAreaView>
-                            :
-                        <SafeAreaView style={{flex: 1}}>
-                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
-                                <SubscribeStack {...props} />
-                            </SideMenu>
-                        </SafeAreaView> 
+                        returnStack(menu)
                     )  
                 }}
 
