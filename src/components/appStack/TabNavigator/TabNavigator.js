@@ -20,6 +20,7 @@ import QrCodeStack from '../QrCode/QrCodeStack';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
 import Reactivation from '../Reactivation/Reactivation';
+import BillingStackNavigator from './BillingStackNavigator/BillingStackNavigator';
 
 
 
@@ -39,7 +40,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
 
     
 
-    function returnStack(menu) {
+    function returnStack(props, menu) {
         try {
             if(Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"]) {
                 return (
@@ -116,7 +117,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 {(props) => {
                     const menu = <SideDrawer navigation={props.navigation} />
                     return (
-                        returnStack(menu)
+                        returnStack(props, menu)
                     )  
                 }}
 
@@ -137,7 +138,6 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
             
             <Tab.Screen
                 name="Billing"
-               
                 options={{
                     unmountOnBlur:true,
                     animationEnabled: true,
@@ -151,7 +151,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 return(
                     <SafeAreaView style={{flex: 1}}>
                         <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
-                            <Billing {...props} />
+                            <BillingStackNavigator />
                         </SideMenu>
                     </SafeAreaView>
                     

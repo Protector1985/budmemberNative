@@ -90,7 +90,7 @@ function AndroidButtons({navigation}) {
 
 
 export default function CTA(props) {
-    
+    console.log(props)
     return( 
         
             <SafeAreaView style={styles.masterContainer}>

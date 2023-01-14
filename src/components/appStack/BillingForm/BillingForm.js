@@ -5,7 +5,7 @@ import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector,useDispatch } from "react-redux";
 import { setBillingInfo } from "../../../store/billingSlice";
-import { createNewSubscription } from "../../../api/nodeApi";
+import { createNewSubscription, upgradeMembership } from "../../../api/nodeApi";
 import Alert from "../../utils/Alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useInitData from "../lib/useInitData";
@@ -14,10 +14,12 @@ import { states } from "./states";
 
 export default function BillingForm({navigation}) {
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
+    const { currentOnboardingStep } = useSelector((state) => state.systemSlice)
     const billingInformation = useSelector((state) => state.billingSlice)
+    useSelector((state) => console.log(state.userSlice))
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
-    const {colorPalette } = useSelector((state) => state.userSlice)
-    const {selectedPlan, previousPlan} = useSelector((state) => state.membershipPlanSlice)
+    const {colorPalette, Email, lastChargeDate, Previous_Package_ID__c } = useSelector((state) => state.userSlice)
+    const {selectedPlan, previousPlan, membershipPlans} = useSelector((state) => state.membershipPlanSlice)
     const [streetAddress, setStreetAddress] = React.useState("");
     const [city, setCity] = React.useState("");
     const [zip, setZip] = React.useState("");
@@ -30,9 +32,11 @@ export default function BillingForm({navigation}) {
     const [alertType, setAlertType] = React.useState("")
     const {fetchAllDataUpdate} = useInitData();
 
+    const selectedPlanData = membershipPlans.filter((plan) => plan.Id === selectedPlan)
+    const previousPlanData = membershipPlans.filter((plan) => plan.Id === Previous_Package_ID__c)
+    console.log(selectedPlanData[0].Package_Amount__c)
 
-
-
+    console.log(previousPlanData[0].Package_Amount__c)
 
 
 
@@ -42,7 +46,6 @@ export default function BillingForm({navigation}) {
         const fullname = paymentInfo.holderName.trim().split(" ");
         const firstName = fullname.shift();
         const lastName = fullname.join(" ");
-        
 
         try {
           setLoading(true);
@@ -91,11 +94,59 @@ export default function BillingForm({navigation}) {
         }
       };
 
+    async function updateMembership() {
+        try{
+      
+            setLoading(true)
+            const fullname = paymentInfo.holderName.trim().split(" ");
+            const firstName = fullname.shift();
+            const lastName = fullname.join(" ");
+            const paymentPackage = {
+                billingFirstName: firstName,
+                billingLastName: lastName,
+                cardExpirationDate: `${paymentInfo.expiration.slice(0,2)}${paymentInfo.expiration.slice(3,5)}`,
+                cardNumber: paymentInfo.cardNumber.trim(),
+                cvv: paymentInfo.cvv,
+                MailingStreet: streetAddress,
+                MailingCity: city,
+                MailingState: state,
+                MailingPostalCode: zip,
+                email: Email,
+                startDate: lastChargeDate,
+                newMembershipAmount: selectedPlanData[0].Package_Amount__c, 
+                dueNow: Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Number(selectedPlanData[0].Package_Amount__c)-Number(previousPlanData[0].Package_Amount__c) , //if downgrade 0 if upgrade diff between lower and higher
+                packageId: selectedPlanData[0].Id,
+                oldPackageId: previousPlanData[0].Id
+            }
+            //below function is used for upgrade AND downgrade 
+            const res = await upgradeMembership(paymentPackage)
+              if(res?.data?.success) {
+                setLoading(false);
+                setAlertOpen(true);
+                setAlertMessage(res.data.msg)
+                setAlertType("SUCCESS")  
+            } else if(!res?.data?.success) {
+                setLoading(false);
+                setAlertOpen(true);
+                setAlertMessage(res.data.msg)
+                setAlertType("SUCCESS")
+            }
+          }catch(err) {
+            console.log(err)
+          }
+    }
+
     async function handleSubmit(){
         try {
             setLoading(true);
             //conditional logic for update etc here
-            dataSubmission()
+            if(currentOnboardingStep === "update") {
+                updateMembership();
+            } else if(currentOnboardingStep === "6" || "7" || "8") {
+                dataSubmission()
+            }
+            
+            
         } catch(err) {
             console.log(err)
         }

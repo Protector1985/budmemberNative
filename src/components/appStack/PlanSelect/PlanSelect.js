@@ -122,15 +122,17 @@ function Card({animationValue, index, colorPalette, item}) {
 }
 
 export default function PlanSelect({navigation}) {
-    const {colorPalette} = useSelector((state) => state.userSlice)
+    const {colorPalette, Previous_Package_ID__c} = useSelector((state) => state.userSlice)
     const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
     const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
+     
+    const filtered = membershipPlans.filter((item) => item.Id !== Previous_Package_ID__c)
+    const carouselItems = filtered
     
 
-    const carouselItems = membershipPlans
     
     React.useEffect(() => {
         dispatch(setSelectedPlan(carouselItems[0]?.Id))
@@ -150,7 +152,7 @@ export default function PlanSelect({navigation}) {
                 </View>
                 <View style={styles.cardContainer}>
                 <Carousel
-                    loop
+                    loop={carouselItems.length > 1 ? true : false}
                     width={width}
                     autoPlay={false}
                     data={carouselItems}
@@ -196,10 +198,11 @@ export default function PlanSelect({navigation}) {
 function IosButton({color, textColor, navigation}) {
 
     const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
+    
     function returnPath() {
         switch(currentOnboardingStep){
             case "update":
-                return navigation.navigate("Payment Information")
+                return navigation.navigate("Upgrade Info")
             case "reactivation":
                 return navigation.navigate("Payment Information")
             case "3": 

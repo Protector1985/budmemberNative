@@ -4,9 +4,6 @@ import axios from 'axios'
 import { VideoExportPreset } from 'expo-image-picker';
 import ENDPOINT from '../../endpoint';
 
-// const ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
-
-// const ENDPOINT = "https://api-stag.budmember.com"
 
 const setToken = async (headers = {}) => {
     const newHeaders = { ...headers }
@@ -15,6 +12,25 @@ const setToken = async (headers = {}) => {
     return newHeaders
 }
 
+export const getCreditCardInfo = async (email, cancelToken) => {
+    try {
+        const headers = await setToken();
+        const creditCardInfo = await axios.post(ENDPOINT + "/ccInfo", {email}, {headers, cancelToken})
+        return creditCardInfo
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export const upgradeMembership = async (dataPackage) => {
+    try {
+        const headers = await setToken()
+        const res = await axios.post(ENDPOINT + "/upgradeSubscription", dataPackage, { headers })
+        return res
+    } catch (err) {
+        return err;
+    }
+}
 
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  

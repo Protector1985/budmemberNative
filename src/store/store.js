@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
 import billingSlice from './billingSlice'
+import ccInfoSlice from './ccInfoSlice'
 import cognitoDataSlice from './cognitoDataSlice'
 import dispensariesSlice from './dispensariesSlice'
 import drawerSlice from './drawerSlice'
@@ -12,6 +13,7 @@ import userSlice from './userSlice'
 
 const store = configureStore({
   reducer: {
+    ccInfoSlice: ccInfoSlice,
     drawerSlice: drawerSlice,
     dispensariesSlice: dispensariesSlice,
     locationSlice: locationSlice,
