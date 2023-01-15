@@ -34,10 +34,7 @@ export default function BillingForm({navigation}) {
 
     const selectedPlanData = membershipPlans.filter((plan) => plan.Id === Selected_Package_ID__c)
     const previousPlanData = membershipPlans.filter((plan) => plan.Id === Previous_Package_ID__c)
-    console.log(Number(previousPlanData[0].Package_Amount__c) - Number(selectedPlanData[0].Package_Amount__c))
-    console.log(Number(selectedPlanData[0].Package_Amount__c))
-
-    console.log(previousPlanData)
+    
 
 
 

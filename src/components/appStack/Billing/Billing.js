@@ -13,7 +13,6 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function Billing({navigation}) {
     
     const {Email, currentActivePackage, selectedPackage, packagePrice, lastChargeDate} = useSelector((state) => state.userSlice)
-    useSelector((state) => console.log(state.userSlice))
     const {ccNumber, ccExp} = useSelector((state) => state.ccInfoSlice)
     const dispatch = useDispatch()
     
@@ -79,13 +78,13 @@ export default function Billing({navigation}) {
                     <View style={styles.actionContainer}>
                         <View style={styles.btnContainer}>
                             <TouchableOpacity style={styles.btn}>
-                                <Text onPress={() => navigation.navigate("Upgrade Membership")}style={styles.btnText}>Change Membership</Text>
+                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.btnText}>Change Membership</Text>
                                 <FontAwesome name="angle-right" size={24} color="grey" />
                             </TouchableOpacity>
                         </View>
                         <View style={styles.btnContainer}>
                             <TouchableOpacity style={styles.btn}>
-                                <Text style={styles.btnText}>Purchase History</Text>
+                                <Text onPress={() => navigation.navigate("Purchase History")} style={styles.btnText}>Purchase History</Text>
                                 <FontAwesome name="angle-right" size={24} color="grey" />
                             </TouchableOpacity>
                         </View>

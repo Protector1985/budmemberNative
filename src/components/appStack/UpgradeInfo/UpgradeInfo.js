@@ -7,7 +7,7 @@ export default function UpgradeInfo({navigation}) {
     const {colorPalette} = useSelector((state) => state.userSlice)
     return (
         <View style={styles.btnContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate("Payment Information")} style={[styles.btn, {backgroundColor: colorPalette.accent}]}>
+            <TouchableOpacity onPress={() => navigation.navigate("Payment Method")} style={[styles.btn, {backgroundColor: colorPalette.accent}]}>
                 <Text style={styles.text}>Continue</Text>
             </TouchableOpacity>
         </View>

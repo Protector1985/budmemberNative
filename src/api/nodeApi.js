@@ -65,6 +65,16 @@ export const signIn = async (signInObject) => {
     }
 }
 
+export const getPurchaseHistory = async (cancelToken) => {
+    try {
+        const headers = await setToken()
+        const purchaseHistory = await axios.get(ENDPOINT + "/payments", {headers, cancelToken})
+        return purchaseHistory
+    } catch (err) {
+        console.log(err)
+    }
+}
+
 export const signUp = async (signUpObject) => {
     try {
         const serverResponse = await axios.post(ENDPOINT + "/user/register", signUpObject)

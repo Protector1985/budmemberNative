@@ -9,10 +9,12 @@ import locationSlice from './locationSlice'
 import membershipPlanSlice from './membershipPlanSlice'
 import paymentInfoSlice from './paymentInfoSlice'
 import systemSlice from './systemSlice'
+import userPurchasesSlice from './userPurchasesSlice'
 import userSlice from './userSlice'
 
 const store = configureStore({
   reducer: {
+    userPurchasesSlice: userPurchasesSlice,
     ccInfoSlice: ccInfoSlice,
     drawerSlice: drawerSlice,
     dispensariesSlice: dispensariesSlice,

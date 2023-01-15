@@ -25,9 +25,7 @@ export default function MapScreen({navigation, initProgress}) {
    
 
    async function handlePress(item) {
-
     try {
-        
         setSliderData(dispensaries[item.Name])
         const supp = await fetchDispensary(item.Id)
         setHours(supp?.data?.data[0].Dispensary_Open_Hours__r.records)

@@ -202,9 +202,9 @@ function IosButton({color, textColor, navigation}) {
     function returnPath() {
         switch(currentOnboardingStep){
             case "update":
-                return navigation.navigate("Upgrade Info")
+                return navigation.navigate("Info")
             case "reactivation":
-                return navigation.navigate("Payment Information")
+                return navigation.navigate("Payment Method")
             case "3": 
                 return navigation.navigate("Verify Phone Number")
             case "4": 

@@ -5,6 +5,7 @@ import fetchDispensaries from './fetchDispensaries'
 import fetchImage from './fetchImage'
 import fetchPlans from './fetchPlans'
 import fetchUserData from './fetchUserData'
+import fetchUserPurchases from './fetchUserPurchases'
 import getLocation from './getLocation'
 
 export default function useInitData() {
@@ -33,6 +34,8 @@ export default function useInitData() {
             message: "Checking for your data on our servers"
         })
         
+        
+
         fetchUserData(dispatch)
         .then(async (res) => {
             if(res) {
@@ -63,6 +66,7 @@ export default function useInitData() {
                 stepsLeft: 0,
                 message: "Finishing!"
             })
+            fetchUserPurchases(dispatch)
         } else {
             //logout
         }

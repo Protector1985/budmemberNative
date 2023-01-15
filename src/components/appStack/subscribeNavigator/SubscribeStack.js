@@ -8,6 +8,7 @@ import BillingForm from '../BillingForm/BillingForm';
 import { useSelector } from 'react-redux';
 import Reactivation from '../Reactivation/Reactivation';
 import UpgradeInfo from '../UpgradeInfo/UpgradeInfo';
+import SelectPayment from '../SelectPayment/SelectPayment';
 
 const Stack = createStackNavigator();
 
@@ -41,8 +42,9 @@ export default function SubscribeStack() {
           headerLeft: ()=> null,
         }}
         name="Enter Code" component={VerifyPhoneNumber} />
-        {currentOnboardingStep === "update" ? <Stack.Screen name="Upgrade Info" component={UpgradeInfo} /> : null}
-      <Stack.Screen
+        {currentOnboardingStep === "update" ? <Stack.Screen name="Info" component={UpgradeInfo} /> : null} 
+        {currentOnboardingStep === "update" || currentOnboardingStep === "reactivate" ? <Stack.Screen name="Payment Method" component={SelectPayment} /> : null}
+        <Stack.Screen
         options={{
           headerLeft: ()=> null,
         }}
