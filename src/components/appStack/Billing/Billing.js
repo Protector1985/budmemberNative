@@ -13,6 +13,7 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function Billing({navigation}) {
     
     const {Email, currentActivePackage, selectedPackage, packagePrice, lastChargeDate} = useSelector((state) => state.userSlice)
+    useSelector((state) => console.log(state.userSlice))
     const {ccNumber, ccExp} = useSelector((state) => state.ccInfoSlice)
     const dispatch = useDispatch()
     
@@ -63,7 +64,17 @@ export default function Billing({navigation}) {
                     </View>
                     
                     
-                    : null}
+                    : 
+                    
+                    <View style={styles.subscriptionContainerChange}>
+                        <Text style={styles.subscriptionHeadline}>Subscription Details</Text>
+                        <View style={styles.subscriptionDetails}>
+                            <Text style={styles.membershipTransitionName}>Active Package: {currentActivePackage}</Text>
+                            <Text style={styles.membershipTransitionNameFuture}>Future Package: {selectedPackage}</Text>
+                            <Text style={styles.cost}>{`$${packagePrice} / month`}</Text>
+                            <Text style={styles.membershipChangeDate}>{moment(lastChargeDate).add("1", "months").format('dddd MMMM DD YYYY')}</Text>
+                    </View>
+                </View>}
 
                     <View style={styles.actionContainer}>
                         <View style={styles.btnContainer}>
@@ -155,6 +166,13 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginRight: "auto",
     },
+    subscriptionContainerChange: {
+        marginTop: 50,
+        width: "90%",
+        height: 150,
+        marginLeft: "auto",
+        marginRight: "auto",
+    },
     subscriptionHeadline: {
         fontSize: 20,
         fontWeight: "600"
@@ -168,6 +186,16 @@ const styles = StyleSheet.create({
         color: "#303f9f",
         fontSize: 21,
         fontWeight: "700",
+    },
+    membershipTransitionName: {
+        color: "#303f9f",
+        fontSize: 17,
+        fontWeight: "400",
+    },
+    membershipTransitionNameFuture: {
+        color: "#303f9f",
+        fontSize: 18,
+        fontWeight: "600",
     },
     cost: {
         color: "#303F9F",
@@ -194,6 +222,10 @@ const styles = StyleSheet.create({
     },
     actionContainer: {
         marginTop: "15%",
+    },
+    membershipChangeDate:{
+        color: "whitesmoke",
+        fontSize: 16,
     }
 
 })

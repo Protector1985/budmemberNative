@@ -122,14 +122,14 @@ function Card({animationValue, index, colorPalette, item}) {
 }
 
 export default function PlanSelect({navigation}) {
-    const {colorPalette, Previous_Package_ID__c} = useSelector((state) => state.userSlice)
+    const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
     const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
     const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
      
-    const filtered = membershipPlans.filter((item) => item.Id !== Previous_Package_ID__c)
+    const filtered = membershipPlans.filter((item) => item.Id !== Selected_Package_ID__c)
     const carouselItems = filtered
     
 

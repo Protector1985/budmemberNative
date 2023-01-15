@@ -18,7 +18,7 @@ export default function BillingForm({navigation}) {
     const billingInformation = useSelector((state) => state.billingSlice)
     useSelector((state) => console.log(state.userSlice))
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
-    const {colorPalette, Email, lastChargeDate, Previous_Package_ID__c } = useSelector((state) => state.userSlice)
+    const {colorPalette, Email, lastChargeDate, Previous_Package_ID__c, Selected_Package_ID__c } = useSelector((state) => state.userSlice)
     const {selectedPlan, previousPlan, membershipPlans} = useSelector((state) => state.membershipPlanSlice)
     const [streetAddress, setStreetAddress] = React.useState("");
     const [city, setCity] = React.useState("");
@@ -32,12 +32,12 @@ export default function BillingForm({navigation}) {
     const [alertType, setAlertType] = React.useState("")
     const {fetchAllDataUpdate} = useInitData();
 
-    const selectedPlanData = membershipPlans.filter((plan) => plan.Id === selectedPlan)
+    const selectedPlanData = membershipPlans.filter((plan) => plan.Id === Selected_Package_ID__c)
     const previousPlanData = membershipPlans.filter((plan) => plan.Id === Previous_Package_ID__c)
-    console.log(selectedPlanData[0].Package_Amount__c)
+    console.log(Number(previousPlanData[0].Package_Amount__c) - Number(selectedPlanData[0].Package_Amount__c))
+    console.log(Number(selectedPlanData[0].Package_Amount__c))
 
-    console.log(previousPlanData[0].Package_Amount__c)
-
+    console.log(previousPlanData)
 
 
 
@@ -114,10 +114,12 @@ export default function BillingForm({navigation}) {
                 email: Email,
                 startDate: lastChargeDate,
                 newMembershipAmount: selectedPlanData[0].Package_Amount__c, 
-                dueNow: Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Number(selectedPlanData[0].Package_Amount__c)-Number(previousPlanData[0].Package_Amount__c) , //if downgrade 0 if upgrade diff between lower and higher
+                dueNow: Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Math.abs(Number(selectedPlanData[0].Package_Amount__c) - Number(previousPlanData[0].Package_Amount__c)) , //if downgrade 0 if upgrade diff between lower and higher
                 packageId: selectedPlanData[0].Id,
                 oldPackageId: previousPlanData[0].Id
             }
+
+            
             //below function is used for upgrade AND downgrade 
             const res = await upgradeMembership(paymentPackage)
               if(res?.data?.success) {
