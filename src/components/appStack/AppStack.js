@@ -4,29 +4,34 @@ import TabNavigator from "./TabNavigator/TabNavigator";
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import SideDrawer from './SideDrawer/SideDrawer.js';
 import { createStackNavigator } from '@react-navigation/stack';
-import { useSelector } from 'react-redux';
-
+import { useDispatch, useSelector } from 'react-redux';
+import _init from './lib/_init';
 
 
 const Stack = createStackNavigator();
 
 export default function AppStack() {
-  
+    
+    const dispatch = useDispatch();
     const [navigation, setNavigation] = React.useState(null)
     const {userSlice} = useSelector((state) => state)
-    // const {initProgress, fetchAllData} = useInitData()
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
+    const {avatarUri} = userSlice
     const {open} = useSelector((state)=> state.drawerSlice)
     const menu = <SideDrawer navigation={navigation} />
-    // useEffect(() => fetchAllData(), [])
-    
+    const [initState, setInitState] = React.useState({
+        progress: 0.01,
+        stepsLeft: 5,
+        message: "Initializing"
+    })
+    React.useEffect(() => {
+        _init(userSlice, cognitoData, avatarUri, dispatch, setInitState)
+    }, [])
+  
     return (
             
             <ActionSheetProvider>
-                <TabNavigator initProgress={{
-                    progress: 0.99,
-                    stepsLeft: 0,
-                    message: "Almost Done!"
-                }} />
+                <TabNavigator initProgress={initState} />
             </ActionSheetProvider>
             
             

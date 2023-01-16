@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Touchable } from "react-native";
 import { useSelector } from 'react-redux';
+import submitExisting from './lib/submitExistingCard';
 
 
 function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
@@ -27,10 +28,17 @@ function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
 }
 
 
-export default function SelectPayment() {
+export default function SelectPayment({navigation}) {
     const [paymentMethods, setPaymentMethods] = React.useState([])
     const [selectionIndex, setSelectionIndex] = React.useState(0)
-    const {Email, colorPalette} = useSelector((state) => state.userSlice)
+    const {
+        Email, 
+        colorPalette, 
+        FirstName, 
+        LastName, 
+        MailingCity, 
+        MailingState, 
+        MailingStreet} = useSelector((state) => state.userSlice)
     const {ccNumber} = useSelector((state) => state.ccInfoSlice)
     
     async function fetchCCInfo(Email, cancelToken) {
@@ -63,6 +71,32 @@ React.useEffect(() => {
     }
   }, [Email])
 
+  function handlePress() {
+
+    switch(paymentMethods[selectionIndex].type) {
+        case "ADD":
+            return navigation.navigate("Payment Information")
+        case "EXISTING":
+           
+            // return submitExisting(
+            //     FirstName, 
+            //     LastName, 
+            //     paymentInfo, 
+            //     MailingStreet, 
+            //     MailingCity, 
+            //     MailingState, 
+            //     zip, 
+            //     Email, 
+            //     lastChargeDate, 
+            //     packageId, 
+            //     setAlertOpen, 
+            //     setLoading, 
+            //     setAlertMessage, 
+            //     setAlertType) 
+            break;
+    }
+  }
+
     return(
         <View style={styles.container}>
             <View style={styles.headerContainer}>
@@ -72,6 +106,11 @@ React.useEffect(() => {
                 data={paymentMethods}
                 renderItem={({item, index}) => <Card selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
             />
+            <View style={styles.btnContainer}>
+                <TouchableOpacity onPress={handlePress} style={[styles.continueBtn, {backgroundColor: colorPalette.accent}]}>
+                    <Text style={styles.continueText}>Continue</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
@@ -112,6 +151,26 @@ const styles = StyleSheet.create({
         width:"90%",
         marginLeft: "auto",
         marginRight: "auto",
+    },
+    btnContainer: {
+        width: "90%",
+        height: 65,
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginBottom: 25,
+    },
+    continueBtn: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height: "100%",
+        borderRadius: 8,
+    },
+    continueText: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "600"
+
     }
 
 })

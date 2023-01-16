@@ -8,7 +8,7 @@ import { setBillingInfo } from "../../../store/billingSlice";
 import { createNewSubscription, upgradeMembership } from "../../../api/nodeApi";
 import Alert from "../../utils/Alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import useInitData from "../lib/useInitData";
+import _init from "../lib/_init";
 import { states } from "./states";
 
 
@@ -16,7 +16,7 @@ export default function BillingForm({navigation}) {
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
     const { currentOnboardingStep } = useSelector((state) => state.systemSlice)
     const billingInformation = useSelector((state) => state.billingSlice)
-    useSelector((state) => console.log(state.userSlice))
+   
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
     const {colorPalette, Email, lastChargeDate, Previous_Package_ID__c, Selected_Package_ID__c } = useSelector((state) => state.userSlice)
     const {selectedPlan, previousPlan, membershipPlans} = useSelector((state) => state.membershipPlanSlice)
@@ -30,7 +30,14 @@ export default function BillingForm({navigation}) {
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
-    const {fetchAllDataUpdate} = useInitData();
+    const {userSlice} = useSelector((state) => state)
+    const dispatch = useDispatch();
+    const {avatarUri} = userSlice
+    const [initState, setInitState] = React.useState({
+        progress: 0.01,
+        stepsLeft: 5,
+        message: "Initializing"
+    })
 
     const selectedPlanData = membershipPlans.filter((plan) => plan.Id === Selected_Package_ID__c)
     const previousPlanData = membershipPlans.filter((plan) => plan.Id === Previous_Package_ID__c)
@@ -61,7 +68,6 @@ export default function BillingForm({navigation}) {
               cardNumber: paymentInfo.cardNumber.trim(),
               cvv: paymentInfo.cvv,
               Email_Opt_Out__c: false,
-              
             },
           };
           
@@ -157,7 +163,7 @@ export default function BillingForm({navigation}) {
     return (
         <SafeAreaView style={styles.container} >
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
-        <Alert callBack={fetchAllDataUpdate} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
+        <Alert callBack={() => _init(userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
             <KeyboardAvoidingView style={styles.inputContainer}>
             <View style={styles.inputSub}>
                 <FloatingLabelInput

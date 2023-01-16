@@ -15,9 +15,18 @@ import { setShowDatePick } from '../../../store/systemSlice';
 
 
 const Stack = createStackNavigator()
-export default function ProfileStack({navigation, userSlice, Email, FirstName, LastName, MobilePhone, currentActivePackage, avatarUri}) {
+export default function ProfileStack({navigation}) {
+  const {
+    MobilePhone,
+    Email, 
+    FirstName, 
+    LastName, 
+    currentActivePackage,
+    avatarUri,
+    Birthdate
+   } = useSelector((state) => state.userSlice)
+   const {userSlice} = useSelector((state) => state)
   const [loading, setLoading] = React.useState(false)
-  const {Birthdate} = useSelector((state) => state.userSlice)
   const {showDatePick} = useSelector((state) => state.systemSlice)
   const [localFirst, setLocalFirst] = React.useState(FirstName);
   const [localLast, setLocalLast] = React.useState(LastName);

@@ -10,7 +10,17 @@ import SideDrawer from '../../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
 
 
-export default function Profile({ email, firstName, lastName, phone, birthDate, membership, image, navigation}) {
+export default function Profile({ navigation}) {
+    const {
+        MobilePhone,
+        Email, 
+        FirstName, 
+        LastName, 
+        currentActivePackage,
+        avatarUri,
+        Birthdate
+       } = useSelector((state) => state.userSlice)
+    
     const colors = useSelector((state) => state.userSlice.colorPalette)
     const {open} = useSelector((state)=> state.drawerSlice)
     const menu = <SideDrawer navigation={navigation} />
@@ -37,10 +47,10 @@ export default function Profile({ email, firstName, lastName, phone, birthDate, 
                 
             </LinearGradient>
                 <View style={styles.avatarContainer}>
-                        <UserAvatar style={styles.profilePic} size={97} name={`${firstName} ${lastName}`} src={image}  />
+                        <UserAvatar style={styles.profilePic} size={97} name={`${FirstName} ${LastName}`} src={avatarUri}  />
                         <View style={styles.nameContainer}>
-                            <Text style={styles.name}>{`${firstName} ${lastName}`}</Text>
-                            <Text style={styles.membership}>{!membership ? "Not Subscribed" : membership}</Text>
+                            <Text style={styles.name}>{`${FirstName} ${LastName}`}</Text>
+                            <Text style={styles.membership}>{!currentActivePackage ? "Not Subscribed" : currentActivePackage}</Text>
                         </View>
                 </View>
             </View>
@@ -48,15 +58,15 @@ export default function Profile({ email, firstName, lastName, phone, birthDate, 
             <ScrollView style={styles.inputContainer}>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Your Email</Text>
-                    <Text style={styles.textDisplay}>{email}</Text>
+                    <Text style={styles.textDisplay}>{Email}</Text>
                 </View>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Phone</Text>
-                    <Text style={styles.textDisplay}>{phone}</Text>
+                    <Text style={styles.textDisplay}>{MobilePhone}</Text>
                 </View>
                 <View style={styles.inputSubContainer} >
                     <Text style={styles.label}>Birth Date</Text>
-                    <Text style={styles.textDisplay}>{moment(birthDate).format("MM/DD/YYYY")}</Text>
+                    <Text style={styles.textDisplay}>{moment(Birthdate).format("MM/DD/YYYY")}</Text>
                 </View>
             </ScrollView> 
         </SafeAreaView>

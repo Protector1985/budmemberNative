@@ -25,7 +25,10 @@ return (
 
 export default function SideDrawer(props) {
     const colors = useSelector((state) => state.userSlice.colorPalette)
-
+    const {FirstName, LastName, Membership_Status__c, avatarUri} = useSelector((state) => state.userSlice)
+    const {totalSavings} = useSelector((state) => state.userPurchasesSlice)
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
+     
 return(
         <ScrollView style={styles.container}>
         <LinearGradient
@@ -41,15 +44,15 @@ return(
             start={{x: 0.5, y: 0}}
             end={{x: 1, y: 0.7}}
             >
-            <UserAvatar style={styles.profile} size={76} name={`${props.FirstName} ${props.LastName}`} src={props.avatarUri}  />
-                <Text style={styles.name}>{`${props.FirstName} ${props.LastName}`}</Text>
+            <UserAvatar style={styles.profile} size={76} name={`${FirstName} ${LastName}`} src={avatarUri}  />
+                <Text style={styles.name}>{`${FirstName} ${LastName}`}</Text>
                 <View style={{flexDirection:'row', alignItems:"center"}}>
-                    <Text style={styles.savings}>$1045 Saved</Text>
+                    <Text style={styles.savings}>{`Total Savings: $${totalSavings}`}</Text>
                 </View>
             </LinearGradient>
             <View style={styles.listItems}>
                 <DrawerItem {...props} screenName="Profile" />
-                <DrawerItem {...props} screenName="Billing" />
+                {Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"] ? <DrawerItem {...props} screenName="Billing" /> : null}
                 <DrawerItem {...props} screenName="Contact Us" />
             </View>
         </ScrollView>
