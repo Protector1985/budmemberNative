@@ -28,7 +28,7 @@ export default function SubscribeStack() {
     }
   }
  
-  console.log(currentOnboardingStep)
+
   return (
     <Stack.Navigator>
       <Stack.Screen name="Become a Budmember" >

@@ -1,14 +1,23 @@
+import React from 'react';
 import {View, SafeAreaView, Text, StyleSheet, Dimensions} from 'react-native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { LinearGradient } from 'expo-linear-gradient';
+import { closeDrawer } from '../../../store/drawerSlice';
 const width = Dimensions.get('window').width * 0.9
 
 export default function SubscriptionData() {
     const {FirstName, LastName, Birthdate, Membership_Status__c} = useSelector((state) => state.userSlice)
     const {colorPalette} = useSelector((state) => state.userSlice);
     const {sub} = useSelector((state) => state.cognitoDataSlice.cognitoData)
+    const dispatch = useDispatch();
+
+    //closes drawer in case it is open
+    React.useEffect(() => {
+        dispatch(closeDrawer())
+    },[])
     
+
     return (
         <View style={styles.container}>
            

@@ -2,9 +2,17 @@ import {Text, StyleSheet, Platform, View, TouchableOpacity} from 'react-native';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
 export default function Alert({callBack, visible, type, message, setVisible, navigation, location}) {
   
+  const dispatch = useDispatch();
+  
+  //closes drawer on page change
+  React.useEffect(() => {
+    dispatch(closeDrawer())
+  },[])
+
     function handlePress() {
         switch(type) {
           case "SUCCESS":

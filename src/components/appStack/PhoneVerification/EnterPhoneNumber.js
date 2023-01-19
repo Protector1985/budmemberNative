@@ -7,6 +7,7 @@ import { findMemberByPhone, updateUser } from '../../../api/nodeApi';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Alert from '../../utils/Alert';
 import { setPhoneNumber } from '../../../store/userSlice';
+import { closeDrawer } from '../../../store/drawerSlice';
 
 
 const width = Dimensions.get('window').width
@@ -73,6 +74,12 @@ export default function EnterPhoneNumber({navigation}) {
     const [alertType, setAlertType] = React.useState("")
     const [loading, setLoading] = React.useState(false);
     const {colorPalette} = useSelector((state) => state.userSlice)
+    
+    const dispatch = useDispatch()
+    //closes drawer on page change
+    React.useEffect(() => {
+        dispatch(closeDrawer())
+    },[])
     
     function onTextChange(text) {
         var cleaned = ('' + text).replace(/\D/g, '')

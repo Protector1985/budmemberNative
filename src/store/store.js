@@ -8,12 +8,14 @@ import drawerSlice from './drawerSlice'
 import locationSlice from './locationSlice'
 import membershipPlanSlice from './membershipPlanSlice'
 import paymentInfoSlice from './paymentInfoSlice'
+import permissionSlice from './permissionSlice'
 import systemSlice from './systemSlice'
 import userPurchasesSlice from './userPurchasesSlice'
 import userSlice from './userSlice'
 
 const store = configureStore({
   reducer: {
+    permissionSlice: permissionSlice,
     userPurchasesSlice: userPurchasesSlice,
     ccInfoSlice: ccInfoSlice,
     drawerSlice: drawerSlice,

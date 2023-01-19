@@ -32,6 +32,26 @@ export const upgradeMembership = async (dataPackage) => {
     }
 }
 
+export const cardOnFileMembershipChange = async (email, packageId, dueNow, isApplePay) => {
+    try {
+        const headers = await setToken()
+        const res = await axios.post(ENDPOINT + "/cardOnFileMembershipChange", {email, packageId, dueNow, isApplePay}, { headers })
+        return res
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+export const submitCreditRecharge = async (data) => {
+    try {
+        const headers = await setToken()
+        const rechargeRes = await axios.post(ENDPOINT + "/recharge", data, { headers })
+        return rechargeRes 
+    } catch (err) {
+        console.error(err)
+    }
+}
+
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  
     try {

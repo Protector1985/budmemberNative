@@ -4,13 +4,14 @@ import MapView, {Marker} from 'react-native-maps';
 import SearchBar from "react-native-dynamic-search-bar";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import BottomSheet from 'react-native-simple-bottom-sheet';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import BottomSlider from '../BottomSlider/BottomSlider'
 import { fetchDispensary } from '../../../api/nodeApi';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
+import { closeDrawer } from '../../../store/drawerSlice';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,8 +22,14 @@ export default function MapScreen({navigation, initProgress}) {
    const {dispensaries} = useSelector((state) => state.dispensariesSlice)
    const {open} = useSelector((state)=> state.drawerSlice)
    const [hours, setHours] = React.useState()
+   const dispatch = useDispatch()
    const menu = <SideDrawer navigation={navigation} />
    
+
+   //closes drawer in case it is open
+   React.useEffect(() => {
+        dispatch(closeDrawer())
+   },[])
 
    async function handlePress(item) {
     try {

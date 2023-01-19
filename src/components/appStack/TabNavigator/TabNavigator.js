@@ -2,43 +2,26 @@ import {View, TouchableOpacity, Text, SafeAreaView, StyleSheet} from 'react-nati
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Entypo } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
-import MapView from 'react-native-maps';
 import MapScreen from '../MapScreen/MapScreen';
-import QrCode from "../QrCode/QrCode"
 import Profile from '../Profile/Screens/Profile'
-import Billing from '../Billing/Billing';
 import ContactUs from '../ContactUs/ContactUs';
 import CustomTabBarButton from './CustomTabBarButton';
-import { DrawerActions } from '@react-navigation/native';
-import { FlipInEasyX } from 'react-native-reanimated';
-import ProfileStack from '../Profile/ProfileStack';
-import CTA from '../CTA/CTA';
 import SubscribeStack from '../subscribeNavigator/SubscribeStack';
 import { useSelector } from 'react-redux';
-
 import QrCodeStack from '../QrCode/QrCodeStack';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
-import Reactivation from '../Reactivation/Reactivation';
 import BillingStackNavigator from './BillingStackNavigator/BillingStackNavigator';
-
-
-
-
 
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator({initProgress, firstEl, returnNav}) {
-  
-
     const {Membership_Status__c} = useSelector((state) => state.userSlice);
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {open} = useSelector((state)=> state.drawerSlice)
   
-    console.log(cognitoData["custom:authorizeSubId"])
 
-    
 
     function returnStack(props, menu) {
         try {

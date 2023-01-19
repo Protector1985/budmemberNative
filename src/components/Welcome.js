@@ -1,11 +1,39 @@
 import { View, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import {useFonts} from 'expo-font'
 import { AntDesign } from '@expo/vector-icons'; 
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+
+import React from 'react';
+import { useDispatch } from "react-redux";
+import Alert from "./utils/Alert";
+import { setLocationPermission } from "../store/permissionSlice";
+import * as Location from 'expo-location';
 
 export default function Welcome({navigation}) {
+    const [alertOpen, setAlertOpen] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState("")
+    const [alertType, setAlertType] = React.useState("")
+    const dispatch = useDispatch()
+ 
 
+    React.useEffect(() => {
+      async function requestPermissions() {
+        try {
+            const {status} = await Location.requestForegroundPermissionsAsync();
+     
+        if (status !== 'granted') {
+          setAlertOpen(true);
+          setAlertMessage("Some features of this app might not be available without location permission")
+          setAlertType("WARNING")
+        }
+        dispatch(setLocationPermission(true))
+
+        }catch (err) {
+            console.log(err)
+        }
+    }
+        requestPermissions()
+    
+    },[])
 
 
       function handleNavigation() {
@@ -15,6 +43,7 @@ export default function Welcome({navigation}) {
     return(
         <View style={styles.masterContainer}>
         <View style={styles.imgContainer}>
+                <Alert visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
                 <Image style={styles.logo} source={require('./authStack/login/logo.jpg')} />
         </View>
         

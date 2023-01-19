@@ -1,11 +1,16 @@
 import axios from 'axios';
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Touchable } from "react-native";
-import { useSelector } from 'react-redux';
-import submitExisting from './lib/submitExistingCard';
+import { ActivityIndicator } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import Alert from '../../utils/Alert';
+import _init from '../lib/_init';
+import changeWithCardOnFile from './lib/changeWithCardOnFile';
+import submitExisting from './lib/changeWithCardOnFile';
 
 
 function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
+    
     const {colorPalette} = useSelector((state) => state.userSlice)
     function returnCard() {
         switch(method) {
@@ -30,22 +35,41 @@ function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
 
 export default function SelectPayment({navigation}) {
     const [paymentMethods, setPaymentMethods] = React.useState([])
+    const {selectedPlan,  membershipPlans} = useSelector((state) => state.membershipPlanSlice)
+    useSelector((state) => console.log(state.membershipPlanSlice))
+    const paymentInfo = useSelector((state) => state.paymentInfoSlice)
+    const {locationPermission} = useSelector((state) => state.permissionSlice)
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
+    
+    const {userSlice} = useSelector((state) => state)
+    const {avatarUri} = userSlice
+    const dispatch = useDispatch()
     const [selectionIndex, setSelectionIndex] = React.useState(0)
+    const [alertOpen, setAlertOpen] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState("")
+    const [alertType, setAlertType] = React.useState("")
+
+    const [loading, setLoading] = React.useState(false);
     const {
         Email, 
+        packageId,
+        lastChargeDate,
         colorPalette, 
-        FirstName, 
-        LastName, 
-        MailingCity, 
-        MailingState, 
-        MailingStreet} = useSelector((state) => state.userSlice)
+        Selected_Package_ID__c, 
+        Previous_Package_ID__c} = useSelector((state) => state.userSlice)
     const {ccNumber} = useSelector((state) => state.ccInfoSlice)
+    const [initState, setInitState] = React.useState({
+        progress: 0.01,
+        stepsLeft: 5,
+        message: "Initializing"
+    })
     
     async function fetchCCInfo(Email, cancelToken) {
         const res = await getCreditCardInfo(Email, cancelToken);
         dispatch(setCCInfo({ccNumber: res.data.data.ccNumber.split("").join(' ').replace("x x x x x x x x x x x", "* * * * * * * * "), ccExp: res.data.data.ccExpiration}))  
     }
-
+    console.log(Selected_Package_ID__c)
+    console.log(Previous_Package_ID__c)
 
     React.useEffect(() => {
         if(ccNumber) {
@@ -71,35 +95,39 @@ React.useEffect(() => {
     }
   }, [Email])
 
-  function handlePress() {
-
+  async function handlePress() {
+    setLoading(true)
     switch(paymentMethods[selectionIndex].type) {
         case "ADD":
             return navigation.navigate("Payment Information")
         case "EXISTING":
            
-            // return submitExisting(
-            //     FirstName, 
-            //     LastName, 
-            //     paymentInfo, 
-            //     MailingStreet, 
-            //     MailingCity, 
-            //     MailingState, 
-            //     zip, 
-            //     Email, 
-            //     lastChargeDate, 
-            //     packageId, 
-            //     setAlertOpen, 
-            //     setLoading, 
-            //     setAlertMessage, 
-            //     setAlertType) 
+    
+            const res = await changeWithCardOnFile(Email, selectedPlan, Previous_Package_ID__c, membershipPlans)
+            console.log(res)
+            if(res.data.success) {
+                setAlertOpen(true);
+                setAlertMessage("Your plan was successfully changed")
+                setAlertType("SUCCESS")
+                setLoading(false)
+            } else {
+                setAlertOpen(true);
+                setAlertMessage(res.data.msg)
+                setAlertType("ERROR")
+                setLoading(false)
+            }
+                if(res) {
+                    setLoading(false)
+                }
             break;
     }
   }
 
     return(
         <View style={styles.container}>
+        <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
             <View style={styles.headerContainer}>
+            <Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
                 <Text style={styles.headline}>Select a payment method</Text>
             </View>
             <FlatList
@@ -107,7 +135,7 @@ React.useEffect(() => {
                 renderItem={({item, index}) => <Card selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
             />
             <View style={styles.btnContainer}>
-                <TouchableOpacity onPress={handlePress} style={[styles.continueBtn, {backgroundColor: colorPalette.accent}]}>
+                <TouchableOpacity disabled={loading} onPress={handlePress} style={[styles.continueBtn, {backgroundColor: colorPalette.accent}]}>
                     <Text style={styles.continueText}>Continue</Text>
                 </TouchableOpacity>
             </View>
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
     },
     cardContainer: {
         width: "90%",
-        height: 180,
+        height: 90,
         marginLeft: "auto",
         marginRight: "auto",
         borderRadius: 8,

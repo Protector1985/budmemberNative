@@ -1,9 +1,12 @@
+import React from 'react';
+
 import { useState } from 'react';
 import {Modal, View, Text, StyleSheet, Image, Dimensions, Platform} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeDrawer } from '../../../store/drawerSlice';
 //CTA == call to action!
 
 
@@ -90,7 +93,13 @@ function AndroidButtons({navigation}) {
 
 
 export default function CTA(props) {
-    console.log(props)
+    const dispatch = useDispatch()
+    
+    
+    React.useEffect(() => {
+        dispatch(closeDrawer())
+   },[])
+
     return( 
         
             <SafeAreaView style={styles.masterContainer}>

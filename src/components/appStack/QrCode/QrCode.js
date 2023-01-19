@@ -1,22 +1,28 @@
+import React from 'react'
 import QRCode from 'react-native-qrcode-svg';
 import { AntDesign } from '@expo/vector-icons'
 import { Text, SafeAreaView, StyleSheet, Dimensions, Image, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import SideDrawer from '../SideDrawer/SideDrawer';
+import { closeDrawer } from '../../../store/drawerSlice';
 
 
 export default function QrCode(props) {
-  const {navigation} = props
-  const menu = <SideDrawer navigation={navigation} />
-  const {sub} = useSelector((state) => state.cognitoDataSlice.cognitoData);
-  const {open} = useSelector((state)=> state.drawerSlice)
-  const {colorPalette} = useSelector((state) => state.userSlice)
-  const size = Dimensions.get("window").width * 0.6;
+    const {navigation} = props
+    const menu = <SideDrawer navigation={navigation} />
+    const {sub} = useSelector((state) => state.cognitoDataSlice.cognitoData);
+    const {open} = useSelector((state)=> state.drawerSlice)
+    const {colorPalette} = useSelector((state) => state.userSlice)
+    const size = Dimensions.get("window").width * 0.6;
+    const dispatch = useDispatch();
+  
+    //closes drawer in case it is open
+    React.useEffect(() => {
+      dispatch(closeDrawer())
+    },[])
 
     return (
-      
         <SafeAreaView style={styles.container}>
-  
           <Image style={styles.logo} source={require("../../../assets/pictures/logo_white.png")} />
           <Text style={styles.text}>Show this QR code to the Budtender when ready: </Text>
           <QRCode

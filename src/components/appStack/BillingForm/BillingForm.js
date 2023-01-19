@@ -16,7 +16,7 @@ export default function BillingForm({navigation}) {
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
     const { currentOnboardingStep } = useSelector((state) => state.systemSlice)
     const billingInformation = useSelector((state) => state.billingSlice)
-   
+    const {locationPermission} = useSelector((state) => state.permissionSlice)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
     const {colorPalette, Email, lastChargeDate, Previous_Package_ID__c, Selected_Package_ID__c } = useSelector((state) => state.userSlice)
     const {selectedPlan, previousPlan, membershipPlans} = useSelector((state) => state.membershipPlanSlice)
@@ -163,7 +163,7 @@ export default function BillingForm({navigation}) {
     return (
         <SafeAreaView style={styles.container} >
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
-        <Alert callBack={() => _init(userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
+        <Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
             <KeyboardAvoidingView style={styles.inputContainer}>
             <View style={styles.inputSub}>
                 <FloatingLabelInput

@@ -16,6 +16,7 @@ export default function AppStack() {
     const [navigation, setNavigation] = React.useState(null)
     const {userSlice} = useSelector((state) => state)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
+    const {locationPermission} = useSelector((state) => state.permissionSlice)
     const {avatarUri} = userSlice
     const {open} = useSelector((state)=> state.drawerSlice)
     const menu = <SideDrawer navigation={navigation} />
@@ -25,7 +26,7 @@ export default function AppStack() {
         message: "Initializing"
     })
     React.useEffect(() => {
-        _init(userSlice, cognitoData, avatarUri, dispatch, setInitState)
+        _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)
     }, [])
   
     return (

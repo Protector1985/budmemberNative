@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { LiquidLike } from 'react-native-animated-pagination-dots';
 import { setSelectedPlan } from '../../../store/membershipPlanSlice';
+import { closeDrawer } from '../../../store/drawerSlice';
 
 
 function Card({animationValue, index, colorPalette, item}) {
@@ -128,6 +129,9 @@ export default function PlanSelect({navigation}) {
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
+    React.useEffect(() => {
+        dispatch(closeDrawer())
+    },[])
      
     const filtered = membershipPlans.filter((item) => item.Id !== Selected_Package_ID__c)
     const carouselItems = filtered
@@ -135,6 +139,7 @@ export default function PlanSelect({navigation}) {
 
     
     React.useEffect(() => {
+       
         dispatch(setSelectedPlan(carouselItems[0]?.Id))
     },[])
    

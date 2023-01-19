@@ -16,9 +16,10 @@ import styles, {
   NOT_EMPTY_CELL_BG_COLOR,
 } from './styles';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { phoneNumberVerification, updateUser } from '../../../api/nodeApi';
 import Alert from '../../utils/Alert';
+import { closeDrawer } from '../../../store/drawerSlice';
 
 const {Value, Text: AnimatedText} = Animated;
 
@@ -54,6 +55,13 @@ function VerifyPhoneNumber({navigation}){
   const [alertType, setAlertType] = useState("")
   const [alertOpen, setAlertOpen] = useState(false)
   const {colorPalette, MobilePhone, Email} = useSelector((state) => state.userSlice)
+
+  const dispatch = useDispatch()
+    
+    React.useEffect(() => {
+        dispatch(closeDrawer())
+    },[])
+
 
   function sanitizeNumber(MobilePhone) {
     var cleaned = ('' + MobilePhone).replace(/\D/g, '')

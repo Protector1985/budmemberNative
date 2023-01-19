@@ -8,62 +8,76 @@ import fetchUserData from './fetchUserData'
 import fetchUserPurchases from './fetchUserPurchases'
 import getLocation from './getLocation'
 
-export default function _init(userSlice, cognitoData, avatarUri, dispatch, setInitState) {
+export default function _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState) {
     
-
-
-    function fetchData() {
+    async function fetchData() {
         try {
         //gets location
         setInitState({
             progress: 0.10,
-            stepsLeft: 4,
+            stepsLeft: 8,
             message: "Getting permissions/fetching dispensaries"
         })
-        getLocation(dispatch)
-        fetchDispensaries(dispatch, cognitoData)
+        
         //fetches initial user state
         setInitState({
-            progress: 0.20,
-            stepsLeft: 4,
+            progress: 0.25,
+            stepsLeft: 7,
             message: "Checking for your data on our servers"
         })
-        fetchUserData(dispatch)
-        .then(async (res) => {
+        const res = await fetchUserData(dispatch)
             if(res) {
+                setInitState({
+                    progress: 0.25,
+                    stepsLeft: 6,
+                    message: "Found you! Fetching your location"
+                })
+                
+            getLocation(dispatch, locationPermission)
             setInitState({
-                progress: 0.25,
-                stepsLeft: 3,
-                message: "Found you! Fetching your avatar picture"
+                progress: 0.35,
+                stepsLeft: 5,
+                message: "Fetching your avatar picture"
             })
-            const steps = []
             //fetches avatar picture
-            const imageFetched = await fetchImage(res.Email, dispatch, avatarUri)
+            await fetchImage(res?.Email, dispatch, avatarUri)
             setInitState({
                 progress: 0.60,
-                stepsLeft: 2,
-                message: "Awesome! Looking for your store's plans"
+                stepsLeft: 4,
+                message: "Awesome! Looking for stores in your area"
             })
             //fetches plans (packages) by store
-            const plansFetched = await fetchPlans(dispatch, res.OwnerId)
+            await fetchDispensaries(dispatch, cognitoData)
+            setInitState({
+                progress: 0.86,
+                stepsLeft: 3,
+                message: "Checking your previous purchases"
+            })
+            fetchUserPurchases(dispatch)
+            setInitState({
+                progress: 0.86,
+                stepsLeft: 2,
+                message: "Finding the plans of your favorite store!"
+            })
+            await fetchPlans(dispatch, res?.OwnerId)
             setInitState({
                 progress: 0.92,
                 stepsLeft: 1,
                 message: "You have tons of options! Finishing up your profile!"
             })
-            //fetches cognito information
-            const cognitoFetched = await fetchCognitoUser(dispatch, res.Email, res.Membership_Status__c)
+             //fetches cognito information
+            
+            await fetchCognitoUser(dispatch, res.Email, res.Membership_Status__c)
             setInitState({
                 progress: 0.99,
                 stepsLeft: 0,
                 message: "Finishing!"
             })
-            fetchUserPurchases(dispatch)
-            
+                   
         } else {
             //logout
         }
-     })    
+   
     }catch(err) {
         console.log(err)
     }
