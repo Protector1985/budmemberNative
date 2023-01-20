@@ -1,11 +1,75 @@
+import React from 'react';
 import {View, Text, TextInput, StyleSheet, Image} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {useFonts} from 'expo-font'
+import { forgotPassword, resetPassword } from '../../../api/nodeApi';
+import Alert from '../../utils/Alert';
 
-export default function ForgotPassword() {
+export default function ForgotPassword({navigation}) {
+    console.log(navigation?.state?.params)
+    const [email, setEmail] = React.useState(navigation?.state?.params?.email || "");
+    const [loading, setLoading] = React.useState(false)
+    const [alertOpen, setAlertOpen] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState("")
+    const [alertType, setAlertType] = React.useState("")
+    const [code, setCode] = React.useState("")
+    const [password, setPassword] = React.useState("")
+    const [confirmedPassword, setConfirmedPassword] = React.useState("")
+    let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
+    async function handleResetPassword(email, code, new_password){
+        setLoading(true);
+        if(password !== confirmedPassword) {
+            setAlertOpen(true);
+            setAlertMessage("The passwords don't match")
+            setAlertType("ERROR")
+        } else if(password === confirmedPassword) {
+            if(mediumPassword.test(password)) {
+                if(code.length > 2) {
+
+                    try {
+                    const response = await resetPassword({email, code, password});
+                    if(response?.data?.success){
+                        setAlertOpen(true);
+                        setAlertMessage("Your password was successfully reset")
+                        setAlertType("SUCCESS")
+                        
+                       
+                    }else{
+                        setAlertOpen(true);
+                        setAlertMessage("Something went wrong")
+                        setAlertType("ERROR")
+                  
+                    }
+                    } catch (error) {
+                    console.log(error)
+                    }finally{
+                    setLoading(false)
+                    }
+            } else if(code.length < 2) {
+                setAlertOpen(true);
+                setAlertMessage("Your code doesn't look right")
+                setAlertType("ERROR")
+                setLoading(false)
+            }
+        } else {
+            setAlertOpen(true);
+            setAlertMessage(`Your password is too weak!
+                Your password has to abide by the rules below:
+                - At least 8 characters long.
+                - Contain at least one upper- and one lowercase letter.
+                - Contain at least one special character
+                - Contain at least one number
+                - Contain at least one special character - $ % ! ? # @ *
+            `)
+            setAlertType("ERROR")
+            setLoading(false)
+        }
+    }
+}
     
     return(
         <View style={styles.masterContainer}>
+        <Alert location="Signin" navigation={navigation} visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
             <View style={styles.subContainer}>
                 <View style={styles.imgContainer}>
                     <Image style={styles.logo} source={require('../login/logo.jpg')} />
@@ -16,20 +80,20 @@ export default function ForgotPassword() {
                     <View>
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>code</Text>
-                            <TextInput style={styles.inputField}/>
+                            <TextInput value={code} onChangeText={(text) => setCode(text)} style={styles.inputField}/>
                         </View>
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Password</Text>
-                            <TextInput style={styles.inputField}/>
+                            <TextInput value={password} onChangeText={(text) => setPassword(text)} style={styles.inputField}/>
                         </View>
                       
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Re-Type Password</Text>
-                            <TextInput style={styles.inputField}/>
+                            <TextInput value={confirmedPassword} onChangeText={(text) => setConfirmedPassword(text)} style={styles.inputField}/>
                         </View>
                     </View>
                     <View style={styles.btnSection}>
-                        <TouchableOpacity style={styles.btn}>
+                        <TouchableOpacity onPress={() => handleResetPassword} style={styles.btn}>
                             <Text style={styles.btnText}>Reset Password</Text>
                         </TouchableOpacity>
                     </View>

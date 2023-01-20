@@ -22,6 +22,15 @@ export const getCreditCardInfo = async (email, cancelToken) => {
     }
 }
 
+export const forgotPassword = async (data) => {
+    try{
+        const forgot = await axios.post(ENDPOINT + "/user/forgot-password", data)
+        return forgot
+    }catch(err){
+        console.error(err)
+    }
+}
+
 export const upgradeMembership = async (dataPackage) => {
     try {
         const headers = await setToken()
@@ -52,12 +61,19 @@ export const submitCreditRecharge = async (data) => {
     }
 }
 
+export const resetPassword = async (data) => {
+    try{
+        const reset = await axios.post(ENDPOINT + "/user/reset-password",data)
+        return reset
+    }catch(err){
+        console.error(err)
+    }
+}
+
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  
     try {
-        const route = ENDPOINT + "/testRoute"
         const user = await axios.get(ENDPOINT + `/find-user/${email}`)
-        
         return user
     } catch (err) {
         console.log(err)

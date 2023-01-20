@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, SafeAreaView, Text, StyleSheet, Dimensions} from 'react-native'
+import {View, SafeAreaView, Text, StyleSheet, Dimensions, Image} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import moment from 'moment'
 import { LinearGradient } from 'expo-linear-gradient';
@@ -21,15 +21,9 @@ export default function SubscriptionData() {
     return (
         <View style={styles.container}>
            
-            <LinearGradient 
-                colors={[colorPalette.main, colorPalette.mainLight]}
-                start={{x: 0, y: 0}}
-                end={{x: 0, y: 1}}
-                style={styles.header}
-            >
-            <View style={styles.roundContainer}>
+            <View style={styles.headerContainer}>
+                <Image style={styles.img} source={require("../../../assets/pictures/logo_white.png")} />
             </View>
-            </LinearGradient>
             <View style={styles.textContainer}>
                 <Text style={styles.identifier}>Member ID: </Text> 
                 <Text style={styles.data}>{sub}</Text>
@@ -57,14 +51,27 @@ const styles = StyleSheet.create({
         alignItems:"center",
         backgroundColor: "white",
     },
-    header: {
-        width: "102%",
-        height: "30%",
+    img: {
+        width: "100%",
+        height: 140,
+        resizeMode: "contain",
+    },
+    headerContainer: {
+        backgroundColor: "white",
+        paddingBottom: "10%",
         position: "absolute",
         top: 0,
+        width: "100%",
+        height: "30%",
         alignItems:"center",
-        borderBottomEndRadius:"100%",
-        borderBottomStartRadius:"100%"
+        justifyContent: "center",
+    },
+    header: {
+        width: "100%",
+        height: "100%",
+        alignItems:"center",
+        borderBottomEndRadius:"50%",
+        borderBottomStartRadius:"50%"
 
     },
     roundContainer: {
