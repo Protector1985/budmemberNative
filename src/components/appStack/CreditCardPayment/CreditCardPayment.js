@@ -11,9 +11,18 @@ import { FormProvider, useForm } from 'react-hook-form'
 import CreditCardForm, { Button, FormModel } from 'rn-credit-card'
 import { useDispatch, useSelector } from 'react-redux';
 import { setCCDetails} from '../../../store/paymentInfoSlice';
+import { closeDrawer } from '../../../store/drawerSlice';
+import React from 'react';
+
+
 export default function CreditCardPayment({navigation}) {
-  
+
+  //closes drawer on page change
   const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(closeDrawer())
+  },[])
+  
     const formMethods = useForm({
         // to trigger the validation on the blur event
         mode: 'onBlur',

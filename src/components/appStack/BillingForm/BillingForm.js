@@ -10,6 +10,7 @@ import Alert from "../../utils/Alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import _init from "../lib/_init";
 import { states } from "./states";
+import { closeDrawer } from "../../../store/drawerSlice";
 
 
 export default function BillingForm({navigation}) {
@@ -39,10 +40,12 @@ export default function BillingForm({navigation}) {
         message: "Initializing"
     })
 
-    const selectedPlanData = membershipPlans.filter((plan) => plan.Id === Selected_Package_ID__c)
+    const selectedPlanData = membershipPlans.filter((plan) => plan.Id === selectedPlan)
     const previousPlanData = membershipPlans.filter((plan) => plan.Id === Previous_Package_ID__c)
-    
-
+    //closes drawer on page change
+    React.useEffect(() => {
+      dispatch(closeDrawer())
+    },[])
 
 
     //submits data package to the backend for signup
@@ -99,7 +102,6 @@ export default function BillingForm({navigation}) {
 
     async function updateMembership() {
         try{
-      
             setLoading(true)
             const fullname = paymentInfo.holderName.trim().split(" ");
             const firstName = fullname.shift();
@@ -117,11 +119,14 @@ export default function BillingForm({navigation}) {
                 email: Email,
                 startDate: lastChargeDate,
                 newMembershipAmount: selectedPlanData[0].Package_Amount__c, 
-                dueNow: Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Math.abs(Number(selectedPlanData[0].Package_Amount__c) - Number(previousPlanData[0].Package_Amount__c)) , //if downgrade 0 if upgrade diff between lower and higher
-                packageId: selectedPlanData[0].Id,
+                dueNow: Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Number(selectedPlanData[0].Package_Amount__c) - Number(previousPlanData[0].Package_Amount__c),
+                packageId: selectedPlan,
                 oldPackageId: previousPlanData[0].Id
             }
 
+            console.log(paymentPackage)
+
+            setLoading(false)
             
             //below function is used for upgrade AND downgrade 
             const res = await upgradeMembership(paymentPackage)
@@ -134,7 +139,7 @@ export default function BillingForm({navigation}) {
                 setLoading(false);
                 setAlertOpen(true);
                 setAlertMessage(res.data.msg)
-                setAlertType("SUCCESS")
+                setAlertType("ERROR")
             }
           }catch(err) {
             console.log(err)

@@ -68,8 +68,7 @@ export default function SelectPayment({navigation}) {
         const res = await getCreditCardInfo(Email, cancelToken);
         dispatch(setCCInfo({ccNumber: res.data.data.ccNumber.split("").join(' ').replace("x x x x x x x x x x x", "* * * * * * * * "), ccExp: res.data.data.ccExpiration}))  
     }
-    console.log(Selected_Package_ID__c)
-    console.log(Previous_Package_ID__c)
+    
 
     React.useEffect(() => {
         if(ccNumber) {
@@ -104,7 +103,6 @@ React.useEffect(() => {
            
     
             const res = await changeWithCardOnFile(Email, selectedPlan, Previous_Package_ID__c, membershipPlans)
-            console.log(res)
             if(res.data.success) {
                 setAlertOpen(true);
                 setAlertMessage("Your plan was successfully changed")

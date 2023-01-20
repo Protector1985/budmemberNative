@@ -5,7 +5,6 @@ const initialState = {
     membershipPlans: [],
     selectedPlan: null,
     previousPlan: null,
-
   }
 
 const membershipPlanSlice = createSlice({
