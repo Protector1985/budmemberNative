@@ -16,6 +16,7 @@ const initialState = {
       ],
       currentOnboardingStep: null,
       ctaOpen: false,
+      showEmailModal: true,
     
   }
 
@@ -32,10 +33,13 @@ const systemSlice = createSlice({
         },
         setCtaOpen(state, action) {
             state.ctaOpen = state.action
+        },
+        setShowEmailModal(state, action) {
+            state.showEmailModal = action.payload
         }
     }
 })
 
-export const { setShowDatePick, setOnboardingStep, setCtaOpen } = systemSlice.actions;
+export const {setShowEmailModal, setShowDatePick, setOnboardingStep, setCtaOpen } = systemSlice.actions;
 
 export default systemSlice.reducer;

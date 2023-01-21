@@ -62,11 +62,21 @@ export const submitCreditRecharge = async (data) => {
 }
 
 export const resetPassword = async (data) => {
+    console.log(data)
     try{
         const reset = await axios.post(ENDPOINT + "/user/reset-password",data)
         return reset
     }catch(err){
         console.error(err)
+    }
+}
+
+export const getVerificationEmail = async (email) => {
+    try {
+        const res = axios.post(`${ENDPOINT}/user/getVerificationEmail`, {email})
+        return res
+    } catch (err) {
+        console.log(err)
     }
 }
 

@@ -6,6 +6,7 @@ import SideDrawer from './SideDrawer/SideDrawer.js';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import _init from './lib/_init';
+import Alert from '../utils/Alert';
 
 
 const Stack = createStackNavigator();
@@ -17,6 +18,7 @@ export default function AppStack() {
     const {userSlice} = useSelector((state) => state)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {locationPermission} = useSelector((state) => state.permissionSlice)
+    const {Email_Verified__c } = useSelector((state) => state.userSlice)
     const {avatarUri} = userSlice
     const {open} = useSelector((state)=> state.drawerSlice)
     const menu = <SideDrawer navigation={navigation} />
@@ -28,7 +30,8 @@ export default function AppStack() {
     React.useEffect(() => {
         _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)
     }, [])
-  
+
+ 
     return (
             
             <ActionSheetProvider>

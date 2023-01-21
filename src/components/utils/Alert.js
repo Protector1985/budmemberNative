@@ -6,13 +6,16 @@ import { useDispatch } from 'react-redux';
 import React from 'react';
 import { closeDrawer } from '../../store/drawerSlice';
 
-export default function Alert({callBack, visible, type, message, setVisible, navigation, location}) {
+export default function Alert({customSetHook, customButtonMessage, callBack, visible, type, message, setVisible, navigation, location, html}) {
   
   const dispatch = useDispatch();
   //closes drawer on page change
   React.useEffect(() => {
     dispatch(closeDrawer())
   },[])
+
+  
+  
 
     function handlePress() {
         switch(type) {
@@ -22,7 +25,8 @@ export default function Alert({callBack, visible, type, message, setVisible, nav
           case "ERROR":
             return setVisible(false);
           case "WARNING":
-            return setVisible(false);
+            callBack ? (callBack(), setVisible(false)) : setVisible(false)
+            break;
         }
     }
   
@@ -92,11 +96,12 @@ export default function Alert({callBack, visible, type, message, setVisible, nav
             onRequestClose={() => console.log("closing")}
             visible={visible}
         >
-    <View style={styles.content}>
+    <View onLayout={(event)=> customSetHook(event.nativeEvent.layout.width)} style={styles.content}>
       <Text style={styles.contentText}>{message}</Text>
+        {html ? html : null}
 
       <TouchableOpacity style={[styles.btn,{backgroundColor: btnColor()}]} onPress={handlePress}>
-        <Text style={styles.btnText}>OK</Text>
+        <Text style={styles.btnText}>{customButtonMessage? customButtonMessage : "OK"}</Text>
       </TouchableOpacity>
     </View>
   </FancyAlert>
