@@ -70,10 +70,13 @@ export default function ProfileStack({navigation}) {
   
   
   return (
-        <Stack.Navigator >
+        <Stack.Navigator  
+        screenOptions={{
+          headerShown: true
+        }}>
             <Stack.Screen 
-            options={{
-                headerRight: () => (
+              options={{
+                headerRight: () => {
                   Platform.OS === "ios" ?
                   //ios button
                   <Button
@@ -85,7 +88,7 @@ export default function ProfileStack({navigation}) {
                   : <TouchableOpacity onPress={() => navigation.navigate("Edit Profile")}>
                       <Text style={styles.androidButton}>Edit</Text>
                     </TouchableOpacity>
-                ),
+                },
               }}
                 name="Profile" 
             >

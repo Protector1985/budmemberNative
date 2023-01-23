@@ -8,12 +8,17 @@ import Alert from "./utils/Alert";
 import { setLocationPermission } from "../store/permissionSlice";
 import * as Location from 'expo-location';
 
+
 export default function Welcome({navigation}) {
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
     const dispatch = useDispatch()
  
+   
+    const [isLoaded] = useFonts({
+        'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
+      });
 
     React.useEffect(() => {
       async function requestPermissions() {

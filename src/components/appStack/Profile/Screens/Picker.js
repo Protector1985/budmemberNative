@@ -10,6 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import UserAvatar from 'react-native-user-avatar';
 import moment from 'moment';
 import {Dimensions} from 'react-native';
+import { useFonts } from 'expo-font';
 
 export default function Picker({navigation, email, setEmail, firstName, setFirstName, lastName, setLastName,phone,setPhone,birthDate,setBirtDate, image, setImage}) {
     const dispatch = useDispatch()
@@ -23,6 +24,11 @@ export default function Picker({navigation, email, setEmail, firstName, setFirst
     let palette2 = new Matercolor(color).palette['complementary']
     let palette3 = new Matercolor(color).palette['triadic']
     
+
+    const [isLoaded] = useFonts({
+        'Roboto-Regular': require('../../../../../assets/fonts/Roboto-Regular.ttf'),
+
+      });
     
     React.useEffect(() => {
         const colors = {...palette, complementary:{...palette2}, triadic:{...palette3}} 

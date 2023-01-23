@@ -10,19 +10,19 @@ import DatePicker from '@dietime/react-native-date-picker';
 import generateDaysInMonth from '../lib/generateDaysInMonth';
 import {months} from '../lib/monthsObject'
 import { generateYears } from "../lib/years";
-import { signUp } from '../../../api/nodeApi';
 import handleCreateAccount from './lib/signupHelpers';
 import { AuthContext } from '../../../context/AuthContext';
 
 export default function Signup({navigation}) {
+    //params are only sent with oAuth. (accesstoken)
+    const params = navigation?.state?.params?.params
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"))
     const [modalOpen, setModalOpen] = useState(true);
     //state for forms
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
-    const [email, setEmail] = useState(navigation.state.params.email || "");
+    const [email, setEmail] = useState(navigation?.state?.params?.email || "");
     const [password, setPassword] = useState("");
-
     //state for dropdown
     const [monthOpen, setMonthOpen] = useState(false)
     const [dayOpen, setDayOpen] = useState(false)
@@ -38,7 +38,14 @@ export default function Signup({navigation}) {
     const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
     //sets state for font
 
-   
+   function submitDisabled() {
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+        if(reg.test(email) && firstName.length > 0 && lastName.length > 0 && password.length > 0) {
+            return false
+        } else {
+            return true
+        }
+   }
       
       //Initialize dropdown values ----
         useEffect(() => {
@@ -76,8 +83,10 @@ export default function Signup({navigation}) {
      
      
       async function handleSignup() {
+        // console.log(email, password, firstName, lastName, birthDayString.toString())
         signUp(email, password, firstName, lastName, birthDayString.toString())
-      }
+        
+    }
     
       function startYear() {
         return Number(moment().subtract("18", "years").format("YYYY"))
@@ -104,12 +113,12 @@ export default function Signup({navigation}) {
                         <Text style={styles.createAcc}>Create an account</Text>
                         <View style={styles.topTextContainer}>
                             <Text style={styles.alreadyMember}>Already a Budmember?</Text>
-                            <Text style={styles.signIn}>Sign In</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("Signin")}><Text style={styles.signIn}>Sign In</Text></TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.socialContainer}>
                         <Text style={styles.signupWithSocial}>Sign up with Social</Text>
-                        <Image style={styles.googleLogo} source={require("../login/google.png")} />
+                        <Image style={styles.googleLogo} source={require("../../../assets/pictures/google.png")} />
                     </View>
                 </View>  
 
@@ -120,10 +129,10 @@ export default function Signup({navigation}) {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <View style={styles.inputSubContainer}>
+                    {!params? <View style={styles.inputSubContainer}>
                         <Text style={styles.label}>Email address</Text>
-                        <TextInput editable={false} value={email} style={styles.inputField} />
-                    </View>
+                        <TextInput onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={styles.inputField} />
+                    </View> : null}
 
                     <View style={styles.inputSubContainer}>
                         <Text style={styles.label}>First Name</Text>
@@ -211,7 +220,7 @@ export default function Signup({navigation}) {
                         <Text style={styles.termsStatement}>I have read and accepted the <A href="https://budmember.com/privacy-policy/" style={styles.link}>privacy policy</A></Text>
                     </View> 
                 </View>
-                <TouchableOpacity onPress={handleSignup} style={styles.btn}>
+                <TouchableOpacity disabled={submitDisabled()} onPress={handleSignup} style={styles.btn}>
                     <Text style={styles.btnText}>Create Account</Text>
                 </TouchableOpacity>
                 </ScrollView>
@@ -293,6 +302,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto-Regular",
         color: "#dbdbdb",
         fontSize: 14,
+        marginRight: 7,
     },
 
     signIn: {

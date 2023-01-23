@@ -1,10 +1,10 @@
 
 import { TouchableOpacity, StyleSheet, Text, Image } from "react-native"
 
-export default function SocialLoginButton({socialIcon, socialDescription}) {
+export default function SocialLoginButton({click, socialIcon, socialDescription}) {
 
     return (
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={click} style={styles.button}>
             <Image style={styles.socialIcon} source={socialIcon}/>
             <Text style={styles.txt}>{socialDescription}</Text>
         </TouchableOpacity>

@@ -8,7 +8,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useSelector } from 'react-redux';
 import SideDrawer from '../../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
-
+import { useFonts } from 'expo-font';
 
 export default function Profile({ navigation}) {
     const {
@@ -20,6 +20,11 @@ export default function Profile({ navigation}) {
         avatarUri,
         Birthdate
        } = useSelector((state) => state.userSlice)
+
+   
+    const [isLoaded] = useFonts({
+        'Roboto-Regular': require('../../../../../assets/fonts/Roboto-Regular.ttf'),
+      });
     
     const colors = useSelector((state) => state.userSlice.colorPalette)
     const {open} = useSelector((state)=> state.drawerSlice)

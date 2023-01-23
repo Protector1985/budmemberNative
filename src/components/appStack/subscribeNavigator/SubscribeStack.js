@@ -19,7 +19,6 @@ export default function SubscribeStack() {
 
   function returnComponent(props) {
     if(Membership_Status__c === "Inactive" && !cognitoData["custom:authorizeSubId"]) {
-      console.log("Returning CTA!!!!!!")
       return <CTA {...props} />
     } else if(Membership_Status__c === "Inactive" && cognitoData["custom:authorizeSubId"]) {
       return <Reactivation {...props} />

@@ -18,9 +18,8 @@ export default function ForgotPassword({navigation}) {
     const [confirmedPassword, setConfirmedPassword] = React.useState("")
     let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
     
-    console.log(email)
     async function handleResetPassword(){
-        console.log(email)
+      
         try {
         setLoading(true);
         if(password !== confirmedPassword) {
@@ -29,12 +28,9 @@ export default function ForgotPassword({navigation}) {
             setAlertType("ERROR")
         } else if(password === confirmedPassword) {
             if(mediumPassword.test(password)) {
-                if(code.length > 2) {
-                    console.log(password)
-                    
+                if(code.length > 2) {                 
                     try {
                     const response = await resetPassword({email, code, new_password: password});
-                    console.log(response.data)
                     if(response?.data?.success){
                         setAlertOpen(true);
                         setAlertMessage("Your password was successfully reset")

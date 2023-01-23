@@ -80,6 +80,18 @@ export const getVerificationEmail = async (email) => {
     }
 }
 
+export const googleSignin = async (signindata)=>{
+    
+    try {
+        const response = await axios.post(ENDPOINT + "/user/google-signin", signindata);
+        //console.log("RESPONSE",response);
+        return response;
+    } catch (error) {
+        console.error(error)
+        return error.response
+    }
+}
+
 //allows to find a user by email. : String:email
 export const findUser = async (email) => {  
     try {
@@ -143,12 +155,13 @@ export const updateUser = async (updateDetails, header) => {
 }
 
 
-
-
-export const fetchMyself = async () => {
+export const fetchMyself = async () => {  
     try {
+        
         const headers = await setToken()
+        console.log(headers)
         const user = await axios.get(ENDPOINT + "/user", { headers })    
+        console.log(user)
         return user
     } catch (err) {
         console.log(err)

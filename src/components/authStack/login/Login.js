@@ -1,6 +1,6 @@
 
 import {useContext, useState} from "react";
-import {StyleSheet, Text, View, Image, TextInput, line, TouchableOpacity, ActivityIndicator} from 'react-native';
+import {StyleSheet, Text, View, Image, TextInput, line, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView} from 'react-native';
 import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import SocialLoginButton from './SocialLoginButton';
@@ -8,11 +8,10 @@ import ContinueButton from './ContinueButton'
 import { AuthContext } from "../../../context/AuthContext";
 import { findUser } from "../../../api/nodeApi";
 import Spinner from '../../utils/Spinner';
+import GoogleSignIn from "../googleSignIn/GoogleSignIn";
 
 export default function Login({navigation}) {
    
-    
-    
     //state for login component
     const [email, setEmail] = useState("");
     const [isLoading, setLoading] = useState(false);
@@ -46,10 +45,10 @@ export default function Login({navigation}) {
         return <Spinner />
     }
     
-
+    
     return (
         <View style={styles.masterContainer}>
-            <View style={styles.subContainer}>
+            <KeyboardAvoidingView style={styles.subContainer}>
             <View style={styles.imgContainer}>
                 <Image style={styles.logo} source={require('./logo.jpg')} />
             </View>
@@ -59,16 +58,18 @@ export default function Login({navigation}) {
                     <Text style={styles.signIn}>Sign In</Text>{'\n'}
                     <Text style={styles.newUserContainer}>
                         <View style={styles.spacer}></View>
-                        <Text style={styles.newUser}>New User? </Text>
-                        <A href="https://google.com" style={styles.createNew}>Create New User</A>
-                    </Text>  
+                        <View style={styles.newUserTextContainer}>
+                            <Text style={{color: "#dbdbdb", fontSize: 17}}>New User? </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("Signup")}><Text style={styles.createNew}>Create New User</Text></TouchableOpacity>
+                        </View>
+                        </Text>  
                 </Text>
                 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email address</Text>
                     <TextInput autoComplete={'email'} value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
                     <View style={styles.continueContainer}>
-                        <ContinueButton pressed={handlePress} />
+                        <ContinueButton disabled={isLoading || email.length < 3} pressed={handlePress} />
                     </View>
                     
                 </View>
@@ -82,9 +83,9 @@ export default function Login({navigation}) {
 
 
             <View style={styles.socialContainer}>
-                <SocialLoginButton socialIcon={require("./google.png")} socialDescription={"Continue with Google"} />
+                <GoogleSignIn navigation={navigation} />
             </View>
-            </View>
+            </KeyboardAvoidingView>
         </View>
     )
 }
@@ -99,8 +100,14 @@ const styles = StyleSheet.create({
         alignItems: "center",
         
     },
+    
+    newUserTextContainer: {
+        flexDirection:"row",
+        justifyContent: "space-between",
+        alignItems:"center",
+    },
     spacer: {
-        height: "17%",
+        height: 30,
         width: "100%",
     },
     continueContainer: {
@@ -144,7 +151,7 @@ const styles = StyleSheet.create({
     signIn: {
         fontSize: 30,
         fontFamily: "Roboto-Regular",
-        marginBottom: 30,
+        marginBottom: "25%",
     },
     newUser: {
         fontSize:18,
@@ -175,7 +182,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        marginTop: "3%",
+        marginTop: "11%",
     },
     line: {
         width: "41%",

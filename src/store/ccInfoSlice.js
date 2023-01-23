@@ -11,7 +11,6 @@ const ccInfoSlice = createSlice({
     reducers: {
         
         setCCInfo(state, action) {
-            console.log(action.payload)
             state.ccNumber = action.payload.ccNumber,
             state.ccExp = action.payload.ccExp
         }, 

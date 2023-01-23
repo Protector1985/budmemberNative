@@ -25,6 +25,7 @@
     },
     "android": {
       "package":"com.native.budmember",
+      "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

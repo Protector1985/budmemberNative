@@ -6,9 +6,18 @@ import { AuthProvider } from './src/context/AuthContext';
 import AppNav from './src/navigation/AppNav';
 import store from './src/store/store.js'
 import { Provider } from 'react-redux'
+import { useFonts } from 'expo-font';
 
 
 function App() {
+
+  const [isLoaded] = useFonts({
+    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+
+  });
+
+ 
+
   return (
     <Provider store={store}>
       <AuthProvider>

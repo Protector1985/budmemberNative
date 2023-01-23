@@ -85,7 +85,7 @@ export default function BillingForm({navigation}) {
      
         //if credit card charge was not successful
           }else {
-            console.log(res.data)
+           
             setAlertOpen(true);
             setAlertMessage(res.data.msg)
             setAlertType("ERROR")

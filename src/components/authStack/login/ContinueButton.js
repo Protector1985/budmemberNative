@@ -1,11 +1,11 @@
 import { TouchableOpacity, Text, StyleSheet} from "react-native";
 import {useFonts} from 'expo-font'
 
-export default function ContinueButton({pressed}) {
+export default function ContinueButton({pressed, disabled}) {
     
 
     return(
-        <TouchableOpacity onPress={() => pressed()} style={styles.btnContainer}>
+        <TouchableOpacity disabled={disabled} onPress={() => pressed()} style={styles.btnContainer}>
             <Text style={styles.btn}>Continue</Text>
         </TouchableOpacity>
     )

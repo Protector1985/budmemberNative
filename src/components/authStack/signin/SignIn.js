@@ -10,7 +10,7 @@ import { findUser, forgotPassword } from '../../../api/nodeApi';
 export default function SignIn({navigation}) {
 
     //state needed for this component
-    const [email, setEmail] = useState(navigation.state.params.email || "");
+    const [email, setEmail] = useState(navigation?.state?.params?.email || "");
     const [password, setPassword] = useState("");
      //State passed from useContext - AuthContext
     const {login, logout} = useContext(AuthContext);

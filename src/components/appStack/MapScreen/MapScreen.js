@@ -1,11 +1,11 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import SearchBar from "react-native-dynamic-search-bar";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import { useDispatch, useSelector } from 'react-redux';
-
+import _ from "lodash"
 import BottomSlider from '../BottomSlider/BottomSlider'
 import { fetchDispensary, getVerificationEmail } from '../../../api/nodeApi';
 import SideDrawer from '../SideDrawer/SideDrawer';
@@ -13,16 +13,37 @@ import SideMenu from 'react-native-side-menu';
 import { closeDrawer } from '../../../store/drawerSlice';
 import Alert from '../../utils/Alert';
 import {setShowEmailModal} from '../../../store/systemSlice';
+import { setLocation } from '../../../store/locationSlice';
 
 const Drawer = createDrawerNavigator();
 
+
+function SearchResultCard({image, name, street, city, zip, state}) {
+    return (
+        <View style={styles.searchResultCard}>
+            <View style={styles.cardLeft}>
+                <Image style={{width: 50, height: 50}} source={{uri: image}} />
+            </View>
+            <View style={styles.cardRight}>
+                <Text style={styles.cardName}>{name}</Text>
+                <Text style={styles.cardAddress}>{street}</Text>
+                <Text style={styles.cardAddress}>{`${city}, ${state}, ${zip}`}</Text>
+                
+            </View>
+
+        </View>
+
+    )
+}
+
 export default function MapScreen({navigation, initProgress}) {
-   const [text, setText] = React.useState()
+   const [searchText, setText] = React.useState("")
    const [alertOpen, setAlertOpen] = React.useState(false)
    const [alertMessage, setAlertMessage] = React.useState("")
    const [alertType, setAlertType] = React.useState("")
    const [sliderData, setSliderData] = React.useState({})
    const {latitude, longitude} = useSelector((state) => state.locationSlice)
+  
    const {showEmailModal} = useSelector((state) => state.systemSlice)
    const {dispensaries} = useSelector((state) => state.dispensariesSlice)
    const {open} = useSelector((state)=> state.drawerSlice)
@@ -34,13 +55,29 @@ export default function MapScreen({navigation, initProgress}) {
    const [alertHtml, setAlertHtml] = React.useState(null)
    const [submits, setSubmits] = React.useState(0)
    const [loading,setLoading] = React.useState(false)
-   
+   const [filteredDispensaries, setFilteredDispensaries] = React.useState([])
    const alertRef = React.useRef();
-   
+
    //closes drawer in case it is open
    React.useEffect(() => {
         dispatch(closeDrawer())
    },[])
+
+
+   //filters dispenaries for display
+   function handleInput(text) {
+    setText(text)
+    const mutableState = _.cloneDeep(Object.values(dispensaries)) //Object.values(dispensaries)
+    const filtered = mutableState.filter((item) => item.Name.toLowerCase().includes(text.toLowerCase()));
+    setFilteredDispensaries(filtered)
+  };
+
+  //Removes filtered dispensaires from screen if user deletes all input
+  React.useEffect(() => {
+    if(searchText.length === 0) {
+        setFilteredDispensaries([])
+    }
+  },[searchText])
 
    async function handleEmailResend() {
     try {
@@ -115,9 +152,30 @@ export default function MapScreen({navigation, initProgress}) {
             <SearchBar
                 style={styles.searchBar}
                 placeholder="Search for nearby dispensaries"
-                onPress={() => alert("onPress")}
-                onChangeText={(text) => setText(text)}
-                />
+                onChangeText={(text) => handleInput(text)}
+                > 
+                </SearchBar>
+
+                {filteredDispensaries.length > 0 ? <FlatList
+                    style={styles.cards}
+                    data={filteredDispensaries}
+                    renderItem={({item}) => {
+                        return (
+                            <TouchableOpacity onPress={() => {
+                                handlePress(item)
+                                setFilteredDispensaries([])
+                                dispatch(setLocation({longitude: item.Geo_Point__Longitude__s, latitude: item.Geo_Point__Latitude__s}))
+                            }}>
+                                <SearchResultCard long={item.Geo_Point__Longitude__s} lat={item.Geo_Point__Latitude__s} state={item.BillingState} image={item.Image_URL__c} name={item.Name} street={item.BillingStreet} city={item.BillingCity} zip={item.BillingPostalCode}/>
+                            </TouchableOpacity>
+                        )
+                        }
+                    }
+                    keyExtractor={item => item.Name}
+                /> : null}
+
+        
+                
 
                 <MapView
                     style={styles.map}
@@ -126,9 +184,14 @@ export default function MapScreen({navigation, initProgress}) {
                     longitude: longitude,
                     latitudeDelta: 3,
                     longitudeDelta: 0.0121,
-                    }}
-                    
+                    }} 
                 >
+            
+                
+
+                    
+             
+                
                 <Marker
                     key={"HomeMarker"}
                     coordinate={{ latitude : latitude , longitude : longitude }}
@@ -163,6 +226,45 @@ const styles = StyleSheet.create({
     },
     map: {
         flex:1,
+    },
+    cards: {
+        position:"absolute",
+        top: "18%",
+        width: "100%",
+        height: "75%",
+    
+        zIndex: 1000000,
+        left:"auto",
+        right: "auto",
+    },
+    searchResultCard: {
+        flexDirection: "row",
+        width: "90%",
+        height: 130,
+        backgroundColor: "white",
+        marginBottom:5,
+        borderRadius: 8,
+        marginLeft:"auto",
+        marginRight:"auto",
+    },
+    cardLeft: {
+        flex: 2,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    cardRight: {
+        flex: 3,
+        justifyContent: "center",
+        alignItems:"flexStart",
+    },
+    cardName: {
+        fontSize: 22,
+        marginBottom:"5%",
+        color: "#444444"
+    },
+    cardAddress: {
+        fontSize: 16,
+        color: "#444444",
     },
     searchBar: {
         position:"absolute",
