@@ -24,11 +24,6 @@ export default function Picker({navigation, email, setEmail, firstName, setFirst
     let palette2 = new Matercolor(color).palette['complementary']
     let palette3 = new Matercolor(color).palette['triadic']
     
-
-    const [isLoaded] = useFonts({
-        'Roboto-Regular': require('../../../../../assets/fonts/Roboto-Regular.ttf'),
-
-      });
     
     React.useEffect(() => {
         const colors = {...palette, complementary:{...palette2}, triadic:{...palette3}} 
@@ -112,7 +107,6 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     },
     name: {
-        fontFamily: "Roboto-Regular",
         color: "#FFF",
         fontSize: 20,
         fontWeight: "800",
@@ -120,7 +114,6 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     membership: {
-        fontFamily: "Roboto-Regular",
         color: "rgba(255, 255, 255, 0.8)",
         fontSize: 13,
         marginRight: 4,

@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import Reactivation from '../Reactivation/Reactivation';
 import UpgradeInfo from '../UpgradeInfo/UpgradeInfo';
 import SelectPayment from '../SelectPayment/SelectPayment';
+import PhoneVerifyStack from './PhoneVerifyStack';
 
 const Stack = createStackNavigator();
 
@@ -31,16 +32,15 @@ export default function SubscribeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Become a Budmember" >
-
         {(props)=> returnComponent(props)}
       </Stack.Screen>
       <Stack.Screen name="Select Plan" component={PlanSelect} />
-      <Stack.Screen name="Verify Phone Number" component={EnterPhoneNumber} />
-      <Stack.Screen
-        options={{
-          headerLeft: ()=> null,
-        }}
-        name="Enter Code" component={VerifyPhoneNumber} />
+        <Stack.Screen options={{
+          headerShown:false,
+          }} 
+          name="Verify Phone Number">
+          {(props) => <PhoneVerifyStack {...props} />}
+        </Stack.Screen>
         {currentOnboardingStep === "update" ? <Stack.Screen name="Info" component={UpgradeInfo} /> : null} 
         {currentOnboardingStep === "update" || currentOnboardingStep === "reactivate" ? <Stack.Screen name="Payment Method" component={SelectPayment} /> : null}
         <Stack.Screen

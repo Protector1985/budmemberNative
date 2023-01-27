@@ -156,7 +156,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     signInHeadline: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 22,
         marginBottom: "5%",
@@ -168,7 +167,6 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
     },
     label: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 12,
         marginBottom: "1%",

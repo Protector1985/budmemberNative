@@ -21,7 +21,18 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.native.budmember",
-      "buildNumber": "2"
+      "buildNumber": "2",
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ],
+        "NSLocationWhenInUseUsageDescription": "This app needs to access your location to find nearby stores",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs to access your location to find nearby stores",
+        "NSLocationAlwaysUsageDescription": "This app needs to access your location to find nearby stores",
+        "NSCameraUsageDescription": "This app would like to use your camera to create an avatar picture",
+        "NSPhotoLibraryUsageDescription": "This app would like to access your gallery for an avatar picture"
+      }
     },
     "android": {
       "package":"com.native.budmember",

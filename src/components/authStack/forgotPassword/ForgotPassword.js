@@ -151,7 +151,6 @@ const styles = StyleSheet.create({
         marginBottom: "3%",
     },
     label: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 12,
         marginBottom: "1%",
@@ -170,7 +169,6 @@ const styles = StyleSheet.create({
         color: "#fff"
     },
     resetDisclaimer : {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 17,
         marginBottom:"5%",

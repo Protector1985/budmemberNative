@@ -49,7 +49,7 @@ export default function MapScreen({navigation, initProgress}) {
    const {open} = useSelector((state)=> state.drawerSlice)
    const {Email_Verified__c, colorPalette, Email} = useSelector((state)=> state.userSlice)
    const [hours, setHours] = React.useState()
-   const [alertWidth, setAlertWidth] = React.useState(null)
+   const [alertWidth, setAlertWidth] = React.useState(200)
    const dispatch = useDispatch()
    const menu = <SideDrawer navigation={navigation} />
    const [alertHtml, setAlertHtml] = React.useState(null)
@@ -147,7 +147,16 @@ export default function MapScreen({navigation, initProgress}) {
             <Alert callBack={() => {
                 //ensures the email modal is not shown a second time for this session
                 return dispatch(setShowEmailModal(false))
-            }} customSetHook={setAlertWidth} customButtonMessage={"Remind me later"} location="Enter Code" navigation={navigation} visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType} html={alertHtml}/>
+            }} 
+                customSetHook={setAlertWidth} 
+                customButtonMessage={"Remind me later"} 
+                location="Enter Code" 
+                navigation={navigation} 
+                visible={alertOpen} 
+                setVisible={setAlertOpen} 
+                message={alertMessage} 
+                type={alertType} 
+                html={alertHtml}/>
             <ProgressBar initProgress={initProgress} />
             <SearchBar
                 style={styles.searchBar}
@@ -255,7 +264,7 @@ const styles = StyleSheet.create({
     cardRight: {
         flex: 3,
         justifyContent: "center",
-        alignItems:"flexStart",
+        alignItems:"flex-start",
     },
     cardName: {
         fontSize: 22,

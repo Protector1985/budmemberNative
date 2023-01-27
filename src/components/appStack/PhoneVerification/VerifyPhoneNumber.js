@@ -43,7 +43,7 @@ const animateCell = ({hasValue, index, isFocused}) => {
   ]).start();
 };
 
-function VerifyPhoneNumber({navigation}){
+function VerifyPhoneNumber({navigation, numberState}){
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
   const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
@@ -108,7 +108,8 @@ function VerifyPhoneNumber({navigation}){
             phone_number_verified: true,
             onboardingStep:  '5',
             });
-            navigation.navigate("Payment Information")
+            numberState? navigation.navigate("Profile") : navigation.navigate("Payment Information")
+            
         } else {
             setLoading(false)
             setAlertMessage("Wrong code")

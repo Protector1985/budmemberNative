@@ -1,3 +1,4 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, ScrollView} from 'react-native';
 import "@expo/match-media";
@@ -7,14 +8,39 @@ import AppNav from './src/navigation/AppNav';
 import store from './src/store/store.js'
 import { Provider } from 'react-redux'
 import { useFonts } from 'expo-font';
+import * as Location from 'expo-location'
 
 
 function App() {
+  const [status, requestPermission] = Location.useForegroundPermissions()
+    async function requestPermissions() {
+        try {
+            if(status != null) {
+                if (!status.granted) {
+                    requestPermission()
+                    .then((res) => {
+                    console.log(res)
+                })
+            //   setAlertOpen(true);
+            //   setAlertMessage("Some features of this app might not be available without location permission")
+            //   setAlertType("WARNING")
+                }
+                return "GRANTED"
+            }
+        }catch (err) {
+            console.log(err)
+        }
+    }
 
-  const [isLoaded] = useFonts({
-    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
+    React.useEffect(() => {
+        try {
+            requestPermissions()
+        } catch(err) {
+            console.log(err)
+        }
+    },[status])
 
-  });
+ 
 
  
 

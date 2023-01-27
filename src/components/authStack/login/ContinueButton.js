@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 16,
         color: "#fff",
-        fontFamily: "Roboto-Regular",
         textAlign: "center",
         
     }

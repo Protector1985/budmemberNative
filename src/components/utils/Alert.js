@@ -93,12 +93,11 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
               {returnIcon()}
             </View>
             }
-            onRequestClose={() => console.log("closing")}
             visible={visible}
         >
-    <View onLayout={(event)=> customSetHook(event.nativeEvent.layout.width)} style={styles.content}>
-      <Text style={styles.contentText}>{message}</Text>
-        {html ? html : null}
+        <View style={styles.content}>
+          <Text style={styles.contentText}>{message}</Text>
+            {html ? html : null}
 
       <TouchableOpacity style={[styles.btn,{backgroundColor: btnColor()}]} onPress={handlePress}>
         <Text style={styles.btnText}>{customButtonMessage? customButtonMessage : "OK"}</Text>
@@ -137,6 +136,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     content: {
+      width: "90%",
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',

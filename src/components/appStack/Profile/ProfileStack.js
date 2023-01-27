@@ -9,13 +9,14 @@ import { fetchMyself, updateUser } from '../../../api/nodeApi';
 import { AntDesign } from '@expo/vector-icons'; 
 import fetchImage from '../lib/fetchImage';
 import { setShowDatePick } from '../../../store/systemSlice';
-
-
+import PhoneVerifyStack from '../subscribeNavigator/PhoneVerifyStack.js'
+import * as Location from 'expo-location'
 
 
 
 const Stack = createStackNavigator()
 export default function ProfileStack({navigation}) {
+  const [status, requestPermission] = Location.useForegroundPermissions()
   const {
     MobilePhone,
     Email, 
@@ -25,6 +26,7 @@ export default function ProfileStack({navigation}) {
     avatarUri,
     Birthdate
    } = useSelector((state) => state.userSlice)
+   const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
    const {userSlice} = useSelector((state) => state)
   const [loading, setLoading] = React.useState(false)
   const {showDatePick} = useSelector((state) => state.systemSlice)
@@ -33,14 +35,25 @@ export default function ProfileStack({navigation}) {
   const [localEmail, setLocalEmail] = React.useState(Email);
   const [localPhone, setLocalPhone] = React.useState(MobilePhone);
   const [image, setImage] = React.useState(null);
-
+  const [initState, setInitState] = React.useState();
   const dispatch = useDispatch()
   
   
   //fetches the image URI from the backend and saves it to async storage
  
+  function mutatePhone(localPhone) {
+    let mutatedPhone;
+    if(localPhone[0] === "+") {
+      return mutatedPhone = localPhone.slice(2);
+    } else if(localPhone[0] === "1") {
+      return mutatedPhone = localPhone.slice(1);
+    } else {
+      return mutatedPhone = localPhone
+    }
+  }
 
   async function handleSave() {  
+
     setLoading(true)
     const updateObject = {
       update: {
@@ -51,13 +64,25 @@ export default function ProfileStack({navigation}) {
         BirthDate: Birthdate,
       },
     };
-    try {
+    //compares if localPhone without +! is different than cognito stored phone
+    //if so it navigates to the phone changer. Otherwise not needed
+    if(cognitoData?.phone_number?.slice(2) !== mutatePhone(localPhone)) {
       const res = await updateUser(updateObject);
-      setLoading(false)
-     
-    }catch (err) {
-      console.log(err)
+      if(res.data.success) {
+        // _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+        navigation.navigate("Verify Phone Number", {
+          params: localPhone
+        })
+      }
+      
     }
+    // try {
+    //   const res = await updateUser(updateObject);
+    //   setLoading(false)
+     
+    // }catch (err) {
+    //   console.log(err)
+    // }
   }
 
   function handleDateChange() {
@@ -65,9 +90,10 @@ export default function ProfileStack({navigation}) {
   }
 
   if(loading) {
-    return <ActivityIndicator />
+    return <ActivityIndicator style={{flex: 1, backgroundColor: "white"}} />
   }
   
+
   
   return (
         <Stack.Navigator  
@@ -77,7 +103,7 @@ export default function ProfileStack({navigation}) {
             <Stack.Screen 
               options={{
                 headerRight: () => {
-                  Platform.OS === "ios" ?
+                  return Platform.OS === "ios" ?
                   //ios button
                   <Button
                     style={styles.btn}
@@ -155,7 +181,6 @@ export default function ProfileStack({navigation}) {
                
                  /> }
         </Stack.Screen>
-
 
         </Stack.Navigator>
 

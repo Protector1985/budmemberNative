@@ -55,6 +55,9 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
     const colors = useSelector((state) => state.userSlice.colorPalette)
     const {Birthdate} = useSelector((state) => state.userSlice)
     const {showDatePick} = useSelector((state) => state.systemSlice)
+    
+    
+    
 
     
     const androidChangeEvent = (event, selectedDate) => {
@@ -62,10 +65,6 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
         dispatch(setShowDatePick(false))
       };
 
-     
-      const [isLoaded] = useFonts({
-          'Roboto-Regular': require('../../../../../assets/fonts/Roboto-Regular.ttf'),
-        });
 
     
       React.useEffect(() => {
@@ -175,7 +174,6 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
                 </LinearGradient>
         
             <View style={styles.inputContainer}>
-                  
                 <View>
                <View style={Dimensions.get("window").height > 690 ? styles.inputSubContainer :styles.inputSubContainerSmall} >
                     <Text style={Dimensions.get("window").height > 690 ? styles.label : styles.labelSmall}>First Name</Text>
@@ -260,7 +258,6 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     },
     name: {
-        fontFamily: "Roboto-Regular",
         color: "#FFF",
         fontSize: 20,
         fontWeight: "800",
@@ -268,7 +265,6 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     membership: {
-        fontFamily: "Roboto-Regular",
         color: "rgba(255, 255, 255, 0.8)",
         fontSize: 13,
         marginRight: 4,

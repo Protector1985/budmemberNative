@@ -12,8 +12,8 @@ import QrCodeStack from '../QrCode/QrCodeStack';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
 import BillingStackNavigator from './BillingStackNavigator/BillingStackNavigator';
-
-
+import ProfileStack from '../Profile/ProfileStack'
+import PhoneVerifyStack from '../subscribeNavigator/PhoneVerifyStack';
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator({initProgress, firstEl, returnNav}) {
@@ -155,7 +155,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 return(
                     <SafeAreaView style={{flex: 1}}>
                         <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
-                            <Profile {...props} />
+                            <ProfileStack {...props} />
                         </SideMenu>
                     </SafeAreaView>
                     
@@ -182,6 +182,14 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                     
                 )}}
             </Tab.Screen>
+            <Tab.Screen 
+                options={{
+                    headerShown:false,
+                    tabBarItemStyle:{ display: "none"},
+                }} 
+                name="Verify Phone Number">
+                {(props) => <PhoneVerifyStack {...props} />}
+              </Tab.Screen>
         </Tab.Navigator>
         
     )

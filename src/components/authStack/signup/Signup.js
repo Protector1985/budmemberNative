@@ -290,7 +290,6 @@ const styles = StyleSheet.create({
     createAcc:{
         color: "#dbdbdb",
         fontSize: 25,
-        fontFamily: "Roboto-Regular",
         
     },
 
@@ -299,7 +298,6 @@ const styles = StyleSheet.create({
     },
 
     alreadyMember: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb",
         fontSize: 14,
         marginRight: 7,
@@ -307,7 +305,6 @@ const styles = StyleSheet.create({
 
     signIn: {
         color: "#2da491",
-        fontFamily: "Roboto-Regular",
         textDecorationLine: "underline",
         fontSize: 14,
     },
@@ -341,7 +338,6 @@ const styles = StyleSheet.create({
     },
 
     signupWithSocial: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb",
         fontSize: 16,
         marginTop: "8%",
@@ -362,13 +358,12 @@ const styles = StyleSheet.create({
     },
 
     or : {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 21,
     },
 
     label: {
-        fontFamily: "Roboto-Regular",
+
         color: "#dbdbdb", 
         fontSize: 12,
     },
@@ -380,7 +375,6 @@ const styles = StyleSheet.create({
     },
 
     dateOfBirth: {
-        fontFamily: "Roboto-Regular",
         color: "#dbdbdb", 
         fontSize: 16,
         marginTop: "3%",
@@ -408,7 +402,7 @@ const styles = StyleSheet.create({
     },
     termsHeadline: {
         color: "#b4b4b4",
-        fontFamily: "Roboto-Regular",
+
     },
     termsStatementContainer: {
         marginLeft: 30,
@@ -420,7 +414,6 @@ const styles = StyleSheet.create({
     },
     termsStatement : {
         color: "#b4b4b4",
-        fontFamily: "Roboto-Regular",
         fontSize: 10,
     },
     bulletPoint : {
@@ -461,7 +454,6 @@ const styles = StyleSheet.create({
         color: "rgb(22, 169, 46)"
     },
     dobText: {
-        fontFamily: "Roboto-Regular",
         fontSize: 20,
         textAlign: "center",
     }

@@ -7,12 +7,13 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useDispatch, useSelector } from 'react-redux';
 import _init from './lib/_init';
 import Alert from '../utils/Alert';
+import * as Location from 'expo-location'
 
 
 const Stack = createStackNavigator();
 
 export default function AppStack() {
-    
+    const [status, requestPermission] = Location.useForegroundPermissions()
     const dispatch = useDispatch();
     const [navigation, setNavigation] = React.useState(null)
     const {userSlice} = useSelector((state) => state)
@@ -28,8 +29,11 @@ export default function AppStack() {
         message: "Initializing"
     })
     React.useEffect(() => {
-        _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)
-    }, [])
+        if(status != null) {
+            _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+        }
+        
+    }, [status])
 
  
     return (

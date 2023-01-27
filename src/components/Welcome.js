@@ -10,35 +10,15 @@ import * as Location from 'expo-location';
 
 
 export default function Welcome({navigation}) {
+    
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
     const dispatch = useDispatch()
- 
-   
-    const [isLoaded] = useFonts({
-        'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
-      });
-
-    React.useEffect(() => {
-      async function requestPermissions() {
-        try {
-            const {status} = await Location.requestForegroundPermissionsAsync();
-     
-        if (status !== 'granted') {
-          setAlertOpen(true);
-          setAlertMessage("Some features of this app might not be available without location permission")
-          setAlertType("WARNING")
-        }
-        dispatch(setLocationPermission(true))
-
-        }catch (err) {
-            console.log(err)
-        }
-    }
-        requestPermissions()
     
-    },[])
+    
+   
+    
 
 
       function handleNavigation() {
@@ -93,7 +73,6 @@ const styles = StyleSheet.create({
     },
     btnText: {
         color: "#fff",
-        fontFamily: "Roboto-Regular",
         fontSize: 20,
         marginLeft: "10%" ,
          

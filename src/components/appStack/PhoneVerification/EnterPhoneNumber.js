@@ -23,21 +23,20 @@ function Button({loading, setLoading, phoneNumber, setAlertOpen, setAlertMessage
         submissionNumber = `+1${phoneNumber}`
     }
 
-    // const member = await findMemberByPhone(searchObj)
-    // if(!member.data.exists) {
     
     async function handleSubmit() {
         try {
             setLoading(true)
             const res = await findMemberByPhone({phone: submissionNumber})
-            console.log(res.data)
-            //if the user is already in the system
+            
+        //     //if the user is already in the system
             if(res.data.exists) {
                 setLoading(false)
                 setAlertMessage("This phone number is already registered")
                 setAlertType("ERROR")
                 setAlertOpen(true)
-            } else {
+                setLoading(false)
+            } else if(!res.data.exists) {
                 const usr = await updateUser({
                     update: { MobilePhone: submissionNumber },
                     onboardingStep: '4',
@@ -50,7 +49,6 @@ function Button({loading, setLoading, phoneNumber, setAlertOpen, setAlertMessage
                     setLoading(false)
                   }
             }
-
         }catch(err) {
             setAlertMessage("Server Error. Please try again later")
             setAlertOpen(true)
@@ -66,9 +64,10 @@ function Button({loading, setLoading, phoneNumber, setAlertOpen, setAlertMessage
     )
 }
 
-export default function EnterPhoneNumber({navigation}) {
-    const [phoneNumber, setPhoneNumber] = React.useState("")
+export default function EnterPhoneNumber({navigation, numberState}) {
     const [sanitizedNumber, setSanitizedNumber] = React.useState("")
+    const [phoneNumber, setPhoneNumber] = React.useState("")
+
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
@@ -80,6 +79,13 @@ export default function EnterPhoneNumber({navigation}) {
     React.useEffect(() => {
         dispatch(closeDrawer())
     },[])
+
+    React.useState(() => {
+        if(numberState) {
+            onTextChange(numberState)
+        }
+
+    },[numberState])
     
     function onTextChange(text) {
         var cleaned = ('' + text).replace(/\D/g, '')
@@ -109,7 +115,7 @@ export default function EnterPhoneNumber({navigation}) {
                     <Text style={styles.headline}>Enter your phone number</Text>
                     <Text style={styles.expl}>{`We will send a code (via SMS text message) to your phone number`}</Text>
                 </View>
-                  <TextInput keyboardType='phone-pad' style={styles.inputField} value={phoneNumber} onChangeText={onTextChange} />
+                  <TextInput editable={numberState ? false : true} keyboardType='phone-pad' style={styles.inputField} value={phoneNumber} onChangeText={onTextChange} />
                 </View>
 
 

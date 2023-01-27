@@ -150,16 +150,13 @@ const styles = StyleSheet.create({
     },
     signIn: {
         fontSize: 30,
-        fontFamily: "Roboto-Regular",
         marginBottom: "25%",
     },
     newUser: {
         fontSize:18,
-        fontFamily: "Roboto-Regular",
     },
     createNew: {
         fontSize:15,
-        fontFamily: "Roboto-Regular",
         color: "#2da491",
         textDecorationLine: "underline",
     },

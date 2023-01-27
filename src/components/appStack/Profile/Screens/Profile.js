@@ -21,10 +21,7 @@ export default function Profile({ navigation}) {
         Birthdate
        } = useSelector((state) => state.userSlice)
 
-   
-    const [isLoaded] = useFonts({
-        'Roboto-Regular': require('../../../../../assets/fonts/Roboto-Regular.ttf'),
-      });
+
     
     const colors = useSelector((state) => state.userSlice.colorPalette)
     const {open} = useSelector((state)=> state.drawerSlice)
@@ -110,7 +107,6 @@ const styles = StyleSheet.create({
         marginLeft: 15,
     },
     name: {
-        fontFamily: "Roboto-Regular",
         color: "#FFF",
         fontSize: 20,
         fontWeight: "800",
@@ -118,7 +114,6 @@ const styles = StyleSheet.create({
         marginBottom: 0,
     },
     membership: {
-        fontFamily: "Roboto-Regular",
         color: "rgba(255, 255, 255, 0.8)",
         fontSize: 13,
         marginRight: 4,

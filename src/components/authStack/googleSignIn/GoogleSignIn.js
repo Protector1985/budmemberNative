@@ -1,7 +1,7 @@
 import React from 'react';
 import * as WebBrowser from 'expo-web-browser'
 import { makeRedirectUri, useAuthRequest, ResponseType} from 'expo-auth-session';
-import { Platform } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import jwt_decode from "jwt-decode";
 import SocialLoginButton from "../login/SocialLoginButton";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,6 +12,7 @@ import { googleSignin } from '../../../api/nodeApi';
 WebBrowser.maybeCompleteAuthSession()
 
 export default function GoogleSignIn({navigation}) {
+
     const {setUserToken} = React.useContext(AuthContext);
     const discoveryDocument = {
         authorizationEndpoint: "https://budmember-prod.auth.us-west-2.amazoncognito.com/login"
