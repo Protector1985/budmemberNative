@@ -1,12 +1,16 @@
 import React from 'react';
 
 import { useState } from 'react';
-import {Modal, View, Text, StyleSheet, Image, Dimensions, Platform} from 'react-native';
+import {Modal, View, Text, StyleSheet, Image, Dimensions, Platform, Linking} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from 'react-redux';
 import { closeDrawer } from '../../../store/drawerSlice';
+import * as WebBrowser from 'expo-web-browser';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ENDPOINT from '../../../../endpoint';
+
 //CTA == call to action!
 
 
@@ -55,28 +59,37 @@ function AndroidButtons({navigation}) {
     const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
     const {currentOnboardingStep} = useSelector((state) => state.systemSlice)
  
-    function returnPath() {
-        if(!Selected_Package_ID__c) {
-            return navigation.navigate("Select Plan")
-        } else {
-        switch(currentOnboardingStep){
-          case "3": 
-            return navigation.navigate("Verify Phone Number")
-          case "4": 
-            return navigation.navigate("Enter Code")
-          case "5":
-            return navigation.navigate("Payment Information")
-            default:
-                return navigation.navigate("Select Plan")
-        }
-        }
-      }
-    function handlePress() {
-        return returnPath()
+    // function returnPath() {
+    //     if(!Selected_Package_ID__c) {
+    //         return navigation.navigate("Select Plan")
+    //     } else {
+    //     switch(currentOnboardingStep){
+    //       case "3": 
+    //         return navigation.navigate("Verify Phone Number")
+    //       case "4": 
+    //         return navigation.navigate("Enter Code")
+    //       case "5":
+    //         return navigation.navigate("Payment Information")
+    //         default:
+    //             return navigation.navigate("Select Plan")
+    //     }
+    //     }
+    //   }
+
+    async function handlePress() {
+        const token = await AsyncStorage.getItem("userToken")
+        Linking.openURL(`https://dc7ed13c0fa3.ngrok.io/nativeRequest/?token=${token}`)
+          
+
+        
+        
+        // console.log(obj)
     }
+
     function handleCancel() {
         navigation.goBack()
     }
+
     return (
         <View>
             <TouchableOpacity onPress={handlePress}>

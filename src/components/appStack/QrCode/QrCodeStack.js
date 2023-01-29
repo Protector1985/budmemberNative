@@ -9,7 +9,8 @@ export default function QrCodeStack() {
  
     return (
         <Stack.Navigator>
-            <Stack.Screen name="QR Code" component={QrCode} />
+            <Stack.Screen name="QR Code" component={QrCode}/>
+
             <Stack.Screen name="Subscription Data" component={SubscriptionData} />
         </Stack.Navigator>
     )

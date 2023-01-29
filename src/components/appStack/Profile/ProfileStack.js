@@ -93,8 +93,6 @@ export default function ProfileStack({navigation}) {
     return <ActivityIndicator style={{flex: 1, backgroundColor: "white"}} />
   }
   
-
-  
   return (
         <Stack.Navigator  
         screenOptions={{
