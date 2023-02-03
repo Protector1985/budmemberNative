@@ -78,7 +78,8 @@ function AndroidButtons({navigation}) {
 
     async function handlePress() {
         const token = await AsyncStorage.getItem("userToken")
-        Linking.openURL(`https://dc7ed13c0fa3.ngrok.io/nativeRequest/?token=${token}`)
+       
+        Linking.openURL(`https://203f8c767aa8.ngrok.io/nativeRequest/?token=${token}`)
           
 
         

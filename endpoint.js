@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 let ENDPOINT;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {

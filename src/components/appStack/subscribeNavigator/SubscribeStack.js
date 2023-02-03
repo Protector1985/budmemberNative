@@ -42,7 +42,7 @@ export default function SubscribeStack() {
           {(props) => <PhoneVerifyStack {...props} />}
         </Stack.Screen>
         {currentOnboardingStep === "update" ? <Stack.Screen name="Info" component={UpgradeInfo} /> : null} 
-        {currentOnboardingStep === "update" || currentOnboardingStep === "reactivate" ? <Stack.Screen name="Payment Method" component={SelectPayment} /> : null}
+         <Stack.Screen name="Payment Method" component={SelectPayment} /> 
         <Stack.Screen
         options={{
           headerLeft: ()=> null,

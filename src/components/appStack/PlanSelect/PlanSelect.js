@@ -215,7 +215,7 @@ function IosButton({color, textColor, navigation}) {
             case "4": 
                 return navigation.navigate("Enter Code")
             case "5":
-                return navigation.navigate("Payment Information")
+                return navigation.navigate("Payment Method")
             default:
                 return navigation.navigate("Select Plan")
         }

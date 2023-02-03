@@ -108,7 +108,7 @@ function VerifyPhoneNumber({navigation, numberState}){
             phone_number_verified: true,
             onboardingStep:  '5',
             });
-            numberState? navigation.navigate("Profile") : navigation.navigate("Payment Information")
+            numberState? navigation.navigate("Profile") : navigation.navigate("Payment Method")
             
         } else {
             setLoading(false)

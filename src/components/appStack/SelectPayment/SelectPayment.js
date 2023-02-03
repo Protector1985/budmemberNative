@@ -1,13 +1,13 @@
 import axios from 'axios';
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Touchable } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Touchable, Alert} from "react-native";
 import { ActivityIndicator } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import Alert from '../../utils/Alert';
+// import Alert from '../../utils/Alert';
 import _init from '../lib/_init';
 import changeWithCardOnFile from './lib/changeWithCardOnFile';
 import submitExisting from './lib/changeWithCardOnFile';
-
+const PaymentRequest = require('react-native-payments').PaymentRequest;
 
 function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
     
@@ -18,6 +18,8 @@ function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
                 return "Add New Card";
             case "EXISTING":
                 return ccNumber
+            case "APPLE_PAY":
+                return "Apple"
         }
     }
 
@@ -97,6 +99,8 @@ React.useEffect(() => {
   async function handlePress() {
     setLoading(true)
     switch(paymentMethods[selectionIndex].type) {
+        case "APPLE_PAY":
+            return paymentRequest.show()
         case "ADD":
             return navigation.navigate("Payment Information")
         case "EXISTING":
@@ -121,16 +125,80 @@ React.useEffect(() => {
     }
   }
 
+
+  //APPLE PAY
+
+  const DETAILS = {
+    id: 'basic-example',
+    displayItems: [
+      {
+        label: 'VIP Membership',
+        amount: { currency: 'USD', value: '49.00' }
+      },
+    ],
+    total: {
+      label: 'Bare Dispensary',
+      amount: { currency: 'USD', value: '49.00' }
+    }
+  };
+
+  const METHOD_DATA = [{
+    supportedMethods: ['apple-pay'],
+    data: {
+      merchantIdentifier: 'merchant.com.budmember',
+      supportedNetworks: ['visa', 'mastercard', 'amex'],
+      countryCode: 'US',
+      currencyCode: 'USD',
+      recurringPaymentRequest: {
+        paymentDescription: "VIP Membership",
+        regularBilling: {type: "final", label: "Membership", amount: "49.00", paymentTiming:"recurring", recurringPaymentIntervalUnit: "day"},
+        managementURL: "https://app.budmember.com/profile",
+      }
+    }
+  }];
+
+  const OPTIONS = {
+    requestPayerName: true,
+    requestPayerPhone: true,
+    requestPayerEmail: true,
+    requestShipping: true
+  };
+
+ 
+
+
+ 
+
+  
+    const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
+    
+    React.useEffect(() => {
+        paymentRequest.canMakePayments()
+        .then((canMakePayment) => {
+             
+            if (canMakePayment) {
+              setPaymentMethods(() => [{type: "APPLE_PAY"},{type:"ADD"}])
+              
+            }
+      })
+
+    },[])
+    
+
+  
+
+  
+
     return(
         <View style={styles.container}>
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
             <View style={styles.headerContainer}>
-            <Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
+            {/*<Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>*/}
                 <Text style={styles.headline}>Select a payment method</Text>
             </View>
             <FlatList
                 data={paymentMethods}
-                renderItem={({item, index}) => <Card selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
+                renderItem={({item, index}) => <Card paymentRequest={paymentRequest} selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
             />
             <View style={styles.btnContainer}>
                 <TouchableOpacity disabled={loading} onPress={handlePress} style={[styles.continueBtn, {backgroundColor: colorPalette.accent}]}>
