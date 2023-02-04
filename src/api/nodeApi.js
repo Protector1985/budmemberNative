@@ -2,7 +2,7 @@ import {Platform, StyleSheet} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import axios from 'axios'
 import { VideoExportPreset } from 'expo-image-picker';
-import ENDPOINT from '../../endpoint';
+import {ENDPOINT} from '../../endpoint';
 
 
 const setToken = async (headers = {}) => {

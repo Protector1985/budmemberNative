@@ -106,7 +106,8 @@
     "redux": "^4.2.0",
     "rn-credit-card": "^1.0.4",
     "rn-fetch-blob": "^0.12.0",
-    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo"
+    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo",
+    "expo-intent-launcher": "~10.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12"

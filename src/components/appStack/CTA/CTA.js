@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { useState } from 'react';
-import {Modal, View, Text, StyleSheet, Image, Dimensions, Platform, Linking} from 'react-native';
+import {Modal, View, Text, StyleSheet, Image, Dimensions, Platform} from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button } from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,10 +9,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { closeDrawer } from '../../../store/drawerSlice';
 import * as WebBrowser from 'expo-web-browser';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import ENDPOINT from '../../../../endpoint';
-
+import {ENDPOINT, webFrontend} from '../../../../endpoint';
+import * as Linking from 'expo-linking';
+import { makeRedirectUri} from 'expo-auth-session';
 //CTA == call to action!
-
 
 function IosButtons({navigation}) {
     const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
@@ -76,10 +76,19 @@ function AndroidButtons({navigation}) {
     //     }
     //   }
 
+    
+    
+    
     async function handlePress() {
+        
+        const backToAppRedirect = Linking.createURL("/browserRedirect/", {finished: true})
         const token = await AsyncStorage.getItem("userToken")
-       
-        Linking.openURL(`https://203f8c767aa8.ngrok.io/nativeRequest/?token=${token}`)
+           
+let result = await WebBrowser.openBrowserAsync(`${webFrontend}/nativeRequest/?token=${token}&redirect=${backToAppRedirect}`);
+          
+
+            
+            
           
 
         
@@ -108,7 +117,7 @@ function AndroidButtons({navigation}) {
 
 export default function CTA(props) {
     const dispatch = useDispatch()
-    
+   
     
     React.useEffect(() => {
         dispatch(closeDrawer())
