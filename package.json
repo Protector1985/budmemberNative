@@ -39,6 +39,7 @@
     "expo-auth-session": "~3.8.0",
     "expo-barcode-scanner": "~12.1.0",
     "expo-image-picker": "~14.0.2",
+    "expo-intent-launcher": "~10.3.1",
     "expo-linear-gradient": "~12.0.1",
     "expo-location": "~15.0.1",
     "expo-random": "~13.0.0",
@@ -98,7 +99,6 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-vision-camera": "^2.15.2",
     "react-native-web-storage": "^0.2.2",
-    "react-native-wheel-datepicker": "^2.2.3",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
     "react-redux": "^8.0.4",
@@ -106,8 +106,7 @@
     "redux": "^4.2.0",
     "rn-credit-card": "^1.0.4",
     "rn-fetch-blob": "^0.12.0",
-    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo",
-    "expo-intent-launcher": "~10.3.1"
+    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12"

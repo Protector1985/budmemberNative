@@ -79,9 +79,11 @@ export default function _init(locationPermission, userSlice, cognitoData, avatar
    
     }catch(err) {
         console.log(err)
+    } finally {
+        return "DONE"
     }
     }
-    fetchData()
+    return fetchData()
     //------INIT - ALL STARTING STATE------
 
 }

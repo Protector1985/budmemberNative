@@ -9,9 +9,12 @@ import store from './src/store/store.js'
 import { Provider } from 'react-redux'
 import { useFonts } from 'expo-font';
 import * as Location from 'expo-location'
-
+import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser';
 
 function App() {
+  
+
   const [status, requestPermission] = Location.useForegroundPermissions()
     async function requestPermissions() {
         try {

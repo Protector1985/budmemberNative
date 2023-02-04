@@ -27,6 +27,9 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
           case "WARNING":
             callBack ? (callBack(), setVisible(false)) : setVisible(false)
             break;
+          case "INFO":
+            callBack ? (callBack(), setVisible(false)) : setVisible(false)
+            break;
         }
     }
   
@@ -38,6 +41,8 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
           return styles.error;
         case "WARNING":
           return styles.warning
+        case "INFO":
+          return styles.info
       }
     }
 
@@ -49,6 +54,8 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
           return '#DC4C64';
         case "WARNING":
           return '#E4A11B';
+        case "INFO":
+          return '#5bc0de';
       }
     }
 
@@ -59,6 +66,8 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
         case "ERROR":
           return 'ios-close';
         case "WARNING":
+          return 'exclamation';
+        case "INFO":
           return 'exclamation';
       }
     }
@@ -78,6 +87,11 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
             color="#FFFFFF"
           />;
         case "WARNING":
+          return <AntDesign 
+            name="exclamation" 
+            size={36}
+            color="#FFFFFF" />
+        case "INFO":
           return <AntDesign 
             name="exclamation" 
             size={36}
@@ -135,17 +149,28 @@ const styles = StyleSheet.create({
         backgroundColor: '#E4A11B',
         width: '100%',
     },
+    info: {
+      flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#5bc0de',
+        width: '100%',
+    },
     content: {
       width: "90%",
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
+      justifyContent: "center",
+      
       alignItems: 'center',
       marginTop: -16,
       marginBottom: 16,
     },
     contentText: {
-      textAlign: 'center',
+      textAlign: 'justify',
+      textJustify: "inter-character",
+      fontSize: 16,
     },
     btn: {
       borderRadius: 32,
