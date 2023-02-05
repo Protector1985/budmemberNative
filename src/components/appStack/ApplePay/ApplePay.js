@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import { PaymentRequest } from 'react-native-payments'
+
 
 export default function ApplePay() {
     const DETAILS = {

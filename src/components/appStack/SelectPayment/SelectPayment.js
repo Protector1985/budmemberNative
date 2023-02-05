@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _init from '../lib/_init';
 import changeWithCardOnFile from './lib/changeWithCardOnFile';
 import submitExisting from './lib/changeWithCardOnFile';
-const PaymentRequest = require('react-native-payments').PaymentRequest;
+
 
 function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
     
@@ -126,43 +126,8 @@ React.useEffect(() => {
   }
 
 
-  //APPLE PAY
+  
 
-  const DETAILS = {
-    id: 'basic-example',
-    displayItems: [
-      {
-        label: 'VIP Membership',
-        amount: { currency: 'USD', value: '49.00' }
-      },
-    ],
-    total: {
-      label: 'Bare Dispensary',
-      amount: { currency: 'USD', value: '49.00' }
-    }
-  };
-
-  const METHOD_DATA = [{
-    supportedMethods: ['apple-pay'],
-    data: {
-      merchantIdentifier: 'merchant.com.budmember',
-      supportedNetworks: ['visa', 'mastercard', 'amex'],
-      countryCode: 'US',
-      currencyCode: 'USD',
-      recurringPaymentRequest: {
-        paymentDescription: "VIP Membership",
-        regularBilling: {type: "final", label: "Membership", amount: "49.00", paymentTiming:"recurring", recurringPaymentIntervalUnit: "day"},
-        managementURL: "https://app.budmember.com/profile",
-      }
-    }
-  }];
-
-  const OPTIONS = {
-    requestPayerName: true,
-    requestPayerPhone: true,
-    requestPayerEmail: true,
-    requestShipping: true
-  };
 
  
 
@@ -170,19 +135,9 @@ React.useEffect(() => {
  
 
   
-    const paymentRequest = new PaymentRequest(METHOD_DATA, DETAILS, OPTIONS);
+   
     
-    React.useEffect(() => {
-        paymentRequest.canMakePayments()
-        .then((canMakePayment) => {
-             
-            if (canMakePayment) {
-              setPaymentMethods(() => [{type: "APPLE_PAY"},{type:"ADD"}])
-              
-            }
-      })
-
-    },[])
+    
     
 
   

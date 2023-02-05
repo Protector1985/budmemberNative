@@ -35,13 +35,18 @@
       }
     },
     "android": {
-      "package":"com.native.budmember",
+      "package":"com.application.budmember",
+      "config": {
+        "googleMaps":{
+          "apiKey": "AIzaSyBRSOTH19xjCo6yQsbox6hjyC8TIaY4g-U"
+        }
+      },
       "softwareKeyboardLayoutMode": "pan",
+      "permissions": [ "CAMERA", "CAMERA_ROLL", "ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION" ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "package": "com.native.budmember"
+      } 
     },
     "web": {
       "favicon": "./assets/favicon.png"

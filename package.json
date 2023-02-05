@@ -75,7 +75,6 @@
     "react-native-expo-fancy-alerts": "^2.1.1",
     "react-native-floating-label-input": "^1.4.2",
     "react-native-gesture-handler": "~2.8.0",
-    "react-native-image-crop-picker": "^0.39.0",
     "react-native-image-picker": "^4.10.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-linear-gradient": "^2.6.2",
@@ -83,7 +82,6 @@
     "react-native-open-maps": "^0.4.0",
     "react-native-pager-view": "6.0.1",
     "react-native-paper": "^5.1.4",
-    "react-native-payments": "^0.8.4",
     "react-native-progress": "^5.0.0",
     "react-native-qrcode-svg": "^6.2.0",
     "react-native-reanimated": "~2.12.0",
@@ -106,7 +104,8 @@
     "redux": "^4.2.0",
     "rn-credit-card": "^1.0.4",
     "rn-fetch-blob": "^0.12.0",
-    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo"
+    "undefined": "WrathChaos/react-native-dynamic-search-bar#expo",
+    "expo-system-ui": "~2.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12"

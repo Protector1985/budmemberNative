@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView} from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView, Platform} from 'react-native';
+import MapView, {Marker, PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import SearchBar from "react-native-dynamic-search-bar";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ProgressBar from '../ProgressBar/ProgressBar';
@@ -188,25 +188,21 @@ export default function MapScreen({navigation, initProgress}) {
 
                 <MapView
                     style={styles.map}
+                    provider={Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     region={{
-                    latitude: latitude,
-                    longitude: longitude,
-                    latitudeDelta: 3,
-                    longitudeDelta: 0.0121,
+                        latitude: latitude,
+                        longitude: longitude,
+                        latitudeDelta: 3,
+                        longitudeDelta: 0.0121,
                     }} 
-                >
-            
-                
-
+                >  
+                    <Marker
+                        key={"HomeMarker"}
+                        coordinate={{ latitude : latitude , longitude : longitude }}
+                        title={"Your Location"}
+                        description={"You are here"}
+                    />
                     
-             
-                
-                <Marker
-                    key={"HomeMarker"}
-                    coordinate={{ latitude : latitude , longitude : longitude }}
-                    title={"Your Location"}
-                    description={"You are here"}
-                />
                     {Object.values(dispensaries).map((item, index) => {
                         return (
                                 <Marker
@@ -218,9 +214,7 @@ export default function MapScreen({navigation, initProgress}) {
                                 />
                             )
                     })}
-                            
-                    
-                    
+                               
                 </MapView>
                     {Object.keys(sliderData).length === 0 ? null :<BottomSlider hours={hours} sliderData={sliderData} homeLatitude={latitude} homeLongitude={longitude}/>}
 

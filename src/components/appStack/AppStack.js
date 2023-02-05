@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _init from './lib/_init';
 import Alert from '../utils/Alert';
 import * as Location from 'expo-location'
+import { Text } from 'react-native';
 
 
 const Stack = createStackNavigator();
@@ -40,6 +41,7 @@ export default function AppStack() {
             
             <ActionSheetProvider>
                 <TabNavigator initProgress={initState} />
+                
             </ActionSheetProvider>
             
             
