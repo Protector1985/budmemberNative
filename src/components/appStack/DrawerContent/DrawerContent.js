@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import Profile from '../Profile/Screens/Profile';
 import Billing from '../Billing/Billing';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
 function DrawerItem({navigation, screenName, screenLink}) {
-        
         function handleNavigation() {
  
             navigation.jumpTo(screenName,{screen: screenLink})
@@ -24,6 +24,8 @@ function DrawerItem({navigation, screenName, screenLink}) {
         </View>
     )
 }
+
+
 
   export default function DrawerContent(props) {
     const colors = useSelector((state) => state.userSlice.colorPalette)
@@ -51,7 +53,9 @@ function DrawerItem({navigation, screenName, screenLink}) {
             <View style={styles.listContainer}>
                 <DrawerItem {...props} screenName="Profile" />
                 <DrawerItem {...props} screenName="Billing" />
+                <Logout />
             </View>
+            
         </SafeAreaView>
     )
   }
@@ -60,6 +64,12 @@ function DrawerItem({navigation, screenName, screenLink}) {
     container: {
         flex: 1,
         zIndex: 1000000,
+    },
+    drawerBottom: {
+        height: 200,
+        width: "100%",
+        backgroundColor:"black",
+        marginTop: "auto",
     },
     listContainer: {
         width: "100%",

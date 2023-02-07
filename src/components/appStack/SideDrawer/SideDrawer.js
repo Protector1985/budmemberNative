@@ -23,6 +23,21 @@ return (
 )
 }
 
+function Logout({navigation, screenName, screenLink}) {
+    function handleNavigation() {
+        AsyncStorage.clear();
+    }
+
+return (
+    <View style={styles.logoutContainer}>
+        <TouchableOpacity onPress={handleNavigation}>
+            <Text style={styles.txt}>Logout</Text>
+        </TouchableOpacity>
+    
+    </View>
+)
+}
+
 export default function SideDrawer(props) {
     const colors = useSelector((state) => state.userSlice.colorPalette)
     const {FirstName, LastName, Membership_Status__c, avatarUri} = useSelector((state) => state.userSlice)
@@ -54,7 +69,9 @@ return(
                 <DrawerItem {...props} screenName="Profile" />
                 {Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"] ? <DrawerItem {...props} screenName="Billing" /> : null}
                 <DrawerItem {...props} screenName="Contact Us" />
+                
             </View>
+            <Logout />
         </ScrollView>
     )
   }
@@ -65,8 +82,16 @@ return(
     container: {
         flex: 1,
     },
+    logoutContainer: {
+        position:"relative",
+        width: "100%",
+        height: 100,
+        backgroundColor: "black",
+        bottom:0
+    },
     listItems: {
         alignItems: "center",
+        height: "80%"
     },
     txt: {
         fontSize: 18,

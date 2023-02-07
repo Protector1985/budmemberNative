@@ -2,7 +2,7 @@
   "expo": {
     "name": "budmemberNative",
     "slug": "budmemberNative",
-    "scheme":"com.native.budmember",
+    "scheme":"com.application.budmember",
     "version": "0.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -35,6 +35,19 @@
       }
     },
     "android": {
+      "intentFilters": [
+        {
+        "action": "VIEW",
+        "autoVerify": true,
+        "data": [
+            {
+            "scheme": "com.application.budmember",
+            "host": "status" 
+            }
+        ],
+        "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "package":"com.application.budmember",
       "config": {
         "googleMaps":{

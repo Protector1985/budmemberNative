@@ -142,12 +142,12 @@ export default function CTA(props) {
 
    async function openWebBrowser() {
         setLoading(true)
-        const backToAppRedirect = Linking.createURL("/status/?complete=true")
+        const backToAppRedirect = Linking.createURL("status")
         const token = await AsyncStorage.getItem("userToken")  
-        console.log(`${webFrontend}/nativeRequest/?token=${token}&redirect=${backToAppRedirect}`)
         let result = await WebBrowser.openBrowserAsync(`${webFrontend}/nativeRequest/?token=${token}&redirect=${backToAppRedirect}`);
-   }
-
+        console.log(result)
+    }
+   
     return( 
         
             <SafeAreaView style={styles.masterContainer}>
