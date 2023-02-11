@@ -18,8 +18,7 @@ function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
                 return "Add New Card";
             case "EXISTING":
                 return ccNumber
-            case "APPLE_PAY":
-                return "Apple"
+            
         }
     }
 
@@ -99,8 +98,7 @@ React.useEffect(() => {
   async function handlePress() {
     setLoading(true)
     switch(paymentMethods[selectionIndex].type) {
-        case "APPLE_PAY":
-            return paymentRequest.show()
+      
         case "ADD":
             return navigation.navigate("Payment Information")
         case "EXISTING":
@@ -153,7 +151,7 @@ React.useEffect(() => {
             </View>
             <FlatList
                 data={paymentMethods}
-                renderItem={({item, index}) => <Card paymentRequest={paymentRequest} selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
+                renderItem={({item, index}) => <Card  selectionIndex={selectionIndex} ccNumber={ccNumber} index={index} setSelectionIndex={setSelectionIndex} method={item.type}/>}
             />
             <View style={styles.btnContainer}>
                 <TouchableOpacity disabled={loading} onPress={handlePress} style={[styles.continueBtn, {backgroundColor: colorPalette.accent}]}>

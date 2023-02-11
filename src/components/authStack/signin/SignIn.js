@@ -6,11 +6,11 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { AuthContext } from '../../../context/AuthContext';
 import Alert from '../../utils/Alert'
 import { findUser, forgotPassword } from '../../../api/nodeApi';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 export default function SignIn({navigation}) {
 
     //state needed for this component
-    const [email, setEmail] = useState(navigation?.state?.params?.email || "");
+    const [email, setEmail] = useState(navigation?.state?.params?.email.toLowerCase() || "");
     const [password, setPassword] = useState("");
      //State passed from useContext - AuthContext
     const {login, logout} = useContext(AuthContext);
@@ -20,6 +20,9 @@ export default function SignIn({navigation}) {
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
     const [userFound, setUserFound] = React.useState(false)
+    
+    
+    
     async function submitForgotPassword(){
         setLoading(true);
         try {
@@ -74,6 +77,16 @@ export default function SignIn({navigation}) {
         <View style={styles.masterContainer}>
         <ActivityIndicator color={"#2CA491"} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
         <Alert location="Enter Code" navigation={navigation} visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
+        <KeyboardAwareScrollView
+                style={{width: "100%"}}
+                contentContainerStyle={{
+                    
+                    alignItems:"center",
+                    width:"100%",
+                    flexGrow: 1,
+                    justifyContent:"center",
+                    overflow:"scroll",
+                }}>
             <View style={styles.subContainer}>
                 <View style={styles.imgContainer}>
                     <Image style={styles.logo} source={require('../login/logo.jpg')} />
@@ -86,7 +99,7 @@ export default function SignIn({navigation}) {
                             <TextInput 
                                 autoComplete={'email'} 
                                 value={email} 
-                                onChangeText={(text) => setEmail(text)} 
+                                onChangeText={(text) => setEmail(text.toLowerCase())} 
                                 style={styles.inputField}/>
                         </View>
                         <View style={styles.inputSubContainer} >
@@ -100,23 +113,24 @@ export default function SignIn({navigation}) {
                         </View>
                     </View>
                     <View style={styles.btnSection}>
-                        <View style={styles.forgotPwBtn}>
-                            <TouchableOpacity disabled={loading} onPress={() => submitForgotPassword()} activeOpacity={1} style={styles.fpBtn}>
-                                <Text style={styles.forgotPassword}>Forgot Password</Text>
-                            </TouchableOpacity>  
-                        </View>
-                        
                         
                         <View style={styles.submitBtn}>
                             <TouchableOpacity onPress={() => login(email, password)} disabled={disableButton()} style={ disableButton() === false ? styles.btn : styles.btnDisabled}>
                                 <Text style={disableButton() === false ? styles.btnText : styles.btnTextDisabled}>Sign In</Text>
                             </TouchableOpacity>
                         </View>
+
+                        <View style={styles.forgotPwBtn}>
+                            <TouchableOpacity disabled={loading} onPress={() => submitForgotPassword()} activeOpacity={1} style={styles.fpBtn}>
+                                <Text style={styles.forgotPassword}>Forgot Password</Text>
+                            </TouchableOpacity>  
+                        </View>
                         
                     </View>
                     
                 </View>
             </View>
+            </KeyboardAwareScrollView>
         </View>
     )
 }
@@ -127,12 +141,12 @@ const styles = StyleSheet.create({
         backgroundColor:"#2a1b6e",
         height: "100%",
         width: "100%", 
-        justifyContent: "center",
-        alignItems: "center", 
+       
+        
     },
     forgotPwBtn: {
         width: 170,
-        marginBottom:20,
+        marginTop: 30,
     },
     fpBtn: {
         width:"auto",
@@ -143,14 +157,14 @@ const styles = StyleSheet.create({
         height: "90%",
     },
     imgContainer: {
-        flex: 0.7,
+        
         width: "100%",
-        height: "auto",
+        height: 150,
         marginTop: 10,
         flexDirection:"column",
     },
     signInSection: {
-        flex: 1.5,
+       flex:0.3
     },
     inputContainers: {
         flex: 1,
@@ -176,6 +190,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         minHeight: 35,
         borderRadius: 5,
+        paddingLeft: 10,
     },
     inputSubContainer: {
         marginBottom: "3%",
@@ -213,7 +228,7 @@ const styles = StyleSheet.create({
     forgotPassword: {
         marginTop: "auto",
         marginBottom:"auto",
-        fontSize: 18,
+        fontSize: 16,
         color: "#b6c0ca",
     }
 })

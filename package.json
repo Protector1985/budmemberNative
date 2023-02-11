@@ -27,6 +27,7 @@
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
     "@reduxjs/toolkit": "^1.8.6",
+    "@unimodules/core": "^7.1.2",
     "amazon-cognito-identity-js": "^5.2.14",
     "apple-pay": "^1.0.2",
     "aws-amplify": "^4.3.45",
@@ -46,6 +47,7 @@
     "expo-screen-orientation": "~5.0.1",
     "expo-splash-screen": "~0.17.5",
     "expo-status-bar": "~1.4.2",
+    "expo-system-ui": "~2.0.1",
     "expo-updates": "~0.15.6",
     "expo-web-browser": "~12.0.0",
     "geolib": "^3.3.3",
@@ -105,7 +107,7 @@
     "rn-credit-card": "^1.0.4",
     "rn-fetch-blob": "^0.12.0",
     "undefined": "WrathChaos/react-native-dynamic-search-bar#expo",
-    "expo-system-ui": "~2.0.1"
+    "expo-checkbox": "~2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12"

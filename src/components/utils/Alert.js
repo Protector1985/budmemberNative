@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
         width: '100%',
       },
     warning: {
-      flex: 1,
+        flex: 1,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',

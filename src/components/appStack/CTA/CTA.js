@@ -118,25 +118,27 @@ export default function CTA(props) {
 
 
   React.useEffect(() => {
-    console.log(url)
+   if(Platform.OS === "android") {
     if(url) {
-      setInitState({
-        progress: 0.01,
-        stepsLeft: 5,
-        message: "Initializing"
-    })
-      WebBrowser.coolDownAsync()
-      _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+        setInitState({
+          progress: 0.01,
+          stepsLeft: 5,
+          message: "Initializing"
+      })
+        WebBrowser.coolDownAsync()
+        _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
+      }
+   }
     
-      
-    }
   },[url])
 
   React.useEffect(() => {
+    if(Platform.OS === "android") {
     if(initState?.stepsLeft === 0) {
         setLoading(false)
         props.navigation.navigate("Map")
     }
+}
   },[initState])
 
 
@@ -149,7 +151,6 @@ export default function CTA(props) {
     }
    
     return( 
-        
             <SafeAreaView style={styles.masterContainer}>
             <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
                 <Image style={styles.logo} source={require("../../../assets/pictures/logo_white.png")} />

@@ -299,11 +299,13 @@ const styles = StyleSheet.create({
     },
     textDisplay: {
         fontSize: 18,
-        marginTop: 10,    
+        marginTop: 10, 
+        paddingLeft: 10,   
     },
     textDisplaySmall: {
         fontSize: 16,
-        marginTop: 10,    
+        marginTop: 10,   
+        paddingLeft: 10,    
     },
     editPictureBg: {
         top: -60,

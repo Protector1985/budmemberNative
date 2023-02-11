@@ -15,6 +15,7 @@ import * as Location from 'expo-location'
 
 
 const Stack = createStackNavigator()
+
 export default function ProfileStack({navigation}) {
   const [status, requestPermission] = Location.useForegroundPermissions()
   const {
@@ -53,7 +54,7 @@ export default function ProfileStack({navigation}) {
   }
 
   async function handleSave() {  
-
+    if(localFirst !== FirstName || localLast !== LastName || localEmail !== Email || localPhone !== MobilePhone) {
     setLoading(true)
     const updateObject = {
       update: {
@@ -76,13 +77,10 @@ export default function ProfileStack({navigation}) {
       }
       
     }
-    // try {
-    //   const res = await updateUser(updateObject);
-    //   setLoading(false)
-     
-    // }catch (err) {
-    //   console.log(err)
-    // }
+  } else {
+    return
+  }
+   
   }
 
   function handleDateChange() {

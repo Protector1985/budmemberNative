@@ -31,7 +31,7 @@ export default function AppStack() {
     })
     React.useEffect(() => {
         if(status != null) {
-            _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+            _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
         }
         
     }, [status])

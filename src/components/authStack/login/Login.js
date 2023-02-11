@@ -28,12 +28,12 @@ export default function Login({navigation}) {
         //if user is not signed up, navigate to signup
         if(!res.data.success) {
             setLoading(false)
-            navigation.navigate('Signup', {email})
+            navigation.navigate('Signup', {email: email.toLowerCase()})
         
             //if user is signed up, navigate to signin    
         } else if(res.data.success) {
             setLoading(false)
-            navigation.navigate('Signin', {email})
+            navigation.navigate('Signin', {email: email.toLowerCase()})
         }   
     } catch(err) {
         console.log(err)
@@ -170,6 +170,7 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderRadius: 7,
         marginTop: 5,
+        paddingLeft: 10,
     },
     label: {
         color: "#dbdbdb",  

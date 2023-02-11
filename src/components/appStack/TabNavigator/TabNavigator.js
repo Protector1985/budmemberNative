@@ -20,8 +20,8 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
     const {Membership_Status__c} = useSelector((state) => state.userSlice);
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {open} = useSelector((state)=> state.drawerSlice)
-  
-
+    const badgeVisible = Membership_Status__c !== "Active" && Membership_Status__c !== "Cancelled" 
+    console.log(Membership_Status__c)
 
     function returnStack(props, menu) {
         try {
@@ -90,6 +90,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
             <Tab.Screen
                 name="QR"
                 options={{
+                    tabBarBadge: badgeVisible ? "!" : null,
                     unmountOnBlur:true,
                     animationEnabled: true,
                     tabBarShowLabel: false, 

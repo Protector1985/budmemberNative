@@ -12,7 +12,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function Billing({navigation}) {
     
-    const {Email, currentActivePackage, selectedPackage, packagePrice, lastChargeDate} = useSelector((state) => state.userSlice)
+    const {Email, currentActivePackage, selectedPackage, packagePrice, lastChargeDate, colorPalette} = useSelector((state) => state.userSlice)
     const {ccNumber, ccExp} = useSelector((state) => state.ccInfoSlice)
     const dispatch = useDispatch()
     
@@ -76,11 +76,11 @@ export default function Billing({navigation}) {
                 </View>}
 
                     <View style={styles.actionContainer}>
-                        <View style={styles.btnContainer}>
-                            <TouchableOpacity style={styles.btn}>
-                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.btnText}>Change Membership</Text>
-                                <FontAwesome name="angle-right" size={24} color="grey" />
-                            </TouchableOpacity>
+                    <View style={styles.btnContainer}>
+                            <View style={styles.btn}>
+                                <Text style={styles.btnText}>Next Billing Cycle</Text>
+                                <Text>Feb 14, 2023</Text>
+                            </View>
                         </View>
                         <View style={styles.btnContainer}>
                             <TouchableOpacity style={styles.btn}>
@@ -89,18 +89,26 @@ export default function Billing({navigation}) {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.btnContainer}>
-                            <View style={styles.btn}>
-                                <Text style={styles.btnText}>Next Billing Cycle</Text>
-                                <Text>Feb 14, 2023</Text>
-                            </View>
-                        </View>
-                        <View style={styles.btnContainer}>
                             <TouchableOpacity style={styles.btn}>
-                                <Text style={styles.btnText}>Cancel Membership</Text>
+                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.btnText}>Change Membership</Text>
                                 <FontAwesome name="angle-right" size={24} color="grey" />
                             </TouchableOpacity>
                         </View>
+                        
+                        <View style={styles.changeMembershipCont}>
+                            <TouchableOpacity style={styles.changeBtn}>
+                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.changeText}>Change Membership</Text>
+                            </TouchableOpacity>
+                            
+                        </View>
+                        
+                        
                     </View>  
+                    <View style={styles.cancelBtnContainer}>
+                            <TouchableOpacity style={[styles.changeBtn, {backGroundColor: colorPalette.accent}]}>
+                                <Text style={styles.cancelBtnText}>Cancel Membership</Text>
+                            </TouchableOpacity>
+                        </View>
             </ScrollView>
         </SafeAreaView>
     )
@@ -113,6 +121,21 @@ const styles = StyleSheet.create({
     },
     scrollContainer: {
         minHeight: "100%",
+    },
+    changeBtn: {
+        width: "100%",
+        height: "100%",
+    },
+    changeMembershipCont: {
+        width:"90%",
+        height: 80,
+    },
+    cancelBtnContainer: {
+        marginTop:"20%",
+        marginLeft:"5%"
+    },
+    cancelBtnText: {
+        color:"#303f9f"
     },
     img: {
         width: "90%",

@@ -1,12 +1,16 @@
 import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import {useContext} from 'react';
 import MenuDrawer from 'react-native-side-drawer'
 import UserAvatar from 'react-native-user-avatar';
 import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
-const height = Dimensions
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AuthContext } from '../../../context/AuthContext';
+const height = Dimensions.get("window").height
 
 function DrawerItem({navigation, screenName, screenLink}) {
+    
     const dispatch = useDispatch()
     
     function handleNavigation() {
@@ -23,13 +27,16 @@ return (
 )
 }
 
+
 function Logout({navigation, screenName, screenLink}) {
+    const {isLoading, userToken, setUserToken} = useContext(AuthContext)
     function handleNavigation() {
         AsyncStorage.clear();
+        setUserToken(null)
     }
 
 return (
-    <View style={styles.logoutContainer}>
+    <View style={[styles.logoutContainer]}>
         <TouchableOpacity onPress={handleNavigation}>
             <Text style={styles.txt}>Logout</Text>
         </TouchableOpacity>
@@ -45,7 +52,7 @@ export default function SideDrawer(props) {
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
      
 return(
-        <ScrollView style={styles.container}>
+        <ScrollView style={[styles.container, {height: height}]}>
         <LinearGradient
         style={{
             width: undefined, 
@@ -65,13 +72,14 @@ return(
                     <Text style={styles.savings}>{`Total Savings: $${totalSavings}`}</Text>
                 </View>
             </LinearGradient>
-            <View style={styles.listItems}>
-                <DrawerItem {...props} screenName="Profile" />
-                {Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"] ? <DrawerItem {...props} screenName="Billing" /> : null}
-                <DrawerItem {...props} screenName="Contact Us" />
-                
+            <View style={[styles.subContainer, {height: height * 0.65}]}>
+                <View style={styles.listItems}>
+                    <DrawerItem {...props} screenName="Profile" />
+                    {Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"] ? <DrawerItem {...props} screenName="Billing" /> : null}
+                    <DrawerItem {...props} screenName="Contact Us" /> 
+                </View>
+                <Logout {...props} />
             </View>
-            <Logout />
         </ScrollView>
     )
   }
@@ -81,17 +89,22 @@ return(
   const styles = StyleSheet.create({
     container: {
         flex: 1,
+        height:"100%",
+    },
+    subContainer: {
+        justifyContent:"space-between",
+        width:"100%",
     },
     logoutContainer: {
         position:"relative",
         width: "100%",
-        height: 100,
-        backgroundColor: "black",
-        bottom:0
+        height: 80,    
+        justifyContent: "center",
+        alignItems:"center",
+       
     },
     listItems: {
         alignItems: "center",
-        height: "80%"
     },
     txt: {
         fontSize: 18,

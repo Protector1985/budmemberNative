@@ -14,6 +14,11 @@ import { closeDrawer } from '../../../store/drawerSlice';
 import Alert from '../../utils/Alert';
 import {setShowEmailModal} from '../../../store/systemSlice';
 import { setLocation } from '../../../store/locationSlice';
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
+import { AntDesign } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import { Entypo } from '@expo/vector-icons'; 
+import { color } from 'react-native-reanimated';
 
 const Drawer = createDrawerNavigator();
 
@@ -36,6 +41,45 @@ function SearchResultCard({image, name, street, city, zip, state}) {
     )
 }
 
+function EmailAlert({submits, setSubmits,handleEmailResend, colorPalette, setAlertOpen, alertOpen}) {
+    
+   
+    return (
+        <FancyAlert
+            style={{backgroundColor: "#EEEEEE"}}
+            icon={
+                <View style={[styles.emailAlert, { borderRadius: 32 } ]}>
+                    <MaterialCommunityIcons name="email-alert" size={32} color="white" />
+                </View>
+            }
+            visible={alertOpen}
+        >
+            <View style={styles.emailAlertContainer}>
+                <Text style={styles.emailAlertHeadline}>Please verify your email!</Text>
+                <Text style={styles.emailAlertMessage}>Your email is not verfied. You will not be able to recover this account.</Text>
+            
+                {submits < 3 ? <View style={[styles.customBtnContainer, {marginTop: "15%", marginBottom: 10, backgroundColor: "#2CA491"}]}>
+                            <TouchableOpacity onPress={handleEmailResend} style={styles.customBtn}>
+                                <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Send Verification Email</Text>
+                            </TouchableOpacity>
+                        </View> : null}
+
+                        <View style={[styles.customBtnContainer, submits >= 3 ? {marginTop: 35, marginBottom: 30, backgroundColor: "#2CA491"} : {marginBottom: 30, backgroundColor: "#2CA491"}]}>
+                                <TouchableOpacity onPress={() => setAlertOpen(false)} style={styles.customBtn}>
+                                    <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Dismiss</Text>
+                                </TouchableOpacity>
+                        </View>
+
+
+        
+
+
+            </View>
+
+        </FancyAlert>
+    )
+}
+
 export default function MapScreen({navigation, initProgress}) {
    const [searchText, setText] = React.useState("")
    const [alertOpen, setAlertOpen] = React.useState(false)
@@ -49,7 +93,7 @@ export default function MapScreen({navigation, initProgress}) {
    const {open} = useSelector((state)=> state.drawerSlice)
    const {Email_Verified__c, colorPalette, Email} = useSelector((state)=> state.userSlice)
    const [hours, setHours] = React.useState()
-   const [alertWidth, setAlertWidth] = React.useState(200)
+
    const dispatch = useDispatch()
    const menu = <SideDrawer navigation={navigation} />
    const [alertHtml, setAlertHtml] = React.useState(null)
@@ -99,36 +143,18 @@ export default function MapScreen({navigation, initProgress}) {
 }
 
 
-
    React.useEffect(() => {
             if(showEmailModal) {
             if(Email_Verified__c != undefined) { 
                 if(Email_Verified__c === false) {
                     setAlertOpen(true);
-                    setAlertMessage("Your email is not verfied. You will not be able to recover this account.")
-                    setAlertType("WARNING")
-                    setAlertHtml(() => (
-                        <View style={[styles.customContainer, {width: alertWidth}]}>
-                        {submits < 3 ? <View style={[styles.customBtnContainer, {marginTop: 35, marginBottom: 10}]}>
-                            <TouchableOpacity onPress={handleEmailResend} style={styles.customBtn}>
-                                <Text style={[styles.customTxt, {color: colorPalette.accent}]}>Send Verification Email</Text>
-                            </TouchableOpacity>
-                        </View> : null}
-                            
-
-                            <View style={[styles.customBtnContainer, submits >= 3 ? {marginTop: 35, marginBottom: 30} : {marginBottom: 30}]}>
-                                <TouchableOpacity style={styles.customBtn}>
-                                    <Text style={[styles.customTxt, {color: colorPalette.accent}]}>Account is Verified</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    ))
+                   
                 }
             }
         }
 
         
-   },[Email_Verified__c, alertWidth])
+   },[Email_Verified__c])
 
    async function handlePress(item) {
     try {
@@ -144,19 +170,7 @@ export default function MapScreen({navigation, initProgress}) {
     return (
         
             <SafeAreaView style={styles.masterContainer}>
-            <Alert callBack={() => {
-                //ensures the email modal is not shown a second time for this session
-                return dispatch(setShowEmailModal(false))
-            }} 
-                customSetHook={setAlertWidth} 
-                customButtonMessage={"Remind me later"} 
-                location="Enter Code" 
-                navigation={navigation} 
-                visible={alertOpen} 
-                setVisible={setAlertOpen} 
-                message={alertMessage} 
-                type={alertType} 
-                html={alertHtml}/>
+            <EmailAlert submits={submits} setSubmits={setSubmits} alertOpen={alertOpen} setAlertOpen={setAlertOpen} handleEmailResend={handleEmailResend} colorPalette={colorPalette} />
             <ProgressBar initProgress={initProgress} />
             <SearchBar
                 style={styles.searchBar}
@@ -227,8 +241,35 @@ const styles = StyleSheet.create({
     masterContainer: {
         flex:1,
     },
+    emailAlert: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#0275d8',
+        width: '100%',
+    },
+    emailAlertContainer: {
+        width: "100%",
+        height: "39%",
+        borderRadius: 8,
+    },
     map: {
         flex:1,
+    },
+    emailAlertHeadline : {
+        fontSize: 22,
+        textAlign: "center",
+        fontWeight: "600",
+        color: "#444444"
+    },
+    emailAlertMessage: {
+        color: "#444444",
+        textAlign: "justify",
+        fontSize: 18,
+        fontWeight: "500",
+        padding: "7%",
+     
     },
     cards: {
         position:"absolute",
@@ -279,22 +320,21 @@ const styles = StyleSheet.create({
         alignItems:"center",
     },
     customBtnContainer: {
-        width: "90%",
-        height: 30,
+        width: "100%",
+        height: 40,
         borderRadius: 8,
-
-
     },
     customBtn: {
         width: "100%",
         height: "100%",
-        borderRadius: 8,
-        justifycontent:"center",
+        justifyContent: "center",
         alignItems:"center",
-        
+        borderRadius: 8,  
     },
     customTxt: {
         fontSize: 18,
-        fontWeight: "700"
+        fontWeight: "700",
+        paddingRight: "20%",
+        paddingLeft: "20%"
     },
 })

@@ -19,7 +19,7 @@ function App() {
     async function requestPermissions() {
         try {
             if(status != null) {
-                if (!status.granted) {
+                if (!status?.granted) {
                     requestPermission()
                     .then((res) => {
                     console.log(res)

@@ -1,17 +1,19 @@
-import {useState, useEffect, useContext} from 'react';
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal } from "react-native";
+import React,{useState, useEffect, useContext} from 'react';
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal, Platform } from "react-native";
+import Checkbox from 'expo-checkbox';
 import { ScrollView } from 'react-native-gesture-handler'
 import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import moment from 'moment'
 import DropDownPicker from 'react-native-dropdown-picker';
-import DatePicker from '@dietime/react-native-date-picker';
+import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 
 import generateDaysInMonth from '../lib/generateDaysInMonth';
 import {months} from '../lib/monthsObject'
 import { generateYears } from "../lib/years";
 import handleCreateAccount from './lib/signupHelpers';
 import { AuthContext } from '../../../context/AuthContext';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function Signup({navigation}) {
     //params are only sent with oAuth. (accesstoken)
@@ -23,6 +25,7 @@ export default function Signup({navigation}) {
     const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState(navigation?.state?.params?.email || "");
     const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("")
     //state for dropdown
     const [monthOpen, setMonthOpen] = useState(false)
     const [dayOpen, setDayOpen] = useState(false)
@@ -32,12 +35,19 @@ export default function Signup({navigation}) {
     const [daysInMonth, setDaysInMonth] = useState([])
     const [dayOfBirth, setDayOfBirth] = useState("");
     const {signUp, login, logout} = useContext(AuthContext);
-    
-    //generates array of years since 1900
-    let years = generateYears();
-    const birthDayString = `${birthYear}-${moment().month(Number(birthMonth) - 1).format("MM")}-${dayOfBirth}`
-    //sets state for font
-
+    const [birthDayString, setBirthdayString] = React.useState(new Date(moment().subtract(18, "years").format("YYYY-MM-DD")))
+    let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
+    const [ageError, setAgeError] = React.useState(null)
+    const [termsAccepted, setTermsAccepted] = React.useState(false)
+    const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
+    const [acceptError, setAcceptError] = React.useState(null)
+    const [errors, setErrors] = React.useState({
+        firstName:null,
+        lastName: null,
+        email:null,
+        password: null,
+    })
+ 
    function submitDisabled() {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
         if(reg.test(email) && firstName.length > 0 && lastName.length > 0 && password.length > 0) {
@@ -47,64 +57,207 @@ export default function Signup({navigation}) {
         }
    }
       
-      //Initialize dropdown values ----
-        useEffect(() => {
-            const monthIndex = moment().month();
-            setBirthMonth(months[monthIndex].value)
-            setBirthYear(moment().subtract(18, 'years').format("YYYY"))
-            setDayOfBirth(moment().format("DD"))
-            const days = moment(`${moment().subtract(18, 'years').format("YYYY")}-${months[monthIndex].label}`, "YYYY-MMMM").daysInMonth()
-            console.log("days")
-            setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
-      }, [])
-      //----end of dropdown initialization
-
-
-
-
-      //side effect functions from dropdown ----------- 
-      //sets days per month dynamically when year and month is changed - includes leap year
-      //closes dropdown after selection
-      function monthValSideEffects(value) {
-        const days = moment(`${Number(birthYear)}-${months[Number(value) -1].label}`, "YYYY-MMMM").daysInMonth();
-        
-        //stringified value to avoid re-renders
-        setDaysInMonth(JSON.stringify(generateDaysInMonth(days)))
-      }
-
-      function yearValSideEffects(value) {
-        const days = moment(`${value}-${months[Number(birthMonth) -1].label})`, "YYYY-MMMM").daysInMonth();
-        const dim = generateDaysInMonth(days)
-        
-        //stringified value to avoid re-renders
-        setDaysInMonth(JSON.stringify(dim))
-      }
-      //-----end of side effect functions
-     
      
       async function handleSignup() {
-        // console.log(email, password, firstName, lastName, birthDayString.toString())
-        signUp(email, password, firstName, lastName, birthDayString.toString())
-        
+        setErrors({
+            firstName:null,
+            lastName: null,
+            email:null,
+            password: null,
+        })
+        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+        if(!submitDisabled()) {
+            if(password === repeatPassword) {
+                if(mediumPassword.test(password)) {
+                    if(moment().diff(moment(birthDayString), 'years',false) >= 18) {
+                        if(privacyAccepted && termsAccepted) {
+                            signUp(email.toLowerCase(), password, firstName, lastName, moment(birthDayString).format("YYYY-MM-DD"))
+                        } else {
+                            setAcceptError("You have to accept our privacy policy and terms in order to accept")
+                        }
+                        
+                    } else {
+                        setAgeError("You have to be at least 18 years old to sign up")
+                    }
+                    
+                    setErrors({
+                        email: null,
+                        firstName: null,
+                        password: null,
+                        lastName: null, 
+                    })
+                } else {
+                    setErrors({
+                        email: null,
+                        firstName: null,
+                        password: "Your password is not strong enough",
+                        lastName: null, 
+                    })
+                }
+            } else if(password !== repeatPassword) {
+                setErrors({
+                    email: null,
+                    firstName: null,
+                    password: "Your passwords don't match",
+                    lastName: null, 
+                })
+                
+            }
+
+        } else if(submitDisabled()) {
+            setErrors({
+                email: "Please enter a valid email address",
+                firstName: "Your first name is required",
+                password:"Please enter a password",
+                lastName: "Your last name is required", 
+            })
+            if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && !reg.test(email)) {
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: "Your last name is required", 
+                    firstName: null,
+                    password: "Please enter a password"
+                })
+            } else if(firstName.length === 0 && lastName.length > 0 && password.length === 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: null, 
+                    firstName: "Your first name is required",
+                    password: "Please enter a password"
+                })
+            
+            } else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: "Your last name is required", 
+                    firstName: "Your first name is required",
+                    password: null
+                })
+            
+            }else if(firstName.length === 0 && lastName.length === 0 && password.length === 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: "Your last name is required", 
+                    firstName: "Your first name is required",
+                    password: "Please enter a password"
+                })
+            } else if(firstName.length > 0 && lastName.length > 0 && password.length > 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: null, 
+                    firstName: null,
+                    password: null
+                })
+            }else if(firstName.length > 0 && lastName.length > 0 && password.length === 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: null, 
+                    firstName: null,
+                    password: "Please enter a password"
+                })
+            } else if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: "Your last name is required", 
+                    firstName: null,
+                    password: "Please enter a password"
+                })
+            } else if(firstName.length > 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: "Your last name is required", 
+                    firstName: null,
+                    password: null
+                })
+            } else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
+                setErrors({
+                    email: "Please enter a valid email address",
+                    lastName: "Your last name is required", 
+                    firstName: "Your first name is required",
+                    password: null
+                })
+            }else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: "Your last name is required", 
+                    firstName: "Your first name is required",
+                    password: null
+                })
+            }else if(firstName.length > 0 && lastName.length === 0 && password.length > 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: "Your last name is required", 
+                    firstName: null,
+                    password: null
+                })
+            }else if(firstName.length === 0 && lastName.length > 0 && password.length > 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: null, 
+                    firstName: "Your first name is required",
+                    password: null
+                })
+            }else if(firstName.length > 0 && lastName.length > 0 && password.length === 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: null, 
+                    firstName: null,
+                    password: "Please enter a password"
+                })
+            }else if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && reg.test(email)) { 
+                setErrors({
+                    email: null,
+                    lastName: "Please enter your last name", 
+                    firstName: null,
+                    password: "Please enter a password"
+                })
+            }
+              
+            
+
+        }     
     }
     
-      function startYear() {
-        return Number(moment().subtract("18", "years").format("YYYY"))
-      }
      
-      console.log("Days in month: " + daysInMonth)
+     
+      function handleDatePress() {
+        if(Platform.OS === "android") {
+            DateTimePickerAndroid.open({
+                mode:"date",
+                display:"default",
+                value: birthDayString,
+                onChange: (event) => {
+                    const {
+                        type,
+                        nativeEvent,
+
+                      } = event;
+                      console.log()
+                      setBirthdayString(new Date(nativeEvent.timestamp))
+
+
+                }
+            })
+        }
+      }
+
+
+    
+
+   
 
     return (
         <View style={styles.masterContainer}>
         
-            <View style={styles.subContainer}>
-            
-            <ScrollView
+           
+            <KeyboardAwareScrollView
+                style={{width: "90%", }}
                 contentContainerStyle={{
-                    flexGrow:0.8,
-                    justifyContent: 'space-between',
-                    overflow: "hidden",
-                }}>
+                    alignItems:"flex-start",
+                    flexGrow: 1,
+                    overflow:"scroll"
+                }}
+                >
                 <View style={styles.imgContainer}>
                     <Image style={styles.logo} source={require('../login/logo.jpg')} />
                 </View>
@@ -130,111 +283,125 @@ export default function Signup({navigation}) {
 
                 <View style={styles.inputContainer}>
                     {!params? <View style={styles.inputSubContainer}>
-                        <Text style={styles.label}>Email address</Text>
-                        <TextInput onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={styles.inputField} />
+                    {errors.email !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Email</Text><Text style={styles.errorText}>{errors.email}</Text></View> : <Text style={styles.label}>Email</Text>}
+                        <TextInput onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={errors.email !== null ? styles.inputFieldError : styles.inputField} />
                     </View> : null}
 
                     <View style={styles.inputSubContainer}>
-                        <Text style={styles.label}>First Name</Text>
+                    {errors.firstName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>First Name</Text><Text style={styles.errorText}>{errors.firstName}</Text></View> : <Text style={styles.label}>First Name</Text>}
                         <TextInput
                             value={firstName} 
                             onChangeText={(text) => setFirstName(text)}
-                            style={styles.inputField} />
+                            style={errors.firstName !== null ? styles.inputFieldError : styles.inputField} />
                     </View>
 
                     <View style={styles.inputSubContainer}>
-                        <Text style={styles.label}>Last Name</Text>
+                    {errors.lastName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Last Name</Text><Text style={styles.errorText}>{errors.lastName}</Text></View> : <Text style={styles.label}>Last Name</Text>}
                         <TextInput
                             value={lastName} 
                             onChangeText={(text) => setLastName(text)}
-                            style={styles.inputField} />
+                            style={errors.lastName!== null ? styles.inputFieldError : styles.inputField} />
                     </View>
 
-                    <View style={styles.inputSubContainer}>
-                        <Text style={styles.label}>Password</Text>
+                    <View style={styles.inputSubContainer}> 
+                        {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Password</Text>}
                         <TextInput 
                             secureTextEntry={true} 
                             autoComplete={'password'}  
-                            style={styles.inputField}
+                            style={errors.password !== null ? styles.inputFieldError : styles.inputField}
                             value={password} 
                             onChangeText={(text) => setPassword(text)}
                              />
                     </View>
-
+                    <View style={styles.inputSubContainer}>  
+                        {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Repeat Password</Text>}
+                        <TextInput 
+                            secureTextEntry={true}   
+                            style={errors.password !== null ? styles.inputFieldError : styles.inputField}
+                            value={repeatPassword} 
+                            onChangeText={(text) => setRepeatPassword(text)}
+                             />
+                    </View>
                 </View>
 
-                <View style={styles.bottomContainer}>
-                    <Text style={styles.dateOfBirth}>Date of Birth</Text>
-                     <View style={styles.dropDownContainer}>
-                    
-                     <View style={styles.indDropDownContainer}>
-                         <Text style={styles.label}>Month</Text>
-                         <DropDownPicker
-                            style={styles.dropdownGlobalStyle} 
-                            placeholder={birthMonth}
-                            containerStyle={styles.dropDownLong} 
-                            value={birthMonth} 
-                            items={months} 
-                            setValue={setBirthMonth} 
-                            onClose={() => setMonthOpen(false)} 
-                            onChangeValue={(value) => monthValSideEffects(value)} 
-                            open={monthOpen} 
-                            setOpen={() => setMonthOpen(true)} />
-                    </View>
-                    <View style={styles.indDropDownContainer}>
-                        <Text style={styles.label}>Day</Text>
-                        <DropDownPicker 
-                            placeholder={dayOfBirth}
-                            containerStyle={styles.dropDownShort} 
-                            value={dayOfBirth} 
-                            items={["31"]} 
-                            setValue={setDayOfBirth} 
-                            onClose={() => setDayOpen(false)} 
-                            open={dayOpen} 
-                            setOpen={() => setDayOpen(true)} />
-                    </View>
-                    <View style={styles.indDropDownContainer}>
-                        <Text style={styles.label}>Year</Text>
-                        <DropDownPicker 
-                            placeholder={birthYear}
-                            containerStyle={styles.dropDownLong} 
-                            value={birthYear} 
-                            items={years} 
-                            setValue={setBirthYear} 
-                            open={yearOpen} 
-                            onClose={() => setYearOpen(false)} 
-                            onChangeValue={(value) => yearValSideEffects(value)} 
-                            setOpen={() => setYearOpen(true)}/>
-                    </View>
-                    </View>
-                    
-                    </View>
+                            {Platform.OS === "ios" ? 
+                            <View>
+                            <View style={styles.dateContainer}>
+                                <Text style={styles.bdayText}> Birthdate: </Text>
+                                <DateTimePicker  
+                                    mode="date"
+                                    themeVariant='dark'
+                                    style={styles.iosPicker}
+                                    display="default"
+                                    value={birthDayString}
+                                    onChange={(event) => {
+                                    const {type, nativeEvent, timeStamp} = event;
+                                    
+                                    if(nativeEvent.timestamp) {
+                                        setBirthdayString(new Date(nativeEvent.timestamp))
+                                    }
+                                
+                                }} />
+
+                                </View>
+                                {ageError !== null ? <Text style={[styles.errorText, {marginLeft: 0}]}>{ageError}</Text> : null}
+                                </View>
+                        
+                            
+                            :
+                            <View>
+                               
+                                <View style={styles.dateContainer}>
+                                    <Text style={styles.bdayText}> Birthdate: </Text>
+                                    <TouchableOpacity style={styles.androidBtnOpacity} onPress={handleDatePress} >
+                                        <Text style={styles.androidBtnText}>{moment(birthDayString).format("M/D/YY")}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {ageError !== null ? <Text style={styles.errorText}>{ageError}</Text> : null}
+                                </View>
+                               }
+                            
+                            
+                
+                
                 <View style={styles.termsPrivacy}>
                     <Text style={styles.termsHeadline}>By clicking create account, I agree that:</Text>
                     <View style={styles.termsStatementContainer}>
-                        <Text style={styles.bulletPoint}>{`\u2B24`}</Text>
+                        <Checkbox
+                            value={termsAccepted}
+                            onValueChange={setTermsAccepted}
+                            style={styles.checkbox}
+                            />
                         <Text style={styles.termsStatement}>I have read and accepted the <A href="https://budmember.com/terms-and-conditions/" style={styles.link}>terms & conditions</A></Text>
                     </View>
                     <View style={styles.termsStatementContainer}>
-                        <Text style={styles.bulletPoint}>{`\u2B24`}</Text>
+                        <Checkbox
+                            value={privacyAccepted}
+                            onValueChange={setPrivacyAccepted}
+                            style={styles.checkbox}
+                        />
                         <Text style={styles.termsStatement}>I have read and accepted the <A href="https://budmember.com/privacy-policy/" style={styles.link}>privacy policy</A></Text>
                     </View> 
+                    {acceptError !== null ? <Text style={[styles.errorText, {marginLeft: 0, marginTop: 10}]}>{acceptError}</Text> : null}
                 </View>
-                <TouchableOpacity disabled={submitDisabled()} onPress={handleSignup} style={styles.btn}>
+
+                <TouchableOpacity onPress={handleSignup} style={styles.btn}>
                     <Text style={styles.btnText}>Create Account</Text>
                 </TouchableOpacity>
-                </ScrollView>
-            </View>
+                
+                </KeyboardAwareScrollView>
+                
+            
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     masterContainer: {
-        position: 'absolute',
+        
         flex:1,
         backgroundColor:"#2a1b6e",
-        height: "100%",
+        
         width: "100%", 
         justifyContent: "center",
         alignItems: "center", 
@@ -245,6 +412,32 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         
+    },
+    iosPicker: {
+       
+    },
+    androidBtnOpacity:{
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        borderRadius: 8,
+        marginLeft: 35,
+        
+
+    },
+    bdayText : {
+        color: "white",
+        fontSize: 19
+        
+    },
+    androidBtnText: {
+        color:"white",
+        fontSize: 14,
+        padding: 6,
+    },
+    dateContainer: {
+        flex:1, 
+        flexDirection: "row",
+        alignItems:'center',
+        marginTop:20,
     },
     modalBox: {
         borderRadius: "15%",
@@ -257,11 +450,11 @@ const styles = StyleSheet.create({
     },
 
    
-    
+
     subContainer: {
         flex: 1,
         width: "90%",
-        height: "80%",
+        height: "150%",
         
     },
 
@@ -279,14 +472,8 @@ const styles = StyleSheet.create({
 
     inputSubContainer: {
         flex: 1,
+        marginBottom:10,
     },
-
-    bottomContainer: {
-        flex: 1,
-        width: "100%",
-
-    },
-
     createAcc:{
         color: "#dbdbdb",
         fontSize: 25,
@@ -310,11 +497,9 @@ const styles = StyleSheet.create({
     },
 
     imgContainer: {
-        flex: 3,
         width: "100%",
-        height: "auto",
-        marginTop: 10,
-        flexDirection:"column",
+        height: 150,
+        
     },
 
     logo: {
@@ -363,15 +548,29 @@ const styles = StyleSheet.create({
     },
 
     label: {
-
         color: "#dbdbdb", 
         fontSize: 12,
+        marginBottom:6,
     },
-
+    errorText: {
+        fontSize: 12,
+        color: "#d9534f",
+        marginLeft: 25,
+        marginBottom: 6,
+    },
     inputField: {
         backgroundColor: "#fff",
         minHeight: 35,
         borderRadius: 5,
+        paddingLeft:10,
+    },
+    inputFieldError: {
+        backgroundColor: "#d9534f",
+        opacity: 0.9,
+        borderColor: "#d9534f",
+        minHeight: 35,
+        borderRadius: 5,
+        paddingLeft:10,
     },
 
     dateOfBirth: {
@@ -404,8 +603,11 @@ const styles = StyleSheet.create({
         color: "#b4b4b4",
 
     },
+    checkbox: {
+        marginRight: 15,
+    },
     termsStatementContainer: {
-        marginLeft: 30,
+        marginLeft: 0,
         alignItems: "center",
         flexDirection: "row",
         width: "100%",
@@ -428,6 +630,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
         textAlign: "center",
         borderRadius: 15,
+        marginBottom: 300,
        
     }, 
     btnText: {
@@ -542,4 +745,45 @@ const styles = StyleSheet.create({
 //                             onChangeValue={(value) => yearValSideEffects(value)} 
 //                             setOpen={() => setYearOpen(true)}/>
 //                     </View>
+//                     </View>
+
+
+
+
+// <DropDownPicker
+//                             style={styles.dropdownGlobalStyle} 
+//                             placeholder={birthMonth}
+//                             containerStyle={styles.dropDownLong} 
+//                             value={birthMonth} 
+//                             items={months} 
+//                             setValue={setBirthMonth} 
+//                             onClose={() => setMonthOpen(false)} 
+//                             onChangeValue={(value) => monthValSideEffects(value)} 
+//                             open={monthOpen} 
+//                             setOpen={() => setMonthOpen(true)} />
+//                     </View>
+//                     <View style={styles.indDropDownContainer}>
+//                         <Text style={styles.label}>Day</Text>
+//                         <DropDownPicker 
+//                             placeholder={dayOfBirth}
+//                             containerStyle={styles.dropDownShort} 
+//                             value={dayOfBirth} 
+//                             items={["31"]} 
+//                             setValue={setDayOfBirth} 
+//                             onClose={() => setDayOpen(false)} 
+//                             open={dayOpen} 
+//                             setOpen={() => setDayOpen(true)} />
+//                     </View>
+//                     <View style={styles.indDropDownContainer}>
+//                         <Text style={styles.label}>Year</Text>
+//                         <DropDownPicker 
+//                             placeholder={birthYear}
+//                             containerStyle={styles.dropDownLong} 
+//                             value={birthYear} 
+//                             items={years} 
+//                             setValue={setBirthYear} 
+//                             open={yearOpen} 
+//                             onClose={() => setYearOpen(false)} 
+//                             onChangeValue={(value) => yearValSideEffects(value)} 
+//                             setOpen={() => setYearOpen(true)}/>
 //                     </View>

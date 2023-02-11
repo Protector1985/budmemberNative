@@ -13,7 +13,10 @@ export default function BillingStackNavigator() {
         }}>
             <Stack.Screen name="Billing Screen" component={Billing}/>
             <Stack.Screen name="Upgrade Membership" component={SubscribeStack} />
-            <Stack.Screen name="Purchase History" component={PurchaseHistory} />
+            <Stack.Screen
+            options={{headerShown: true}}
+            
+            name="Purchase History" component={PurchaseHistory} />
         </Stack.Navigator>
     )
 }

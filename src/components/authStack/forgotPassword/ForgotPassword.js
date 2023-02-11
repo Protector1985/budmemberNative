@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         minHeight: 35,
         borderRadius: 5,
+        paddingLeft: 10,
     },
     inputSubContainer: {
         marginBottom: "3%",
