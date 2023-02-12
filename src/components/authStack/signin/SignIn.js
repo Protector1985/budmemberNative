@@ -97,7 +97,9 @@ export default function SignIn({navigation}) {
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Email address</Text>
                             <TextInput 
-                                autoComplete={'email'} 
+                                autoComplete='email'
+                                keyboardType="email-address"
+                                textContentType="emailAddress"
                                 value={email} 
                                 onChangeText={(text) => setEmail(text.toLowerCase())} 
                                 style={styles.inputField}/>
@@ -106,7 +108,8 @@ export default function SignIn({navigation}) {
                             <Text style={styles.label}>Password</Text>
                             <TextInput 
                                 secureTextEntry={true} 
-                                autoComplete={'password'} 
+                                autoComplete="password"
+                                textContentType="password"
                                 value={password} 
                                 onChangeText={(text) => setPassword(text)} 
                                 style={styles.inputField}/>

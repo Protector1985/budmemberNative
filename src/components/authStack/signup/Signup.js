@@ -1,21 +1,24 @@
 import React,{useState, useEffect, useContext} from 'react';
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal, Platform } from "react-native";
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal, Platform, InputAccessoryView, Touchable } from "react-native";
 import Checkbox from 'expo-checkbox';
 import { ScrollView } from 'react-native-gesture-handler'
 import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import moment from 'moment'
+import {findNodeHandle} from 'react-native'
 import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePicker, { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
-
+import { AntDesign } from '@expo/vector-icons'; 
 import generateDaysInMonth from '../lib/generateDaysInMonth';
 import {months} from '../lib/monthsObject'
 import { generateYears } from "../lib/years";
 import handleCreateAccount from './lib/signupHelpers';
 import { AuthContext } from '../../../context/AuthContext';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useKeyboardVisible } from '../../utils/useKeyboardVisible';
 
 export default function Signup({navigation}) {
+    const keyboardOpen = useKeyboardVisible();
     //params are only sent with oAuth. (accesstoken)
     const params = navigation?.state?.params?.params
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"))
@@ -41,6 +44,7 @@ export default function Signup({navigation}) {
     const [termsAccepted, setTermsAccepted] = React.useState(false)
     const [privacyAccepted, setPrivacyAccepted] = React.useState(false)
     const [acceptError, setAcceptError] = React.useState(null)
+    const scrollViewRef= React.useRef();
     const [errors, setErrors] = React.useState({
         firstName:null,
         lastName: null,
@@ -57,6 +61,8 @@ export default function Signup({navigation}) {
         }
    }
       
+
+     
      
       async function handleSignup() {
         setErrors({
@@ -248,9 +254,8 @@ export default function Signup({navigation}) {
 
     return (
         <View style={styles.masterContainer}>
-        
-           
             <KeyboardAwareScrollView
+                extraScrollHeight={150}
                 style={{width: "90%", }}
                 contentContainerStyle={{
                     alignItems:"flex-start",
@@ -258,6 +263,14 @@ export default function Signup({navigation}) {
                     overflow:"scroll"
                 }}
                 >
+                <InputAccessoryView nativeID="signUp">
+                    <View style={styles.accessoryView}>
+                        <TouchableOpacity style={styles.accessibilitArrowDown}>
+                            <AntDesign name="arrowdown" size={27} color="#2CA491" />
+                        </TouchableOpacity>
+                    </View>
+                
+                </InputAccessoryView>
                 <View style={styles.imgContainer}>
                     <Image style={styles.logo} source={require('../login/logo.jpg')} />
                 </View>
@@ -284,13 +297,16 @@ export default function Signup({navigation}) {
                 <View style={styles.inputContainer}>
                     {!params? <View style={styles.inputSubContainer}>
                     {errors.email !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Email</Text><Text style={styles.errorText}>{errors.email}</Text></View> : <Text style={styles.label}>Email</Text>}
-                        <TextInput onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={errors.email !== null ? styles.inputFieldError : styles.inputField} />
+                        <TextInput keyboardType="email-address" textContentType="emailAddress" autoComplete="email" inputAccessoryViewID="signUp" onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={errors.email !== null ? styles.inputFieldError : styles.inputField} />
                     </View> : null}
-
+                    
                     <View style={styles.inputSubContainer}>
                     {errors.firstName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>First Name</Text><Text style={styles.errorText}>{errors.firstName}</Text></View> : <Text style={styles.label}>First Name</Text>}
                         <TextInput
                             value={firstName} 
+                            autoComplete="name-given"
+                            textContentType="givenName"
+                            inputAccessoryViewID="signUp"
                             onChangeText={(text) => setFirstName(text)}
                             style={errors.firstName !== null ? styles.inputFieldError : styles.inputField} />
                     </View>
@@ -298,6 +314,9 @@ export default function Signup({navigation}) {
                     <View style={styles.inputSubContainer}>
                     {errors.lastName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Last Name</Text><Text style={styles.errorText}>{errors.lastName}</Text></View> : <Text style={styles.label}>Last Name</Text>}
                         <TextInput
+                            inputAccessoryViewID="signUp"
+                            autoComplete="name-family"
+                            textContentType="familyName"
                             value={lastName} 
                             onChangeText={(text) => setLastName(text)}
                             style={errors.lastName!== null ? styles.inputFieldError : styles.inputField} />
@@ -306,8 +325,8 @@ export default function Signup({navigation}) {
                     <View style={styles.inputSubContainer}> 
                         {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Password</Text>}
                         <TextInput 
+                            inputAccessoryViewID="signUp"
                             secureTextEntry={true} 
-                            autoComplete={'password'}  
                             style={errors.password !== null ? styles.inputFieldError : styles.inputField}
                             value={password} 
                             onChangeText={(text) => setPassword(text)}
@@ -316,13 +335,17 @@ export default function Signup({navigation}) {
                     <View style={styles.inputSubContainer}>  
                         {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Repeat Password</Text>}
                         <TextInput 
+                            inputAccessoryViewID="signUp"
                             secureTextEntry={true}   
                             style={errors.password !== null ? styles.inputFieldError : styles.inputField}
                             value={repeatPassword} 
                             onChangeText={(text) => setRepeatPassword(text)}
                              />
+                    
+                    </View> 
+                    
                     </View>
-                </View>
+                    
 
                             {Platform.OS === "ios" ? 
                             <View>
@@ -350,7 +373,6 @@ export default function Signup({navigation}) {
                             
                             :
                             <View>
-                               
                                 <View style={styles.dateContainer}>
                                     <Text style={styles.bdayText}> Birthdate: </Text>
                                     <TouchableOpacity style={styles.androidBtnOpacity} onPress={handleDatePress} >
@@ -358,7 +380,7 @@ export default function Signup({navigation}) {
                                     </TouchableOpacity>
                                 </View>
                                 {ageError !== null ? <Text style={styles.errorText}>{ageError}</Text> : null}
-                                </View>
+                            </View>
                                }
                             
                             
@@ -388,8 +410,8 @@ export default function Signup({navigation}) {
                 <TouchableOpacity onPress={handleSignup} style={styles.btn}>
                     <Text style={styles.btnText}>Create Account</Text>
                 </TouchableOpacity>
-                
                 </KeyboardAwareScrollView>
+                
                 
             
         </View>
@@ -398,14 +420,27 @@ export default function Signup({navigation}) {
 
 const styles = StyleSheet.create({
     masterContainer: {
-        
         flex:1,
         backgroundColor:"#2a1b6e",
-        
         width: "100%", 
         justifyContent: "center",
-        alignItems: "center", 
-           
+        alignItems: "center",   
+    },
+    accessoryView: {
+        width: "100%",
+        height: 50,
+        backgroundColor:"#D3D3D3",
+        justifyContent: "center",
+        alignItems:"flex-end",
+    },
+    accessibilitArrowDown: {
+        height: 35,
+        width: 35,
+        backgroundColor: "#bebebe",
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems:"center",
+        marginRight: 25,
     },
     modalContainer: {
         flex: 1,

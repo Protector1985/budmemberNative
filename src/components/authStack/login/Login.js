@@ -67,7 +67,7 @@ export default function Login({navigation}) {
                 
             <View style={styles.inputContainer}>
                 <Text style={styles.label}>Email address</Text>
-                    <TextInput autoComplete={'email'} value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
+                    <TextInput keyboardType="email-address" textContentType="emailAddress" autoComplete={'email'} value={email} onChangeText={(text) => setEmail(() => text)} style={styles.inputField}  />
                     <View style={styles.continueContainer}>
                         <ContinueButton disabled={isLoading || email.length < 3} pressed={handlePress} />
                     </View>

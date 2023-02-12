@@ -12,7 +12,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch, useSelector } from "react-redux";
 
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { LiquidLike } from 'react-native-animated-pagination-dots';
 import { setSelectedPlan } from '../../../store/membershipPlanSlice';
 import { closeDrawer } from '../../../store/drawerSlice';
 
@@ -21,9 +20,8 @@ function Card({animationValue, index, colorPalette, item}) {
     const WIDTH= Dimensions.get('window').width / 1.1;
     const HEIGHT = Dimensions.get('window').height / 1.5;
     const cs = useSelector((state) => state.userSlice?.colorPalette)
-    // const cs = useSelector((state) => state.userSlice?.colorPalette["triadic"]['secondary'])
     const {Name, Package_Amount__c, Features__c, Value_Statement__c, Percent_Discount__c, Purchase_Limit__c} = item
-    const featuresArr = Features__c.split(";")
+ 
     
     
     const cardStyle = useAnimatedStyle(() => {
@@ -97,16 +95,14 @@ function Card({animationValue, index, colorPalette, item}) {
             ]}
         >   
         <View style={styles.cardTop}>
-            <Text style={styles.cardHeadline}>{Name.toUpperCase()}</Text>
-            <Text style={styles.cardPercentage}>{`${Percent_Discount__c}%OFF`}</Text>
-            {!Purchase_Limit__c ? <Text style={styles.purchaseLimit}>EVERY PURCHASE UNLIMITED</Text> : <Text style={styles.purchaseLimit}>{`UP TO $${Purchase_Limit__c}`}</Text> }
-            <Text style={styles.cardPrice}>{`Only $${Package_Amount__c} /mo`}</Text>
-            <Text style={styles.valueStatement}>{`(${Value_Statement__c.toUpperCase()})`}</Text>
+          <Text style={styles.cardHeadline}>{Name?.toUpperCase()}</Text>  
+          <Text style={styles.cardPercentage}>{`${Percent_Discount__c}%OFF`}</Text> 
+          {!Purchase_Limit__c ? <Text style={styles.purchaseLimit}>EVERY PURCHASE UNLIMITED</Text> : <Text style={styles.purchaseLimit}>{`UP TO $${Purchase_Limit__c}`}</Text> }   
+           <Text style={styles.cardPrice}>{`Only $${Package_Amount__c} /mo`}</Text> 
+           <Text style={styles.valueStatement}>{`(${Value_Statement__c?.toUpperCase()})`}</Text> 
         </View>
        
-        <View style={styles.cardBottom}>
-            
-        </View>
+        
         </Animated.View>
 
     </Animated.View>
@@ -120,29 +116,22 @@ function Card({animationValue, index, colorPalette, item}) {
 export default function PlanSelect({navigation}) {
     const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
     const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
-    const [cardIndex, setCardIndex] = React.useState(0)
     const [featuresArr, setFeaturesArr] = React.useState([])
-    const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
-    
-    
-
-    React.useEffect(() => {
-        setFeaturesArr(carouselItems[0].Features__c.split(";"))
-        dispatch(closeDrawer())
-    },[])
-     
     const filtered = membershipPlans.filter((item) => item.Id !== Selected_Package_ID__c)
     const carouselItems = filtered
-
- 
-    
     
     React.useEffect(() => {
         dispatch(setSelectedPlan(carouselItems[0]?.Id))
+        setFeaturesArr(carouselItems[0].Features__c.split(";"))
+        dispatch(closeDrawer())
     },[])
+ 
+    
+    
+    
    
     return (
         
@@ -177,13 +166,13 @@ export default function PlanSelect({navigation}) {
                     
                     renderItem={({ index, animationValue, item }) => {
 
-                        return <Card 
-                                key={index}
-                                index={index} 
-                                animationValue={animationValue} 
-                                colorPalette={colorPalette}
-                                item={item}
-                                />
+                        return  <Card 
+                                    key={index}
+                                    index={index} 
+                                    animationValue={animationValue} 
+                                    colorPalette={colorPalette}
+                                    item={item}
+                        />
                     }
                         
                     }
@@ -198,15 +187,15 @@ export default function PlanSelect({navigation}) {
                     }
 
                     <FlatList
-                    bounces={false}
-                    data={featuresArr}
-                    contentContainerStyle={{ alignItems:"center"}}
-                    renderItem={({ item }) => {
-                    return (
-                        <View style={{ width: "92%",  flexDirection: "row", marginTop:"5%"}}>
-                            <Text style={{textAlign:"center", fontWeight: "500", color: "white", fontSize: 16 }}>{item}</Text>
-                        </View>
-                    );
+                        bounces={false}
+                        data={featuresArr}
+                        contentContainerStyle={{ alignItems:"center"}}
+                        renderItem={({ item }) => {
+                        return (
+                            <View style={{ width: "92%",  flexDirection: "row", marginTop:"5%"}}>
+                                <Text style={{textAlign:"center", fontWeight: "500", color: "white", fontSize: 16 }}>{item}</Text>
+                            </View>
+                        );
                     }}
                     />
                 
@@ -260,10 +249,11 @@ function AndroidButton({color, textColor, navigation}) {
     )
 }
 
+
+
 const styles = StyleSheet.create({
     masterContainer: {
       flex:1,
-   
     },
     cardPercentage: {
         fontSize: 35,
@@ -307,7 +297,6 @@ const styles = StyleSheet.create({
     headerContainer: {
         flex: 1,
         justifyContent: "center"
-        // backgroundColor: "black"
     },
     headline: {
         fontSize:29,
@@ -323,8 +312,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flex: 1,
         marginBottom:'-25%',
-
-        // backgroundColor: "purple",
     },
     cardWrapper: {
         flex: 1,
