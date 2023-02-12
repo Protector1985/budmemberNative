@@ -45,7 +45,7 @@ function ChooseColorPalette({colorSelection}) {
     )
 }
 
-export default function EditProfile ({navigation, email, setEmail, firstName, setFirstName, lastName,setLastName,phone,setPhone,birthDate,setBirtDate, image, setImage}) {
+export default function EditProfile ({Birthdate, setLocalBirthdate, navigation, email, setEmail, firstName, setFirstName, lastName,setLastName,phone,setPhone,birthDate,setBirtDate, image, setImage}) {
     const [cameraPermission, requestCameraPermission] = ImagePicker.useCameraPermissions();
     const [libraryPermission, requestLibraryPermission] = ImagePicker.useMediaLibraryPermissions();
     const [backgroundColor, setBackgroundColor] = React.useState("")
@@ -53,7 +53,7 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
     const dispatch = useDispatch()
     const { showActionSheetWithOptions } = useActionSheet();
     const colors = useSelector((state) => state.userSlice.colorPalette)
-    const {Birthdate} = useSelector((state) => state.userSlice)
+
     const {showDatePick} = useSelector((state) => state.systemSlice)
     
     
@@ -61,7 +61,7 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
 
     
     const androidChangeEvent = (event, selectedDate) => {
-        dispatch(setBirthDate(moment(selectedDate).format("YYYY-MM-DD")))
+        setLocalBirthdate(moment(selectedDate).format("YYYY-MM-DD"))
         dispatch(setShowDatePick(false))
       };
 
@@ -185,7 +185,7 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
                </View>
                <View style={Dimensions.get("window").height > 690 ? styles.inputSubContainer :styles.inputSubContainerSmall} >
                     <Text style={Dimensions.get("window").height > 690 ? styles.label : styles.labelSmall}>Your Email</Text>
-                    <TextInput value={email} style={Dimensions.get("window").height > 690 ? styles.textDisplay : styles.textDisplaySmall} onChangeText={(text) => setEmail(() => text)} />
+                    <TextInput editable={false} value={email} style={Dimensions.get("window").height > 690 ? styles.textDisplay : styles.textDisplaySmall} onChangeText={(text) => setEmail(() => text)} />
                </View>
                <View style={Dimensions.get("window").height > 690 ? styles.inputSubContainer :styles.inputSubContainerSmall} >
                     <Text style={Dimensions.get("window").height > 690 ? styles.label : styles.labelSmall}>Phone</Text>
@@ -203,7 +203,7 @@ export default function EditProfile ({navigation, email, setEmail, firstName, se
                         mode={"date"} 
                         display={"spinner"}
                         value={new Date(moment(Birthdate).add(1,"days").format("YYYY-MM-DD"))}
-                        onChange={(e, selection) => dispatch(setBirthDate(moment(selection).format("YYYY-MM-DD")))}
+                        onChange={(e, selection) => setLocalBirthdate(moment(selection).format("YYYY-MM-DD"))}
                         style={Dimensions.get("window").height > 690 ? styles.textDisplay : styles.textDisplaySmall} 
                     />
                 </View> :

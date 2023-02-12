@@ -9,6 +9,7 @@ import fetchUserPurchases from './fetchUserPurchases'
 import getLocation from './getLocation'
 
 export default function _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState) {
+    
     async function fetchData() {
         try {
         //gets location

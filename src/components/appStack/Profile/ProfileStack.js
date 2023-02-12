@@ -11,12 +11,17 @@ import fetchImage from '../lib/fetchImage';
 import { setShowDatePick } from '../../../store/systemSlice';
 import PhoneVerifyStack from '../subscribeNavigator/PhoneVerifyStack.js'
 import * as Location from 'expo-location'
+import moment from 'moment';
+import { P } from '@expo/html-elements';
+import _init from '../lib/_init';
+import { setCognitoPhone } from '../../../store/cognitoDataSlice';
 
 
 
 const Stack = createStackNavigator()
 
 export default function ProfileStack({navigation}) {
+ 
   const [status, requestPermission] = Location.useForegroundPermissions()
   const {
     MobilePhone,
@@ -36,6 +41,7 @@ export default function ProfileStack({navigation}) {
   const [localEmail, setLocalEmail] = React.useState(Email);
   const [localPhone, setLocalPhone] = React.useState(MobilePhone);
   const [image, setImage] = React.useState(null);
+  const [localBirthdate, setLocalBirthdate] = React.useState(Birthdate)
   const [initState, setInitState] = React.useState();
   const dispatch = useDispatch()
   
@@ -44,42 +50,71 @@ export default function ProfileStack({navigation}) {
  
   function mutatePhone(localPhone) {
     let mutatedPhone;
-    if(localPhone[0] === "+") {
-      return mutatedPhone = localPhone.slice(2);
-    } else if(localPhone[0] === "1") {
-      return mutatedPhone = localPhone.slice(1);
-    } else {
-      return mutatedPhone = localPhone
+    if(localPhone) {
+      if(localPhone[0] === "+") {
+        return mutatedPhone = localPhone.slice(2);
+      } else if(localPhone[0] === "1") {
+        return mutatedPhone = localPhone.slice(1);
+      } else {
+        return mutatedPhone = localPhone
+      }
     }
   }
 
   async function handleSave() {  
-    if(localFirst !== FirstName || localLast !== LastName || localEmail !== Email || localPhone !== MobilePhone) {
-    setLoading(true)
-    const updateObject = {
-      update: {
-        FirstName: localFirst,
-        LastName: localLast,
-        Email : localEmail,
-        MobilePhone: localPhone,
-        BirthDate: Birthdate,
-      },
-    };
-    //compares if localPhone without +! is different than cognito stored phone
-    //if so it navigates to the phone changer. Otherwise not needed
-    if(cognitoData?.phone_number?.slice(2) !== mutatePhone(localPhone)) {
+    console.log(localPhone)
+    console.log(cognitoData?.phone_number?.slice(2))
+    try {
+      if((localFirst !== FirstName || localLast !== LastName || localEmail !== Email || localPhone !== MobilePhone || moment(Birthdate).format("YYYY-MM-DD") != localBirthdate) && cognitoData?.phone_number?.slice(2) === mutatePhone(localPhone)) {
+        
+      setLoading(true)
+      const updateObject = {
+        update: {
+          FirstName: localFirst,
+          LastName: localLast,
+          Email : localEmail,
+          MobilePhone: localPhone,
+          BirthDate: Birthdate,
+        },
+      };
       const res = await updateUser(updateObject);
-      if(res.data.success) {
-        // _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
-        navigation.navigate("Verify Phone Number", {
-          params: localPhone
-        })
-      }
+        if(res.data.success) {
+          _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+          navigation.navigate("ProfileStack")
+
+        }
       
+    } else if((localFirst !== FirstName || localLast !== LastName || localEmail !== Email || localPhone !== MobilePhone || moment(Birthdate).format("YYYY-MM-DD") != localBirthdate) && cognitoData?.phone_number?.slice(2) !== mutatePhone(localPhone)) {
+     
+        const updateObject = {
+          update: {
+            FirstName: localFirst,
+            LastName: localLast,
+            Email : localEmail,
+            MobilePhone: localPhone,
+            BirthDate: Birthdate,
+          },
+        };
+        //compares if localPhone without +! is different than cognito stored phone
+        //if so it navigates to the phone changer. Otherwise not needed
+        if(cognitoData?.phone_number?.slice(2) != mutatePhone(localPhone)) {
+          const res = await updateUser(updateObject);
+          if(res.data.success) {
+            _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
+            navigation.navigate("Verify Phone Number", {
+              params: localPhone
+            })
+          }
+          
+        }
+    } else {
+      navigation.goBack()
     }
-  } else {
-    return
-  }
+    } catch(err) {
+      console.log(err)
+    } finally {
+      setLoading(false)
+    }
    
   }
 
@@ -128,17 +163,20 @@ export default function ProfileStack({navigation}) {
             <Stack.Screen name="Edit Profile" 
                 options={{
                   headerRight: () => (
+
+                    
                     Platform.OS === "ios" ?
-                    //ios button
                     <Button
                       style={styles.btn}
                       onPress={showDatePick ? handleDateChange : handleSave}
                       title={showDatePick ? "Select Date" : "Save"}
                     />
+                    
                     //Android button
                     : <TouchableOpacity onPress={handleSave}>
                         <Text style={styles.androidButton}>Save</Text>
                       </TouchableOpacity>
+                    
                   ),
                 }}
             >
@@ -152,7 +190,8 @@ export default function ProfileStack({navigation}) {
                     setLastName={setLocalLast}
                     phone={localPhone} 
                     setPhone={setLocalPhone}
-                    birthDate={Birthdate}
+                    Birthdate={localBirthdate}
+                    setLocalBirthdate={setLocalBirthdate}
                     image={avatarUri}
                     
                 

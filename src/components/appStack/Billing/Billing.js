@@ -88,27 +88,24 @@ export default function Billing({navigation}) {
                                 <FontAwesome name="angle-right" size={24} color="grey" />
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.btnContainer}>
-                            <TouchableOpacity style={styles.btn}>
-                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.btnText}>Change Membership</Text>
-                                <FontAwesome name="angle-right" size={24} color="grey" />
-                            </TouchableOpacity>
-                        </View>
+                       
                         
-                        <View style={styles.changeMembershipCont}>
+                        <View style={styles.changeMembershipContainer}>
                             <TouchableOpacity style={styles.changeBtn}>
                                 <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.changeText}>Change Membership</Text>
                             </TouchableOpacity>
                             
                         </View>
-                        
-                        
-                    </View>  
-                    <View style={styles.cancelBtnContainer}>
-                            <TouchableOpacity style={[styles.changeBtn, {backGroundColor: colorPalette.accent}]}>
+
+                        <View style={styles.cancelBtnContainer}>
+                            <TouchableOpacity style={[styles.cancelBtn, {backGroundColor: colorPalette.accent}]}>
                                 <Text style={styles.cancelBtnText}>Cancel Membership</Text>
                             </TouchableOpacity>
                         </View>
+                        
+                        
+                    </View>  
+                    
             </ScrollView>
         </SafeAreaView>
     )
@@ -119,12 +116,26 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "white",
     },
+    changeMembershipContainer: {
+        backgroundColor:"#2CA491",
+        height: 60,
+        borderRadius: 8,
+        width:"90%",
+        marginLeft:"auto",
+        marginRight:"auto",
+    },
+    changeText: {
+        color:"white",
+        fontSize: 17,
+    },
     scrollContainer: {
         minHeight: "100%",
     },
     changeBtn: {
         width: "100%",
         height: "100%",
+        justifyContent: "center",
+        alignItems:"center",
     },
     changeMembershipCont: {
         width:"90%",
@@ -135,7 +146,8 @@ const styles = StyleSheet.create({
         marginLeft:"5%"
     },
     cancelBtnText: {
-        color:"#303f9f"
+        color:"#303f9f",
+        fontSize:16
     },
     img: {
         width: "90%",

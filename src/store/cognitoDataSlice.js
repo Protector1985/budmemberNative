@@ -12,10 +12,11 @@ const cognitoDataSlice = createSlice({
         setCognitoData(state, action) {
             state.cognitoData = action.payload
         },
+        
        
     }
 })
 
-export const { setCognitoData } = cognitoDataSlice.actions;
+export const { setCognitoData, updateCognitoPhone } = cognitoDataSlice.actions;
 
 export default cognitoDataSlice.reducer;

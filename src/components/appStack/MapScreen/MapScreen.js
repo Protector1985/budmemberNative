@@ -54,28 +54,33 @@ function EmailAlert({submits, setSubmits,handleEmailResend, colorPalette, setAle
             }
             visible={alertOpen}
         >
+            <ScrollView 
+                style={{height: "39%"}}
+                contentContainerStyle={{flexGrow: 1, justifyContent: "space-between"}}
+            >
+            
             <View style={styles.emailAlertContainer}>
                 <Text style={styles.emailAlertHeadline}>Please verify your email!</Text>
-                <Text style={styles.emailAlertMessage}>Your email is not verfied. You will not be able to recover this account.</Text>
+                <Text style={styles.emailAlertMessage}>Your email is not verfied. You will not be able to recover this account if you forget your password.</Text>
             
-                {submits < 3 ? <View style={[styles.customBtnContainer, {marginTop: "15%", marginBottom: 10, backgroundColor: "#2CA491"}]}>
-                            <TouchableOpacity onPress={handleEmailResend} style={styles.customBtn}>
-                                <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Send Verification Email</Text>
-                            </TouchableOpacity>
-                        </View> : null}
-
-                        <View style={[styles.customBtnContainer, submits >= 3 ? {marginTop: 35, marginBottom: 30, backgroundColor: "#2CA491"} : {marginBottom: 30, backgroundColor: "#2CA491"}]}>
-                                <TouchableOpacity onPress={() => setAlertOpen(false)} style={styles.customBtn}>
-                                    <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Dismiss</Text>
-                                </TouchableOpacity>
-                        </View>
-
-
-        
-
-
             </View>
 
+            <View style={{marginBottom:0}}>
+
+                    {submits < 3 ? <View style={[styles.customBtnContainer, { marginBottom: 10, backgroundColor: "#2CA491"}]}>
+                                <TouchableOpacity onPress={handleEmailResend} style={styles.customBtn}>
+                                    <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Send Verification Email</Text>
+                                </TouchableOpacity>
+                            </View> : null}
+
+                            <View style={[styles.customBtnContainer, submits >= 3 ? {marginTop: 35, marginBottom:"15%", backgroundColor: "#2CA491"} : {marginBottom:"15%", backgroundColor: "#2CA491"}]}>
+                                    <TouchableOpacity onPress={() => setAlertOpen(false)} style={styles.customBtn}>
+                                        <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Dismiss</Text>
+                                    </TouchableOpacity>
+                            </View>
+                
+                </View>
+                </ScrollView>
         </FancyAlert>
     )
 }
@@ -266,7 +271,7 @@ const styles = StyleSheet.create({
     emailAlertMessage: {
         color: "#444444",
         textAlign: "justify",
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: "500",
         padding: "7%",
      

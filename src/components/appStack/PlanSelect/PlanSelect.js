@@ -22,7 +22,7 @@ function Card({animationValue, index, colorPalette, item}) {
     const HEIGHT = Dimensions.get('window').height / 1.5;
     const cs = useSelector((state) => state.userSlice?.colorPalette)
     // const cs = useSelector((state) => state.userSlice?.colorPalette["triadic"]['secondary'])
-    const {Name, Package_Amount__c, Features__c} = item
+    const {Name, Package_Amount__c, Features__c, Value_Statement__c, Percent_Discount__c, Purchase_Limit__c} = item
     const featuresArr = Features__c.split(";")
     
     
@@ -83,7 +83,7 @@ function Card({animationValue, index, colorPalette, item}) {
                     alignItems: 'center',
                     borderRadius: 20,
                     width: WIDTH,
-                    height: "85%",
+                    height: "60%",
                     shadowColor: '#000',
                     shadowOffset: {
                         width: 0,
@@ -97,22 +97,15 @@ function Card({animationValue, index, colorPalette, item}) {
             ]}
         >   
         <View style={styles.cardTop}>
-            <Text style={styles.cardHeadline}>{Name}</Text>
-            <Text style={styles.cardPrice}>{`$${Package_Amount__c}/Month`}</Text>
+            <Text style={styles.cardHeadline}>{Name.toUpperCase()}</Text>
+            <Text style={styles.cardPercentage}>{`${Percent_Discount__c}%OFF`}</Text>
+            {!Purchase_Limit__c ? <Text style={styles.purchaseLimit}>EVERY PURCHASE UNLIMITED</Text> : <Text style={styles.purchaseLimit}>{`UP TO $${Purchase_Limit__c}`}</Text> }
+            <Text style={styles.cardPrice}>{`Only $${Package_Amount__c} /mo`}</Text>
+            <Text style={styles.valueStatement}>{`(${Value_Statement__c.toUpperCase()})`}</Text>
         </View>
        
         <View style={styles.cardBottom}>
-        <FlatList
-         bounces={false}
-          data={featuresArr}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ width: "92%",flexDirection: "row", marginTop: "10%"}}>
-                <Text style={{color: "#2A1B6E",fontSize: 19, marginTop:-3}}>{`\u29BF`} </Text><Text style={{fontWeight: "500",color: "#2A1B6E", fontSize: 16 }}>{item}</Text>
-              </View>
-            );
-          }}
-        />
+            
         </View>
         </Animated.View>
 
@@ -122,24 +115,32 @@ function Card({animationValue, index, colorPalette, item}) {
 
 }
 
+
+
 export default function PlanSelect({navigation}) {
     const {colorPalette, Selected_Package_ID__c} = useSelector((state) => state.userSlice)
     const {membershipPlans} = useSelector((state) => state.membershipPlanSlice)
+    const [cardIndex, setCardIndex] = React.useState(0)
+    const [featuresArr, setFeaturesArr] = React.useState([])
     const selection = useSelector((state) => state.membershipPlanSlice.selectedPlan)
     const dispatch = useDispatch();
     const width = Dimensions.get('window').width;
     
+    
+    
+
     React.useEffect(() => {
+        setFeaturesArr(carouselItems[0].Features__c.split(";"))
         dispatch(closeDrawer())
     },[])
      
     const filtered = membershipPlans.filter((item) => item.Id !== Selected_Package_ID__c)
     const carouselItems = filtered
-    
 
+ 
+    
     
     React.useEffect(() => {
-       
         dispatch(setSelectedPlan(carouselItems[0]?.Id))
     },[])
    
@@ -152,9 +153,7 @@ export default function PlanSelect({navigation}) {
                 style={styles.masterContainer}
             >
            
-                <View style={styles.headerContainer}>
-                    <Text style={[styles.headline, {color:"white"}]}>Select your Plan</Text>
-                </View>
+                
                 <View style={styles.cardContainer}>
                 <Carousel
                     loop={carouselItems.length > 1 ? true : false}
@@ -163,21 +162,27 @@ export default function PlanSelect({navigation}) {
                     data={carouselItems}
                     pagingEnabled={true}
                     withAnimation={{
-                        type: 'spring',
+                        type: 'timing',
                         config: {
-                            damping: 13,
+                            damping: 10,
                         },
                     }}
                     scrollAnimationDuration={1000}
-                    onSnapToItem={(index) => dispatch(setSelectedPlan(carouselItems[index].Id))}
+                    
+                   
+                    onSnapToItem={(index) => { 
+                        setFeaturesArr(carouselItems[index].Features__c.split(";"))
+                        dispatch(setSelectedPlan(carouselItems[index].Id))
+                    }}
+                    
                     renderItem={({ index, animationValue, item }) => {
+
                         return <Card 
                                 key={index}
                                 index={index} 
                                 animationValue={animationValue} 
                                 colorPalette={colorPalette}
                                 item={item}
-                                
                                 />
                     }
                         
@@ -186,17 +191,29 @@ export default function PlanSelect({navigation}) {
                 </View>
                 
                 <View style={styles.buttonContainer}>
-
                     {Platform.OS === "ios"? 
                         <IosButton navigation={navigation} textColor="white" color={colorPalette.accent} />
                     :
                         <AndroidButton navigation={navigation} textColor="white" color={colorPalette.accent} />
                     }
+
+                    <FlatList
+                    bounces={false}
+                    data={featuresArr}
+                    contentContainerStyle={{ alignItems:"center"}}
+                    renderItem={({ item }) => {
+                    return (
+                        <View style={{ width: "92%",  flexDirection: "row", marginTop:"5%"}}>
+                            <Text style={{textAlign:"center", fontWeight: "500", color: "white", fontSize: 16 }}>{item}</Text>
+                        </View>
+                    );
+                    }}
+                    />
                 
                 </View>
+                   
                 </LinearGradient>
-       
-
+    
     )
 }
 
@@ -227,7 +244,7 @@ function IosButton({color, textColor, navigation}) {
 
     return(
         <TouchableOpacity onPress={handleNavigation} style={[styles.btn,{backgroundColor: color}]}>
-            <Text style={[styles.btnText, {color: textColor}]}>Select</Text>
+            <Text style={[styles.btnText, {color: textColor}]}>SUBSCRIBE</Text>
         </TouchableOpacity>
     )
 }
@@ -248,10 +265,31 @@ const styles = StyleSheet.create({
       flex:1,
    
     },
+    cardPercentage: {
+        fontSize: 35,
+        fontWeight: "900",
+        color:"#2A1B6E",
+        letterSpacing: 3,
+    },
+    valueStatement: {
+        fontSize: 18,
+        fontWeight: "500",
+        color:"#2A1B6E",
+        fontFamily: 'AmericanTypewriter-Bold' 
+    },
     btnText: {
-        fontSize: 23,
-        
+        fontSize: 26,
+        letterSpacing: 3,
+        fontWeight: "600"
        
+    },
+    purchaseLimit: {
+        fontSize: 25,
+        color: "#2A1B6E",
+        fontWeight: "500",
+        textAlign:"center",
+        letterSpacing: 3,
+        
     },
     btn: {
         width: "90%",
@@ -277,10 +315,15 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     cardContainer: {
-        flex: 6,
+        flex: 1,
+        marginBottom:"-15%",
+        marginTop: "-14%",
+        
     },
     buttonContainer: {
         flex: 1,
+        marginBottom:'-25%',
+
         // backgroundColor: "purple",
     },
     cardWrapper: {
@@ -295,21 +338,19 @@ const styles = StyleSheet.create({
         paddingTop: "5%"
     },
    
-    cardBottom: {
-        flex: 4,
-        width: "100%",
-        alignItems: "space-around"
-        
-    },
+    
     cardHeadline: {
-        fontSize: 25,
+        fontSize: 35,
         color: "#2A1B6E",
-        fontWeight: "500"
+        fontWeight: "600",
+        letterSpacing: 4,
+       
     },
     cardPrice: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "500",
-        color: "#424049"
+        color: "#424049",
+        
     }
 })
 
