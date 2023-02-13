@@ -1,6 +1,6 @@
-import { SafeAreaView, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity,StyleSheet, ActivityIndicator} from "react-native"
+import { SafeAreaView, Text, TextInput, View, KeyboardAvoidingView, TouchableOpacity,StyleSheet, ActivityIndicator, Image} from "react-native"
 import React from 'react';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { FloatingLabelInput } from 'react-native-floating-label-input';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useSelector,useDispatch } from "react-redux";
@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import _init from "../lib/_init";
 import { states } from "./states";
 import { closeDrawer } from "../../../store/drawerSlice";
+
 
 
 export default function BillingForm({navigation}) {
@@ -46,6 +47,11 @@ export default function BillingForm({navigation}) {
     React.useEffect(() => {
       dispatch(closeDrawer())
     },[])
+
+    const streetRef = React.useRef();
+    const cityRef = React.useRef();
+    const stateRef = React.useRef();
+    const zipRef = React.useRef();
 
 
     //submits data package to the backend for signup
@@ -164,35 +170,45 @@ export default function BillingForm({navigation}) {
     }
 
 
-
     return (
         <SafeAreaView style={styles.container} >
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
-        <Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
-            <KeyboardAvoidingView style={styles.inputContainer}>
+        <KeyboardAwareScrollView
+                extraScrollHeight={150}
+                contentContainerStyle={styles.inputContainer}
+                >
+            <Alert callBack={() => _init(locationPermission, userSlice, cognitoData, avatarUri, dispatch, setInitState)} navigation={navigation} location="Map" visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
+            <Image style={styles.img} source={require('../../../assets/pictures/logo_white.png')} />
             <View style={styles.inputSub}>
                 <FloatingLabelInput
+                        ref={streetRef}
                         label={'Street'}
                         labelStyles={styles.labelStyles}
                         containerStyles={styles.containerStyles}
                         isPassword={false}
                         value={streetAddress}
-                        onChangeText={value => setStreetAddress(value)}        
+                        onChangeText={value => setStreetAddress(value)}  
+                        onSubmitEditing={() => cityRef.current.focus()}
+                        blurOnSubmit={false}
                 />
             </View>
             <View style={styles.inputSub}>
              
                 <FloatingLabelInput
+                        ref={cityRef}
                         label={'City'}
                         containerStyles={styles.containerStyles}
                         isPassword={false}
                         value={city}
-                        onChangeText={value => setCity(value)}        
+                        onChangeText={value => setCity(value)}   
+                        onSubmitEditing={() => setOpen(true)}
+                        blurOnSubmit={false}     
                 />
             </View>
 
             <View style={styles.inputSub}>
                 <DropDownPicker
+                    ref={stateRef}
                     style={styles.dropdown}
                     dropDownDirection={"TOP"}
                     open={open}
@@ -201,12 +217,14 @@ export default function BillingForm({navigation}) {
                     setOpen={setOpen}
                     setValue={setState}
                     placeholder={"State"}
-                    // setItems={setItems}
+                    onSelectItem={()=> zipRef.current.focus()}
+                    blurOnSubmit={false}
                 />
             </View>
             
             <View style={styles.inputSub}>
             <FloatingLabelInput
+                ref={zipRef}
                 label={'Zip'}
                 containerStyles={styles.containerStyles}
                 isPassword={false}
@@ -221,7 +239,7 @@ export default function BillingForm({navigation}) {
             </View>
             
                 
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
         
         </SafeAreaView>
 
@@ -233,6 +251,15 @@ const styles= StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
+    },
+    img: {
+        resizeMode: "contain",
+        width: "100%",
+        height: "30%", 
+        marginBottom: "10%",
+        position:"relative",
+        top:-50
+        
     },
     inputSub: {
         width: "90%",
@@ -256,7 +283,7 @@ const styles= StyleSheet.create({
         fontSize: 16,
     },
     inputContainer: {
-        flex: 1,
+        flexGrow: 1,
         justifyContent: "center",
         alignItems: "center",
 

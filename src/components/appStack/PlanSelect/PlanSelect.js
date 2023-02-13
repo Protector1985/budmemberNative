@@ -219,7 +219,7 @@ function IosButton({color, textColor, navigation}) {
             case "3": 
                 return navigation.navigate("Verify Phone Number")
             case "4": 
-                return navigation.navigate("Enter Code")
+                return navigation.navigate("Verify Phone Number", {screen: "Enter Code"})
             case "5":
                 return navigation.navigate("Payment Method")
             default:
