@@ -21,7 +21,7 @@ export default function SignIn({navigation}) {
     const [alertType, setAlertType] = React.useState("")
     const [userFound, setUserFound] = React.useState(false)
     
-    
+    const passwordRef = React.useRef();
     
     async function submitForgotPassword(){
         setLoading(true);
@@ -101,12 +101,16 @@ export default function SignIn({navigation}) {
                                 keyboardType="email-address"
                                 textContentType="emailAddress"
                                 value={email} 
+                                onSubmitEditing={() => passwordRef.current.focus()}
+                                blurOnSubmit={false}
                                 onChangeText={(text) => setEmail(text.toLowerCase())} 
                                 style={styles.inputField}/>
                         </View>
                         <View style={styles.inputSubContainer} >
                             <Text style={styles.label}>Password</Text>
                             <TextInput 
+                                ref={passwordRef}
+                                blurOnSubmit={false}
                                 secureTextEntry={true} 
                                 autoComplete="password"
                                 textContentType="password"

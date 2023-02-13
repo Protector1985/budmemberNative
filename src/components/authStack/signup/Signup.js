@@ -51,6 +51,15 @@ export default function Signup({navigation}) {
         email:null,
         password: null,
     })
+
+    const emailRef = React.useRef();
+    const firstNameRef = React.useRef();
+    const lastNameRef = React.useRef();
+    const passwordRef = React.useRef();
+    const passwordRepeatRef = React.useRef();
+    const datePickRef = React.useRef();
+    const checkBox1 = React.useRef();
+    const checkBox2 = React.useRef();
  
    function submitDisabled() {
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
@@ -297,48 +306,59 @@ export default function Signup({navigation}) {
                 <View style={styles.inputContainer}>
                     {!params? <View style={styles.inputSubContainer}>
                     {errors.email !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Email</Text><Text style={styles.errorText}>{errors.email}</Text></View> : <Text style={styles.label}>Email</Text>}
-                        <TextInput keyboardType="email-address" textContentType="emailAddress" autoComplete="email" inputAccessoryViewID="signUp" onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={errors.email !== null ? styles.inputFieldError : styles.inputField} />
+                        <TextInput onSubmitEditing={() => firstNameRef.current.focus()} ref={emailRef} keyboardType="email-address" textContentType="emailAddress" autoComplete="email" inputAccessoryViewID="signUp" onChangeText={(text) => setEmail(text)} editable={!navigation?.state?.params?.email ? true : false} value={email} style={errors.email !== null ? styles.inputFieldError : styles.inputField} />
                     </View> : null}
                     
                     <View style={styles.inputSubContainer}>
                     {errors.firstName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>First Name</Text><Text style={styles.errorText}>{errors.firstName}</Text></View> : <Text style={styles.label}>First Name</Text>}
                         <TextInput
+                            ref={firstNameRef}
                             value={firstName} 
                             autoComplete="name-given"
                             textContentType="givenName"
                             inputAccessoryViewID="signUp"
                             onChangeText={(text) => setFirstName(text)}
+                            onSubmitEditing={() => lastNameRef.current.focus()}
+                            blurOnSubmit={false}
                             style={errors.firstName !== null ? styles.inputFieldError : styles.inputField} />
                     </View>
 
                     <View style={styles.inputSubContainer}>
                     {errors.lastName !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Last Name</Text><Text style={styles.errorText}>{errors.lastName}</Text></View> : <Text style={styles.label}>Last Name</Text>}
                         <TextInput
+                            ref={lastNameRef}
                             inputAccessoryViewID="signUp"
                             autoComplete="name-family"
                             textContentType="familyName"
                             value={lastName} 
                             onChangeText={(text) => setLastName(text)}
+                            onSubmitEditing={() => passwordRef.current.focus()}
+                            blurOnSubmit={false}
                             style={errors.lastName!== null ? styles.inputFieldError : styles.inputField} />
                     </View>
 
                     <View style={styles.inputSubContainer}> 
                         {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Password</Text>}
                         <TextInput 
+                            ref={passwordRef}
                             inputAccessoryViewID="signUp"
                             secureTextEntry={true} 
                             style={errors.password !== null ? styles.inputFieldError : styles.inputField}
                             value={password} 
+                            onSubmitEditing={() => passwordRepeatRef.current.focus()}
+                            blurOnSubmit={false}
                             onChangeText={(text) => setPassword(text)}
                              />
                     </View>
                     <View style={styles.inputSubContainer}>  
                         {errors.password !== null ? <View style={{flexDirection:'row'}}><Text style={styles.label}>Password</Text><Text style={styles.errorText}>{errors.password}</Text></View> : <Text style={styles.label}>Repeat Password</Text>}
                         <TextInput 
+                            ref={passwordRepeatRef}
                             inputAccessoryViewID="signUp"
                             secureTextEntry={true}   
                             style={errors.password !== null ? styles.inputFieldError : styles.inputField}
                             value={repeatPassword} 
+                            blurOnSubmit={false}
                             onChangeText={(text) => setRepeatPassword(text)}
                              />
                     
@@ -351,7 +371,8 @@ export default function Signup({navigation}) {
                             <View>
                             <View style={styles.dateContainer}>
                                 <Text style={styles.bdayText}> Birthdate: </Text>
-                                <DateTimePicker  
+                                <DateTimePicker 
+                                    ref={datePickRef} 
                                     mode="date"
                                     themeVariant='dark'
                                     style={styles.iosPicker}
@@ -390,6 +411,7 @@ export default function Signup({navigation}) {
                     <Text style={styles.termsHeadline}>By clicking create account, I agree that:</Text>
                     <View style={styles.termsStatementContainer}>
                         <Checkbox
+                            ref={checkBox1}
                             value={termsAccepted}
                             onValueChange={setTermsAccepted}
                             style={styles.checkbox}
@@ -398,6 +420,7 @@ export default function Signup({navigation}) {
                     </View>
                     <View style={styles.termsStatementContainer}>
                         <Checkbox
+                            ref={checkBox2}
                             value={privacyAccepted}
                             onValueChange={setPrivacyAccepted}
                             style={styles.checkbox}
