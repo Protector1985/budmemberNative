@@ -66,7 +66,6 @@ function EmailAlert({submits, setSubmits,handleEmailResend, colorPalette, setAle
             </View>
 
             <View style={{marginBottom:0}}>
-
                     {submits < 3 ? <View style={[styles.customBtnContainer, { marginBottom: 10, backgroundColor: "#2CA491"}]}>
                                 <TouchableOpacity onPress={handleEmailResend} style={styles.customBtn}>
                                     <Text style={{color:"white", fontSize: 16, fontWeight: "500"}}>Send Verification Email</Text>
@@ -98,7 +97,7 @@ export default function MapScreen({navigation, initProgress}) {
    const {open} = useSelector((state)=> state.drawerSlice)
    const {Email_Verified__c, colorPalette, Email} = useSelector((state)=> state.userSlice)
    const [hours, setHours] = React.useState()
-
+    const [sliderOpen, setSliderOpen] = React.useState(true)
    const dispatch = useDispatch()
    const menu = <SideDrawer navigation={navigation} />
    const [alertHtml, setAlertHtml] = React.useState(null)
@@ -106,7 +105,7 @@ export default function MapScreen({navigation, initProgress}) {
    const [loading,setLoading] = React.useState(false)
    const [filteredDispensaries, setFilteredDispensaries] = React.useState([])
    const alertRef = React.useRef();
-
+    const panelRef = React.useRef();
    //closes drawer in case it is open
    React.useEffect(() => {
         dispatch(closeDrawer())
@@ -147,6 +146,7 @@ export default function MapScreen({navigation, initProgress}) {
     }     
 }
 
+console.log(panelRef)
 
    React.useEffect(() => {
             if(showEmailModal) {
@@ -170,6 +170,7 @@ export default function MapScreen({navigation, initProgress}) {
         console.log(err)
     }
    }
+   
    
 
     return (
@@ -202,11 +203,17 @@ export default function MapScreen({navigation, initProgress}) {
                     keyExtractor={item => item.Name}
                 /> : null}
 
-        
-                
+    
 
                 <MapView
                     style={styles.map}
+                    onPress={() => {
+                        if(Object.keys(sliderData).length !== 0) {
+                            if(panelRef.current.state.isPanelOpened) {
+                                panelRef.current.togglePanel();
+                            }                            
+                        }
+                    }}
                     provider={Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     region={{
                         latitude: latitude,
@@ -235,7 +242,7 @@ export default function MapScreen({navigation, initProgress}) {
                     })}
                                
                 </MapView>
-                    {Object.keys(sliderData).length === 0 ? null :<BottomSlider hours={hours} sliderData={sliderData} homeLatitude={latitude} homeLongitude={longitude}/>}
+                    {Object.keys(sliderData).length === 0 ? null : <BottomSlider sliderOpen={sliderOpen} panelRef={panelRef} hours={hours} sliderData={sliderData} homeLatitude={latitude} homeLongitude={longitude}/>}
 
                 </SafeAreaView>
         

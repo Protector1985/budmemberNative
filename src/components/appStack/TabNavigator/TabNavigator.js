@@ -28,7 +28,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
             if(Membership_Status__c === "Active" && cognitoData["custom:authorizeSubId"]) {
                 return (
                         <SafeAreaView style={{flex: 1}}>
-                            <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                            <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                                 <QrCodeStack {...props} />
                             </SideMenu>
                         </SafeAreaView>
@@ -36,7 +36,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
             } else if(Membership_Status__c === "Inactive" && !cognitoData["custom:authorizeSubId"]) {
                 return (
                     <SafeAreaView style={{flex: 1}}>
-                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                        <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                             <SubscribeStack {...props} />
                         </SideMenu>
                     </SafeAreaView> 
@@ -44,7 +44,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
             }else if(Membership_Status__c === "Inactive" && cognitoData["custom:authorizeSubId"]) {
                 return (
                     <SafeAreaView style={{flex: 1}}>
-                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                        <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                             <SubscribeStack />
                         </SideMenu>
                     </SafeAreaView> 
@@ -80,7 +80,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                         const menu = <SideDrawer navigation={props.navigation} />
                         return(
                             <SafeAreaView style={{flex: 1}}>
-                                <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                                     <MapScreen initProgress={initProgress} {...props} />
                                 </SideMenu>
                             </SafeAreaView>
@@ -134,7 +134,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 const menu = <SideDrawer navigation={props.navigation} />
                 return(
                     <SafeAreaView style={{flex: 1}}>
-                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                        <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                             <BillingStackNavigator />
                         </SideMenu>
                     </SafeAreaView>
@@ -155,7 +155,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 const menu = <SideDrawer navigation={props.navigation} />
                 return(
                     <SafeAreaView style={{flex: 1}}>
-                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                        <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                             <ProfileStack {...props} />
                         </SideMenu>
                     </SafeAreaView>
@@ -176,7 +176,7 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
                 const menu = <SideDrawer navigation={props.navigation} />
                 return(
                     <SafeAreaView style={{flex: 1}}>
-                        <SideMenu bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                        <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
                             <ContactUs {...props} />
                         </SideMenu>
                     </SafeAreaView>

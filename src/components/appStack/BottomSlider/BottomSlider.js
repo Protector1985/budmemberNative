@@ -12,7 +12,7 @@ import openMap, {createMapLink} from 'react-native-open-maps';
 const height = Dimensions.get("window").height
 
 
-export default function BottomSlider({sliderData, homeLatitude, homeLongitude, hours}) {
+export default function BottomSlider({panelRef, sliderOpen, sliderData, homeLatitude, homeLongitude, hours}) {
     const {Name, Image_URL__c, BillingStreet, BillingState, BillingPostalCode, Geo_Point__Latitude__s, Geo_Point__Longitude__s, openHours} = sliderData;
     const [distance, setDistance] = React.useState(0)
     const [storeOpen, setStoreOpen] = React.useState(true)
@@ -71,9 +71,9 @@ export default function BottomSlider({sliderData, homeLatitude, homeLongitude, h
         console.log(err)
     }
    }
-
+   console.log(sliderOpen)
     return (
-        <BottomSheet sliderMaxHeight={height} isOpen={true}>
+        <BottomSheet ref={panelRef} sliderMaxHeight={height} >
           <ScrollView>
             <View style={styles.pictureContainer}>
                 <Image style={{width: 75, height: 75}}  source={{uri: Image_URL__c}} />

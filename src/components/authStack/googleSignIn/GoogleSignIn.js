@@ -27,7 +27,7 @@ export default function GoogleSignIn({navigation}) {
 
     const [request, response, promptAsync] = useAuthRequest({
         clientId: "2o54hoh2kq8t2v4e2dqom8866t",
-        scopes: ['email', 'openid', 'aws.cognito.signin.user.admin', 'profile'],
+        scopes: ['aws.cognito.signin.user.admin'],
         responseType: "token",
         redirectUri: makeRedirectUri({
             scheme: "com.native.budmember",

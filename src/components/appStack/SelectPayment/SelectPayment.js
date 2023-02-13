@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import _init from '../lib/_init';
 import changeWithCardOnFile from './lib/changeWithCardOnFile';
 import submitExisting from './lib/changeWithCardOnFile';
-
+import * as Location from "expo-location"
 
 function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
     
@@ -41,7 +41,7 @@ export default function SelectPayment({navigation}) {
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
     const {locationPermission} = useSelector((state) => state.permissionSlice)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
-    
+    const [status, requestPermission] = Location.useForegroundPermissions()
     const {userSlice} = useSelector((state) => state)
     const {avatarUri} = userSlice
     const dispatch = useDispatch()
@@ -49,7 +49,7 @@ export default function SelectPayment({navigation}) {
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
-
+   
     const [loading, setLoading] = React.useState(false);
     const {
         Email, 
@@ -103,13 +103,13 @@ React.useEffect(() => {
             return navigation.navigate("Payment Information")
         case "EXISTING":
            
-    
             const res = await changeWithCardOnFile(Email, selectedPlan, Previous_Package_ID__c, membershipPlans)
             if(res.data.success) {
                 setAlertOpen(true);
                 setAlertMessage("Your plan was successfully changed")
                 setAlertType("SUCCESS")
                 setLoading(false)
+                _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
             } else {
                 setAlertOpen(true);
                 setAlertMessage(res.data.msg)

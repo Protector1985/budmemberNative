@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AuthContext } from '../../../context/AuthContext';
+import axios from 'axios';
 const height = Dimensions.get("window").height
 
 function DrawerItem({navigation, screenName, screenLink}) {
@@ -31,7 +32,14 @@ return (
 function Logout({navigation, screenName, screenLink}) {
     const {isLoading, userToken, setUserToken} = useContext(AuthContext)
     function handleNavigation() {
+        
+        
         AsyncStorage.clear();
+
+        // axios.get("https://budmember-prod.auth.us-west-2.amazoncognito.com/logout?response_type=code&client_id=2o54hoh2kq8t2v4e2dqom8866&redirect_uri=com.application.budmember://status")
+        // .then((res) => {
+        //     console.log(res)
+        // })
         setUserToken(null)
     }
 
@@ -54,18 +62,18 @@ export default function SideDrawer(props) {
 return(
         <ScrollView style={[styles.container, {height: height}]}>
         <LinearGradient
-        style={{
-            width: undefined, 
-            padding: 16, 
-            paddingTop: 80, 
-            position: "relative", 
-            marginTop: -60,
-            marginBottom:15,
-            }}
-            colors={[colors.main, colors.mainLight]}
-            start={{x: 0.5, y: 0}}
-            end={{x: 1, y: 0.7}}
-            >
+            style={{
+                    width: undefined, 
+                    padding: 16, 
+                    paddingTop: 80, 
+                    position: "relative", 
+                    marginTop: -60,
+                    marginBottom:15,
+                }}
+                    colors={[colors.main, colors.mainLight]}
+                    start={{x: 0.5, y: 0}}
+                    end={{x: 1, y: 0.7}}
+                >
             <UserAvatar style={styles.profile} size={76} name={`${FirstName} ${LastName}`} src={avatarUri}  />
                 <Text style={styles.name}>{`${FirstName} ${LastName}`}</Text>
                 <View style={{flexDirection:'row', alignItems:"center"}}>

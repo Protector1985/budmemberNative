@@ -200,6 +200,7 @@ export default function BillingForm({navigation}) {
                     items={states}
                     setOpen={setOpen}
                     setValue={setState}
+                    placeholder={"State"}
                     // setItems={setItems}
                 />
             </View>

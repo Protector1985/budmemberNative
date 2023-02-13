@@ -53,7 +53,7 @@ function DrawerItem({navigation, screenName, screenLink}) {
             <View style={styles.listContainer}>
                 <DrawerItem {...props} screenName="Profile" />
                 <DrawerItem {...props} screenName="Billing" />
-                <Logout />
+               
             </View>
             
         </SafeAreaView>
