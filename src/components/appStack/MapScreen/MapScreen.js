@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView, Platform} from 'react-native';
+import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView, Platform, Alert} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import SearchBar from "react-native-dynamic-search-bar";
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -11,7 +11,7 @@ import { fetchDispensary, getVerificationEmail } from '../../../api/nodeApi';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
 import { closeDrawer } from '../../../store/drawerSlice';
-import Alert from '../../utils/Alert';
+
 import {setShowEmailModal} from '../../../store/systemSlice';
 import { setLocation } from '../../../store/locationSlice';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
@@ -19,6 +19,11 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import { Entypo } from '@expo/vector-icons'; 
 import { color } from 'react-native-reanimated';
+import * as Linking from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as WebBrowser from 'expo-web-browser';
+import { webFrontend } from '../../../../endpoint';
+
 
 const Drawer = createDrawerNavigator();
 
@@ -43,7 +48,6 @@ function SearchResultCard({image, name, street, city, zip, state}) {
 
 function EmailAlert({submits, setSubmits,handleEmailResend, colorPalette, setAlertOpen, alertOpen}) {
     
-   
     return (
         <FancyAlert
             style={{backgroundColor: "#EEEEEE"}}
@@ -91,11 +95,11 @@ export default function MapScreen({navigation, initProgress}) {
    const [alertType, setAlertType] = React.useState("")
    const [sliderData, setSliderData] = React.useState({})
    const {latitude, longitude} = useSelector((state) => state.locationSlice)
-  
+   const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
    const {showEmailModal} = useSelector((state) => state.systemSlice)
    const {dispensaries} = useSelector((state) => state.dispensariesSlice)
    const {open} = useSelector((state)=> state.drawerSlice)
-   const {Email_Verified__c, colorPalette, Email} = useSelector((state)=> state.userSlice)
+   const {Email_Verified__c, colorPalette, Email, Membership_Status__c} = useSelector((state)=> state.userSlice)
    const [hours, setHours] = React.useState()
     const [sliderOpen, setSliderOpen] = React.useState(true)
    const dispatch = useDispatch()
@@ -104,6 +108,7 @@ export default function MapScreen({navigation, initProgress}) {
    const [submits, setSubmits] = React.useState(0)
    const [loading,setLoading] = React.useState(false)
    const [filteredDispensaries, setFilteredDispensaries] = React.useState([])
+   const [provider, setProvider] = React.useState(null)
    const alertRef = React.useRef();
     const panelRef = React.useRef();
    //closes drawer in case it is open
@@ -146,8 +151,6 @@ export default function MapScreen({navigation, initProgress}) {
     }     
 }
 
-console.log(panelRef)
-
    React.useEffect(() => {
             if(showEmailModal) {
             if(Email_Verified__c != undefined) { 
@@ -156,9 +159,7 @@ console.log(panelRef)
                    
                 }
             }
-        }
-
-        
+        } 
    },[Email_Verified__c])
 
    async function handlePress(item) {
@@ -170,13 +171,57 @@ console.log(panelRef)
         console.log(err)
     }
    }
+
+   async function browserRedirect() {
    
+        try {
+            const backToAppRedirect = Linking.createURL("status")
+            const token = await AsyncStorage.getItem("userToken")  
+            let result = await WebBrowser.openBrowserAsync(`${webFrontend}/nativeRequest/?token=${token}&redirect=${backToAppRedirect}`);
+            
+        } catch (err) {
+            console.log(err)
+        }
+
+   }
+
+   React.useEffect(() => {
+        if(cognitoData?.sub) {
+           
+            // console.log(providerProcessor())
+            if(cognitoData["custom:salesforceRole"] === "Budtender") {
+                Alert.alert("Hello Budtender, you will be redirected to the web version of this app shortly. Please wait...")
+                setTimeout(() => {
+                    browserRedirect();
+                }, 4000)
+                
+               
+                
+            }
+        } 
+   },[cognitoData])
    
+  
+
+   function showEmailAlert() {
+    
+        if(cognitoData?.identities) {
+            return null
+        } else {
+            if(!cognitoData?.sub) {
+                return null
+            } else if(cognitoData.sub) {
+                return <EmailAlert submits={submits} setSubmits={setSubmits} alertOpen={alertOpen} setAlertOpen={setAlertOpen} handleEmailResend={handleEmailResend} colorPalette={colorPalette} />
+            }
+            return null
+            
+        }
+   }
 
     return (
         
             <SafeAreaView style={styles.masterContainer}>
-            <EmailAlert submits={submits} setSubmits={setSubmits} alertOpen={alertOpen} setAlertOpen={setAlertOpen} handleEmailResend={handleEmailResend} colorPalette={colorPalette} />
+            {showEmailAlert()}
             <ProgressBar initProgress={initProgress} />
             <SearchBar
                 style={styles.searchBar}

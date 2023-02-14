@@ -24,7 +24,7 @@ export default function CreditCardPayment({navigation}) {
   },[])
 
   const methods = useFormContext()
-  console.log(methods)
+  
   
     const formMethods = useForm({
         // to trigger the validation on the blur event
@@ -38,7 +38,7 @@ export default function CreditCardPayment({navigation}) {
         },
       })
 
-      console.log(formMethods)
+  
       const {  formState, getValues } = formMethods
    
       function handleSubmit(e) {

@@ -19,12 +19,8 @@ export default function GoogleSignIn({navigation}) {
     }
 
     const useProxy = true
-
-    
     const respType = ResponseType.Token
     
-
-
     const [request, response, promptAsync] = useAuthRequest({
         clientId: "2o54hoh2kq8t2v4e2dqom8866t",
         scopes: ['aws.cognito.signin.user.admin'],
@@ -36,10 +32,7 @@ export default function GoogleSignIn({navigation}) {
         discoveryDocument
     )
    
-   
-
   
-
     React.useEffect(() => {
         if (response) {
           if (response.error) {

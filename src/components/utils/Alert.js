@@ -16,7 +16,7 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
 
   
   
-
+  
     function handlePress() {
         switch(type) {
           case "SUCCESS":
@@ -28,7 +28,7 @@ export default function Alert({customSetHook, customButtonMessage, callBack, vis
             callBack ? (callBack(), setVisible(false)) : setVisible(false)
             break;
           case "INFO":
-            callBack ? (callBack(), setVisible(false)) : setVisible(false)
+            (callBack(), setVisible(false))
             break;
         }
     }

@@ -6,7 +6,7 @@ export default async function changeWithCardOnFile(email, selected, previous, me
 
 try {
   const dueNow = Number(previousPlanData[0].Package_Amount__c) >= Number(selectedPlanData[0].Package_Amount__c) ? 0 : Math.abs(Number(selectedPlanData[0].Package_Amount__c) - Number(previousPlanData[0].Package_Amount__c))
-  console.log(dueNow)
+
   return await cardOnFileMembershipChange(email, selected, dueNow)
 
     

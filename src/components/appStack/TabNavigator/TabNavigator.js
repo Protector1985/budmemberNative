@@ -21,7 +21,8 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice);
     const {open} = useSelector((state)=> state.drawerSlice)
     const badgeVisible = Membership_Status__c !== "Active" && Membership_Status__c !== "Cancelled" 
-    console.log(Membership_Status__c)
+    
+  
 
     function returnStack(props, menu) {
         try {
@@ -57,6 +58,45 @@ export default function TabNavigator({initProgress, firstEl, returnNav}) {
     
     return(
   
+
+        cognitoData["custom:salesforceRole"] === "Budtender" ?
+        <Tab.Navigator style={styles.bottomContainer} screenOptions={{
+            headerShown: false,
+            unmountOnBlur: true,
+            tabBarStyle: {
+                display:"flex",
+                flexDirection:"row",
+                justifyContent: "space-around",
+                alignItems:"center",
+            }
+          }}>
+
+            <Tab.Screen
+            name="Map"
+            options={{
+                activeTintColor: "black",
+                tabBarShowLabel: false, 
+                tabBarIcon: (props) => <Entypo name="map" style={styles.icon} size={26} color="black" />,
+            }}
+            >
+                {(props) => {
+                    const menu = <SideDrawer navigation={props.navigation} />
+                    return(
+                        <SafeAreaView style={{flex: 1}}>
+                            <SideMenu edgeHitWidth={50} bounceBackOnOverdraw={false} isOpen={open} menu={menu} > 
+                                <MapScreen initProgress={initProgress} {...props} />
+                            </SideMenu>
+                        </SafeAreaView>
+                        
+                    )}}
+            </Tab.Screen>
+          
+          </Tab.Navigator>
+
+
+        :
+
+
         
         <Tab.Navigator style={styles.bottomContainer} screenOptions={{
             headerShown: false,

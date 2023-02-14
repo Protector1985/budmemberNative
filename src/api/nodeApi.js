@@ -62,7 +62,7 @@ export const submitCreditRecharge = async (data) => {
 }
 
 export const resetPassword = async (data) => {
-    console.log(data)
+   
     try{
         const reset = await axios.post(ENDPOINT + "/user/reset-password",data)
         return reset
@@ -144,7 +144,7 @@ export const signUp = async (signUpObject) => {
 
 export const updateUser = async (updateDetails, header) => {
     const headers = header ? header : await setToken()
-    console.log(updateDetails)
+   
     try {
         const updateUserRes = await axios.patch(ENDPOINT + "/user", updateDetails,  {headers} )
         return updateUserRes
@@ -159,9 +159,9 @@ export const fetchMyself = async () => {
     try {
         
         const headers = await setToken()
-        console.log(headers)
+   
         const user = await axios.get(ENDPOINT + "/user", { headers })    
-        console.log(user)
+ 
         return user
     } catch (err) {
         console.log(err)

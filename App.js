@@ -20,10 +20,7 @@ function App() {
         try {
             if(status != null) {
                 if (!status?.granted) {
-                    requestPermission()
-                    .then((res) => {
-                    console.log(res)
-                })
+                    
             //   setAlertOpen(true);
             //   setAlertMessage("Some features of this app might not be available without location permission")
             //   setAlertType("WARNING")
@@ -37,7 +34,7 @@ function App() {
 
     React.useEffect(() => {
         try {
-            requestPermissions()
+          requestPermission()
         } catch(err) {
             console.log(err)
         }

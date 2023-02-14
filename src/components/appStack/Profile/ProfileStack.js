@@ -62,8 +62,7 @@ export default function ProfileStack({navigation}) {
   }
 
   async function handleSave() {  
-    console.log(localPhone)
-    console.log(cognitoData?.phone_number?.slice(2))
+  
     try {
       if((localFirst !== FirstName || localLast !== LastName || localEmail !== Email || localPhone !== MobilePhone || moment(Birthdate).format("YYYY-MM-DD") != localBirthdate) && cognitoData?.phone_number?.slice(2) === mutatePhone(localPhone)) {
         

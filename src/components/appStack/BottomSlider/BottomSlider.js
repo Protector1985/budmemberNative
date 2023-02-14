@@ -71,7 +71,7 @@ export default function BottomSlider({panelRef, sliderOpen, sliderData, homeLati
         console.log(err)
     }
    }
-   console.log(sliderOpen)
+
     return (
         <BottomSheet ref={panelRef} sliderMaxHeight={height} >
           <ScrollView>

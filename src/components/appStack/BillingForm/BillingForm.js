@@ -130,7 +130,7 @@ export default function BillingForm({navigation}) {
                 oldPackageId: previousPlanData[0].Id
             }
 
-            console.log(paymentPackage)
+          
 
             setLoading(false)
             
@@ -229,6 +229,7 @@ export default function BillingForm({navigation}) {
                 containerStyles={styles.containerStyles}
                 isPassword={false}
                 value={zip}
+                returnKeyLabel="Register"
                 onChangeText={value => setZip(value)}        
             />
             </View>

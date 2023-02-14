@@ -128,8 +128,7 @@ export default function CTA(props) {
         WebBrowser.coolDownAsync()
         _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
       }
-   }
-    
+   }  
   },[url])
 
   React.useEffect(() => {
@@ -141,13 +140,11 @@ export default function CTA(props) {
 }
   },[initState])
 
-
    async function openWebBrowser() {
         setLoading(true)
         const backToAppRedirect = Linking.createURL("status")
         const token = await AsyncStorage.getItem("userToken")  
         let result = await WebBrowser.openBrowserAsync(`${webFrontend}/nativeRequest/?token=${token}&redirect=${backToAppRedirect}`);
-        console.log(result)
     }
    
     return( 
