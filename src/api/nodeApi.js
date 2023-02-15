@@ -270,6 +270,16 @@ export const fetchDispensary = async (dispensaryId) => {
 }
 
 
+export const cancelSubscription = async (subscriptionId, email, startDate) => {
+    try{
+        const headers = await setToken();
+        const cancelSubs = await axios.post(ENDPOINT + "/delete-subscription", {subscriptionId:subscriptionId, email:email, startDate:startDate}, {headers})
+        return cancelSubs;
+    } catch (err) {
+        return err.response
+    }
+}
+
 export const fetchDispensaryDetails = async (data) => {
     try{
         const headers = await setToken()

@@ -1,27 +1,83 @@
 import axios from 'axios';
 import React from 'react';
-import {Text, View, ScrollView, SafeAreaView, StyleSheet, Image, TouchableOpacity} from 'react-native'
+import {Text, View, ScrollView, SafeAreaView, StyleSheet, Image, TouchableOpacity, ActivityIndicator} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
-import { getCreditCardInfo } from '../../../api/nodeApi';
+import { cancelSubscription, getCreditCardInfo } from '../../../api/nodeApi';
 import { setCCInfo } from '../../../store/ccInfoSlice';
 import { setCCDetails } from '../../../store/paymentInfoSlice';
 import moment from 'moment'
 import { FontAwesome } from '@expo/vector-icons'; 
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
+import { AntDesign } from '@expo/vector-icons';
 
+function ConfirmCancelModal({setLoading, lastChargeDate, open, setOpen, subId, email, navigation}) {
+    const [message, setMessage] = React.useState(`If you cancel your membership, you will lose access to member benefits on ${moment(lastChargeDate).add(1, "Months").format("MM-DD-YYYY")}`)
+    async function handleCancel() {
+        setLoading(true)
+        try {
+            const res = await cancelSubscription(subId, email, lastChargeDate)
+            console.log(res)
+            if(res.data.success) {
+                navigation.navigate("appStack", {screen:"Map"})
+                setLoading(false)
+            } else {
+                setMessage("Something went wrong. Your request could not be processed and your subscription was not cancelled - email contact@budmember.com")
+                setLoading(false)
+            }
+        } catch(err) {
+            console.log(err)
+        }
+    }
+
+    return (
+        <FancyAlert
+            style={{backgroundColor: "#EEEEEE"}}
+            icon={
+                <View style={[styles.warning, { borderRadius: 32 } ]}>
+                    <AntDesign name="exclamation" size={36} color="#FFFFFF" />
+                </View>
+            }
+            visible={open}
+        >
+            <View style={styles.cancelModalContainer}>
+                <Text style={styles.cancelModalText}>{message}</Text>
+            
+                <View style={styles.cancelButtons}>
+                    
+                    <View style={[styles.cancelBtnInModal, {backgroundColor:"#2CA491"}]}>
+                        <TouchableOpacity onPress={() => setOpen(false)} style={styles.cancelBtnOpacity}>
+                            <Text style={styles.cancelButtonsText}>Close</Text>
+                        </TouchableOpacity>
+                    </View>
+                
+                    <View style={[styles.cancelBtnInModal, {backgroundColor:"#86BDB2"}]}>
+                        <TouchableOpacity onPress={() => handleCancel()} style={styles.cancelBtnOpacity}>
+                            <Text style={styles.cancelButtonsText}>Unsubscribe</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+            </View>
+        
+        </FancyAlert>
+    )
+}
 
 
 export default function Billing({navigation}) {
     
     const {Email, currentActivePackage, selectedPackage, packagePrice, lastChargeDate, colorPalette} = useSelector((state) => state.userSlice)
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
     const {ccNumber, ccExp} = useSelector((state) => state.ccInfoSlice)
     const dispatch = useDispatch()
-    
+    const [cancelOpen, setCancelOpen] = React.useState(false)
+    const [loading, setLoading] = React.useState(false)
     async function fetchCCInfo(Email, cancelToken) {
             const res = await getCreditCardInfo(Email, cancelToken);
             dispatch(setCCInfo({ccNumber: res.data.data.ccNumber.split("").join(' ').replace("x x x x x x x x x x x", "* * * * * * * * "), ccExp: res.data.data.ccExpiration}))  
     }
 
-    
+    console.log(cognitoData["custom:authorizeSubId"])
  
     React.useEffect(() => {
         //canceltoken for cleanup
@@ -39,10 +95,13 @@ export default function Billing({navigation}) {
       }, [Email])
 
 
+     
 
 
     return (
         <SafeAreaView style={styles.container}>
+        <ActivityIndicator color={"#2CA491"} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
+        <ConfirmCancelModal setLoading={setLoading} email={Email} subId={cognitoData["custom:authorizeSubId"]} setOpen={setCancelOpen} open={cancelOpen} lastChargeDate={lastChargeDate} />
         <Image style={styles.img} source={require("../../../assets/pictures/logo_white.png")} />
             <ScrollView style={styles.scrollContainer}>
         
@@ -91,14 +150,14 @@ export default function Billing({navigation}) {
                        
                         
                         <View style={styles.changeMembershipContainer}>
-                            <TouchableOpacity style={styles.changeBtn}>
-                                <Text onPress={() => navigation.navigate("Upgrade Membership")} style={styles.changeText}>Change Membership</Text>
+                            <TouchableOpacity onPress={() => navigation.navigate("Upgrade Membership")} style={styles.changeBtn}>
+                                <Text style={styles.changeText}>Change Membership</Text>
                             </TouchableOpacity>
                             
                         </View>
 
                         <View style={styles.cancelBtnContainer}>
-                            <TouchableOpacity style={[styles.cancelBtn, {backGroundColor: colorPalette.accent}]}>
+                            <TouchableOpacity onPress={() => setCancelOpen(true)} style={[styles.cancelBtn, {backGroundColor: colorPalette.accent}]}>
                                 <Text style={styles.cancelBtnText}>Cancel Membership</Text>
                             </TouchableOpacity>
                         </View>
@@ -115,6 +174,47 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
+    },
+    cancelModalText: {
+        marginLeft: 10,
+        marginRight: 10,
+        textAlign: "justify",
+        fontSize: 18
+
+    },
+    cancelButtonsText: {
+        color:"white",
+        letterSpacing: 2,
+    },
+    cancelModalContainer: {
+        flexGrow: 1, 
+        justifyContent: "space-between",
+    },
+    cancelButtons: {
+        flexDirection:"row",
+        justifyContent:"space-around"
+    },
+    cancelBtnInModal: {
+        height: 40,
+        width: "42%", 
+        borderRadius: 8,
+        marginTop:"10%",
+        marginBottom:"10%",
+    },
+    cancelBtnOpacity: {
+        height: 40,
+        width: "100%", 
+        justifyContent:"center",
+        alignItems: "center",
+        backgroundcolor:"blue",
+    },
+    warning: {
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#E4A11B',
+        width: '100%',
     },
     changeMembershipContainer: {
         backgroundColor:"#2CA491",

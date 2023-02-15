@@ -5,7 +5,7 @@ let webFrontend
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
     ENDPOINT = Platform.OS === 'ios' ? "http://localhost:5000" : "http://10.0.2.2:5000" // ios || android avd localhost
-    webFrontend = 'https://33c637b8bbbf.ngrok.io'
+    webFrontend = 'https://bca53cc6ae81.ngrok.io'
     
 
 } else {
