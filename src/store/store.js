@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/dist/query'
+import authSlice from './authSlice'
 import billingSlice from './billingSlice'
 import ccInfoSlice from './ccInfoSlice'
 import cognitoDataSlice from './cognitoDataSlice'
@@ -15,6 +16,7 @@ import userSlice from './userSlice'
 
 const store = configureStore({
   reducer: {
+    authSlice: authSlice,
     permissionSlice: permissionSlice,
     userPurchasesSlice: userPurchasesSlice,
     ccInfoSlice: ccInfoSlice,

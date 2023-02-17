@@ -16,8 +16,8 @@ function ConfirmCancelModal({setLoading, lastChargeDate, open, setOpen, subId, e
         setLoading(true)
         try {
             const res = await cancelSubscription(subId, email, lastChargeDate)
-            console.log(res)
-            if(res.data.success) {
+
+            if(res.data === "SUCCESS") {
                 navigation.navigate("appStack", {screen:"Map"})
                 setLoading(false)
             } else {
@@ -77,8 +77,7 @@ export default function Billing({navigation}) {
             dispatch(setCCInfo({ccNumber: res.data.data.ccNumber.split("").join(' ').replace("x x x x x x x x x x x", "* * * * * * * * "), ccExp: res.data.data.ccExpiration}))  
     }
 
-    console.log(cognitoData["custom:authorizeSubId"])
- 
+    
     React.useEffect(() => {
         //canceltoken for cleanup
         const CancelToken = axios.CancelToken;
@@ -138,7 +137,7 @@ export default function Billing({navigation}) {
                     <View style={styles.btnContainer}>
                             <View style={styles.btn}>
                                 <Text style={styles.btnText}>Next Billing Cycle</Text>
-                                <Text>Feb 14, 2023</Text>
+                                <Text>{moment(lastChargeDate).add(1, "Months").format("MMM DD,YYYY")}</Text>
                             </View>
                         </View>
                         <View style={styles.btnContainer}>

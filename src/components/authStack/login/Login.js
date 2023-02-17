@@ -5,18 +5,19 @@ import {useFonts} from 'expo-font'
 import { A } from '@expo/html-elements';
 import SocialLoginButton from './SocialLoginButton';
 import ContinueButton from './ContinueButton'
-import { AuthContext } from "../../../context/AuthContext";
 import { findUser } from "../../../api/nodeApi";
 import Spinner from '../../utils/Spinner';
 import GoogleSignIn from "../googleSignIn/GoogleSignIn";
+import { useSelector } from "react-redux";
+import { setIsLoading } from "../../../store/authSlice";
+
 
 export default function Login({navigation}) {
-   
     //state for login component
     const [email, setEmail] = useState("");
     const [isLoading, setLoading] = useState(false);
-    
-
+    const {globalSpinnerOn} = useSelector((state) => state.authSlice)
+   
 
       // onPress function passed to Continue button
       async function handlePress() {
@@ -44,6 +45,9 @@ export default function Login({navigation}) {
     if(isLoading) {
         return <Spinner />
     }
+    console.log(globalSpinnerOn)
+    console.log(globalSpinnerOn)
+   
     
     
     return (
@@ -83,7 +87,7 @@ export default function Login({navigation}) {
 
 
             <View style={styles.socialContainer}>
-                <GoogleSignIn navigation={navigation} />
+                <GoogleSignIn setLoading={setLoading} navigation={navigation} />
             </View>
             </KeyboardAvoidingView>
         </View>

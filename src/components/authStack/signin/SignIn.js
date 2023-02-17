@@ -3,18 +3,22 @@ import {useContext, useState} from 'react'
 import {View, Text, TextInput, StyleSheet, Image, ActivityIndicator} from "react-native";
 import {useFonts} from 'expo-font'
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { AuthContext } from '../../../context/AuthContext';
+
 import Alert from '../../utils/Alert'
-import { findUser, forgotPassword } from '../../../api/nodeApi';
+import { findUser, forgotPassword, signIn } from '../../../api/nodeApi';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserToken } from '../../../store/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function SignIn({navigation}) {
 
     //state needed for this component
     const [email, setEmail] = useState(navigation?.state?.params?.email.toLowerCase() || "");
     const [password, setPassword] = useState("");
      //State passed from useContext - AuthContext
-    const {login, logout} = useContext(AuthContext);
-
+    
+    const dispatch = useDispatch()
+ 
     const [loading, setLoading] = React.useState(false);
     const [alertOpen, setAlertOpen] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState("")
@@ -53,7 +57,6 @@ export default function SignIn({navigation}) {
         }
         } catch (error) {
             setAlertOpen(true);
-            console.log(error)
             setAlertMessage("Something went wrong. Please restart the app and try again")
             setAlertType("ERROR")
         }finally{
@@ -70,14 +73,40 @@ export default function SignIn({navigation}) {
             return false
         }
       }
-
+      
+      
+      async function login(email, password) {
+        setLoading(true)
+        try {
+            var res = await signIn({
+                email: email,
+                password: password,
+              });
+              if(!res.data.success) {
+                setLoading(false)
+                setAlertOpen(true);
+                setAlertMessage("The password you entered didn't match our records")
+                setAlertType("ERROR")
+                
+                } else if(res.data.success) {
+                dispatch(setUserToken(res.data.token))
+                AsyncStorage.setItem("userToken", res.data.token)
+                setLoading(false)  
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
    
+
+    
 
     return(
         <View style={styles.masterContainer}>
         <ActivityIndicator color={"#2CA491"} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
         <Alert location="Enter Code" navigation={navigation} visible={alertOpen} setVisible={setAlertOpen} message={alertMessage} type={alertType}/>
         <KeyboardAwareScrollView
+                extraHeight={-64}
                 style={{width: "100%"}}
                 contentContainerStyle={{
                     

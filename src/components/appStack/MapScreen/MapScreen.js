@@ -11,7 +11,7 @@ import { fetchDispensary, getVerificationEmail } from '../../../api/nodeApi';
 import SideDrawer from '../SideDrawer/SideDrawer';
 import SideMenu from 'react-native-side-menu';
 import { closeDrawer } from '../../../store/drawerSlice';
-
+import * as Location from 'expo-location';
 import {setShowEmailModal} from '../../../store/systemSlice';
 import { setLocation } from '../../../store/locationSlice';
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
@@ -109,6 +109,8 @@ export default function MapScreen({navigation, initProgress}) {
    const [loading,setLoading] = React.useState(false)
    const [filteredDispensaries, setFilteredDispensaries] = React.useState([])
    const [provider, setProvider] = React.useState(null)
+   const [homeLat, setHomeLat] = React.useState("")
+   const [homeLong, setHomeLong] = React.useState("")
    const alertRef = React.useRef();
     const panelRef = React.useRef();
    //closes drawer in case it is open
@@ -218,6 +220,18 @@ export default function MapScreen({navigation, initProgress}) {
         }
    }
 
+   async function homePosition() {
+    let location = await Location.getCurrentPositionAsync({});
+    const hlat = location.coords.latitude
+    const hlong = location.coords.longitude
+    setHomeLat(hlat)
+    setHomeLong(hlong)
+   }
+
+   React.useEffect(() => {
+    homePosition();
+   },[])
+
     return (
         
             <SafeAreaView style={styles.masterContainer}>
@@ -261,8 +275,8 @@ export default function MapScreen({navigation, initProgress}) {
                     }}
                     provider={Platform.OS === "android" ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
                     region={{
-                        latitude: latitude,
-                        longitude: longitude,
+                        latitude: homeLat,
+                        longitude: homeLong,
                         latitudeDelta: 3,
                         longitudeDelta: 0.0121,
                     }} 

@@ -174,6 +174,7 @@ export default function BillingForm({navigation}) {
         <SafeAreaView style={styles.container} >
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
         <KeyboardAwareScrollView
+                extraHeight={-64}
                 extraScrollHeight={150}
                 contentContainerStyle={styles.inputContainer}
                 >

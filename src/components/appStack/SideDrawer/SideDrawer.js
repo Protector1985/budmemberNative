@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AuthContext } from '../../../context/AuthContext';
 import axios from 'axios';
+import { setUserToken } from '../../../store/authSlice';
 const height = Dimensions.get("window").height
 
 function DrawerItem({navigation, screenName, screenLink}) {
@@ -30,9 +30,9 @@ return (
 
 
 function Logout({navigation, screenName, screenLink}) {
-    const {isLoading, userToken, setUserToken} = useContext(AuthContext)
+
+    const dispatch = useDispatch();
     function handleNavigation() {
-        
         
         AsyncStorage.clear();
 
@@ -40,7 +40,7 @@ function Logout({navigation, screenName, screenLink}) {
         // .then((res) => {
         //     console.log(res)
         // })
-        setUserToken(null)
+        dispatch(setUserToken(null))
     }
 
 return (

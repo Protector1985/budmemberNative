@@ -13,12 +13,19 @@ import generateDaysInMonth from '../lib/generateDaysInMonth';
 import {months} from '../lib/monthsObject'
 import { generateYears } from "../lib/years";
 import handleCreateAccount from './lib/signupHelpers';
-import { AuthContext } from '../../../context/AuthContext';
+
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useKeyboardVisible } from '../../utils/useKeyboardVisible';
+import {deleteNullSFEntry} from '../../../api/nodeApi'
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setUserToken } from '../../../store/authSlice';
 
 export default function Signup({navigation}) {
+   
+    const dispatch = useDispatch()
     const keyboardOpen = useKeyboardVisible();
+
     //params are only sent with oAuth. (accesstoken)
     const params = navigation?.state?.params?.params
     const [date, setDate] = useState(moment().format("YYYY-MM-DD"))
@@ -37,7 +44,8 @@ export default function Signup({navigation}) {
     const [birthYear, setBirthYear] = useState("");
     const [daysInMonth, setDaysInMonth] = useState([])
     const [dayOfBirth, setDayOfBirth] = useState("");
-    const {signUp, login, logout} = useContext(AuthContext);
+    const [isLoading, setIsLoading] = React.useState(false)
+  
     const [birthDayString, setBirthdayString] = React.useState(new Date(moment().subtract(18, "years").format("YYYY-MM-DD")))
     let mediumPassword = new RegExp('((?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,}))|((?=.*[a-z])(?=.*[A-Z])(?=.*[^A-Za-z0-9])(?=.{8,}))')
     const [ageError, setAgeError] = React.useState(null)
@@ -69,9 +77,33 @@ export default function Signup({navigation}) {
             return true
         }
    }
-      
+    
 
-     
+   async function signUp(email, password, firstName, lastName, birthDayString) {
+    setIsLoading(true)
+    try {
+    
+    const res = await handleCreateAccount(email, password, firstName, lastName, birthDayString)
+    if(!res?.success) {
+        Alert.alert("Something went wrong", "Please close the app and try again")
+        const deleteRes = await deleteNullSFEntry(email, res.header);
+        if(deleteRes.data.success) {
+            setIsLoading(false) 
+        } else {
+            setIsLoading(false) 
+        }
+
+    } else if (res?.success) {
+        dispatch(setUserToken(res.token))
+        AsyncStorage.setItem("userToken", res?.token);
+        setIsLoading(false)
+    }
+    
+} catch(err) {
+    console.log(err)
+}
+            
+}
      
       async function handleSignup() {
         setErrors({
@@ -264,6 +296,7 @@ export default function Signup({navigation}) {
     return (
         <View style={styles.masterContainer}>
             <KeyboardAwareScrollView
+                extraHeight={-64}
                 extraScrollHeight={150}
                 style={{width: "90%", }}
                 contentContainerStyle={{

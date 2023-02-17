@@ -108,7 +108,7 @@ export default function EnterPhoneNumber({navigation, numberState}) {
         
         <SafeAreaView style={styles.masterContainer}>
         <ActivityIndicator color={colorPalette.accentSecondary} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
-        <KeyboardAwareScrollView style={styles.keyboardScrollView}>
+        <KeyboardAwareScrollView   extraHeight={-64} style={styles.keyboardScrollView}>
             <Image style={styles.logo} source={require("../../../assets/pictures/phoneverify.jpg")} />
             <View style={styles.inputContainer}>
                 <View style={styles.textContainer}>
@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     },
     inputField: {
         width: "90%",
+        paddingLeft: 10,
         borderColor: "grey",
         borderWidth: 1,
         fontSize: 20,

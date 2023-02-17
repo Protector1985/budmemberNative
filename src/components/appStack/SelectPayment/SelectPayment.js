@@ -98,19 +98,19 @@ React.useEffect(() => {
   async function handlePress() {
     setLoading(true)
     switch(paymentMethods[selectionIndex].type) {
-      
         case "ADD":
             return navigation.navigate("Payment Information")
         case "EXISTING":
-           
             const res = await changeWithCardOnFile(Email, selectedPlan, Previous_Package_ID__c, membershipPlans)
             if(res.data.success) {
+                _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
                 setAlertOpen(true);
                 setAlertMessage("Your plan was successfully changed")
                 setAlertType("SUCCESS")
                 setLoading(false)
-                _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
+                navigation.navigate("Map")
             } else {
+                _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)  
                 setAlertOpen(true);
                 setAlertMessage(res.data.msg)
                 setAlertType("ERROR")
@@ -123,22 +123,6 @@ React.useEffect(() => {
     }
   }
 
-
-  
-
-
- 
-
-
- 
-
-  
-   
-    
-    
-    
-
-  
 
   
 

@@ -5,12 +5,34 @@ import AppStack from '../components/appStack/AppStack';
 import React from 'react';
 
 import AuthStack from '../components/authStack/AuthStack';
-import { AuthContext } from '../context/AuthContext';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserToken } from '../store/authSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function AppNav() {
-  const {isLoading, userToken} = useContext(AuthContext)
-  
+
+  const [isLoading, setIsLoading] = React.useState(false)
+  const { userToken } = useSelector((state)=> state.authSlice)
+  const dispatch = useDispatch();
+
+  async function isLoggedIn() {
+    try {
+        setIsLoading(true)
+        let userToken = await AsyncStorage.getItem("userToken")
+        dispatch(setUserToken(userToken))
+        setIsLoading(false)
+    } catch(err) {
+        console.log("Is logged in error " + err)
+        setIsLoading(false)
+    } 
+}
+
+React.useEffect(() => {
+  isLoggedIn()
+},[])
+
   if(isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -18,6 +40,10 @@ export default function AppNav() {
       </View>
     )
   }
+
+ 
+
+
  
 
   return (

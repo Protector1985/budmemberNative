@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCCDetails} from '../../../store/paymentInfoSlice';
 import { closeDrawer } from '../../../store/drawerSlice';
 import React from 'react';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function CreditCardPayment({navigation}) {
 
@@ -46,16 +46,19 @@ export default function CreditCardPayment({navigation}) {
         dispatch(setCCDetails(values))
         navigation.navigate("Billing Information")
       }
-      
+ 
       return (
         <FormProvider {...formMethods}>
           <SafeAreaView style={styles.container}>
-            <KeyboardAvoidingView
-              style={styles.avoider}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          <KeyboardAwareScrollView
+              extraHeight={-64}
+              extraScrollHeight={250}
+              style={{width: "90%", marginLeft:"auto", marginRight:"auto"}}
+              contentContainerStyle={{
+                  overflow:"scroll"
+              }}
             >
               <CreditCardForm
-                
                 LottieView={LottieView}
                 horizontalStart={false}
                 overrides={{
@@ -64,7 +67,7 @@ export default function CreditCardPayment({navigation}) {
                   },
                 }}
               />
-            </KeyboardAvoidingView>
+            </KeyboardAwareScrollView>
             {formState.isValid && (
               <Button
                 style={styles.button}
