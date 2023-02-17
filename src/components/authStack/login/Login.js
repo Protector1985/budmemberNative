@@ -45,8 +45,7 @@ export default function Login({navigation}) {
     if(isLoading) {
         return <Spinner />
     }
-    console.log(globalSpinnerOn)
-    console.log(globalSpinnerOn)
+
    
     
     

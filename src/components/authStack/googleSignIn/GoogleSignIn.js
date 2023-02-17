@@ -32,10 +32,8 @@ export default function GoogleSignIn({setLoading, navigation}) {
         extraParams: {identity_provider: "Google"},
         scopes: ['aws.cognito.signin.user.admin', "email", "openid", "phone", "profile"],
         responseType: "token",
-        redirectUri: makeRedirectUri({
-            scheme: "com.native.budmember",
-            useProxy
-        })},
+        redirectUri: "com.application.budmember://status"
+        },
         discoveryDocument
     )
    
@@ -71,7 +69,7 @@ export default function GoogleSignIn({setLoading, navigation}) {
     
     
     return(
-        <SocialLoginButton click={() => promptAsync({useProxy: true, showInRecents: true})} socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
+        <SocialLoginButton setLoading={setLoading} click={() => promptAsync({useProxy: false, showInRecents: true})} socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
     )
 }
 

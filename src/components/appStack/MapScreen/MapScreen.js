@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView, Platform, Alert} from 'react-native';
+import {View, StyleSheet, SafeAreaView, Text, Image, TouchableOpacity, FlatList, ScrollView, Platform, Alert, ActivityIndicator} from 'react-native';
 import MapView, {Marker, PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import SearchBar from "react-native-dynamic-search-bar";
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -94,7 +94,7 @@ export default function MapScreen({navigation, initProgress}) {
    const [alertMessage, setAlertMessage] = React.useState("")
    const [alertType, setAlertType] = React.useState("")
    const [sliderData, setSliderData] = React.useState({})
-   const {latitude, longitude} = useSelector((state) => state.locationSlice)
+   const {latitude, longitude, homeLat, homeLong} = useSelector((state) => state.locationSlice)
    const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
    const {showEmailModal} = useSelector((state) => state.systemSlice)
    const {dispensaries} = useSelector((state) => state.dispensariesSlice)
@@ -109,8 +109,7 @@ export default function MapScreen({navigation, initProgress}) {
    const [loading,setLoading] = React.useState(false)
    const [filteredDispensaries, setFilteredDispensaries] = React.useState([])
    const [provider, setProvider] = React.useState(null)
-   const [homeLat, setHomeLat] = React.useState("")
-   const [homeLong, setHomeLong] = React.useState("")
+
    const alertRef = React.useRef();
     const panelRef = React.useRef();
    //closes drawer in case it is open
@@ -197,8 +196,6 @@ export default function MapScreen({navigation, initProgress}) {
                     browserRedirect();
                 }, 4000)
                 
-               
-                
             }
         } 
    },[cognitoData])
@@ -220,17 +217,7 @@ export default function MapScreen({navigation, initProgress}) {
         }
    }
 
-   async function homePosition() {
-    let location = await Location.getCurrentPositionAsync({});
-    const hlat = location.coords.latitude
-    const hlong = location.coords.longitude
-    setHomeLat(hlat)
-    setHomeLong(hlong)
-   }
-
-   React.useEffect(() => {
-    homePosition();
-   },[])
+  
 
     return (
         
