@@ -5,7 +5,7 @@ import { Alert, Platform } from 'react-native';
 import jwt_decode from "jwt-decode";
 import SocialLoginButton from "../login/SocialLoginButton";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as Linking from 'expo-linking'
 import { googleSignin } from '../../../api/nodeApi';
 import { useDispatch } from 'react-redux';
 import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
@@ -21,26 +21,31 @@ export default function GoogleSignIn({setLoading, navigation}) {
         request_uri_parameter_supported: true
     }
 
+  
+
     // `https://${process.env.REACT_APP_COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&redirect_uri=${process.env.REACT_APP_CLIENT_LOGIN_URL}&response_type=TOKEN&client_id=${process.env.REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID}&scope=aws.cognito.signin.user.admin email openid phone profile`
 
     const useProxy = true
-    const respType = ResponseType.Token
     
     
+
     const [request, response, promptAsync] = useAuthRequest({
         clientId: "2o54hoh2kq8t2v4e2dqom8866t",
         extraParams: {identity_provider: "Google"},
         scopes: ['aws.cognito.signin.user.admin', "email", "openid", "phone", "profile"],
         responseType: "token",
-        redirectUri: "com.application.budmember://status"
+        redirectUri: makeRedirectUri({
+            scheme:"com.application.budmember",
+            useProxy: true
+        })
         },
         discoveryDocument
     )
-   
-  
 
-   
+    console.log(request)
+        
         if (response) {
+            console.log(response)
           if (response.error) {
             Alert.alert(
               'Authentication error',
@@ -56,9 +61,15 @@ export default function GoogleSignIn({setLoading, navigation}) {
                 .then((res) => {
                     if(res.data.success) {
                         setLoading(true)
+                        dispatch(setGlobalSpinnerOn(true))
                         AsyncStorage.setItem("userToken", res.data.token)
                         dispatch(setUserToken(res.data.token))
-                        dispatch(setGlobalSpinnerOn(true))
+                        
+                        setTimeout(()=> {
+                            console.log("processed")
+                            navigation.navigate("AppStack", "Map")
+                        }, 2000)
+                        
                     } else {
                         console.log("Something went wrong")
                     }
@@ -69,7 +80,7 @@ export default function GoogleSignIn({setLoading, navigation}) {
     
     
     return(
-        <SocialLoginButton setLoading={setLoading} click={() => promptAsync({useProxy: false, showInRecents: true})} socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
+        <SocialLoginButton setLoading={setLoading} click={() => promptAsync({useProxy: true, showInRecents: true})} socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
     )
 }
 

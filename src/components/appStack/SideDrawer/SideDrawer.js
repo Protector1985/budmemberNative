@@ -8,6 +8,9 @@ import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { setUserToken } from '../../../store/authSlice';
+import * as WebBrowser from 'expo-web-browser'
+import { makeRedirectUri} from 'expo-auth-session';
+
 const height = Dimensions.get("window").height
 
 function DrawerItem({navigation, screenName, screenLink}) {
@@ -30,16 +33,16 @@ return (
 
 
 function Logout({navigation, screenName, screenLink}) {
-
     const dispatch = useDispatch();
-    function handleNavigation() {
+    
+    function handleNavigation() { 
+        const logoutUrl = `https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/logout?client_id=2o54hoh2kq8t2v4e2dqom8866t&redirect_uri=${makeRedirectUri({scheme:"com.application.budmember",useProxy: true})}&response_type=code`
+        axios.get(logoutUrl)
+        .then((res) => console.log(res))
+        
+        
         
         AsyncStorage.clear();
-
-        // axios.get("https://budmember-prod.auth.us-west-2.amazoncognito.com/logout?response_type=code&client_id=2o54hoh2kq8t2v4e2dqom8866&redirect_uri=com.application.budmember://status")
-        // .then((res) => {
-        //     console.log(res)
-        // })
         dispatch(setUserToken(null))
     }
 
