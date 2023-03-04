@@ -11,11 +11,12 @@ import { useDispatch } from 'react-redux';
 import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
 
 
-WebBrowser.maybeCompleteAuthSession()
+
 
 export default function GoogleSignIn({setLoading, navigation}) {
    const dispatch = useDispatch();
-
+    
+    
     const discoveryDocument = {
         authorizationEndpoint: "https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/authorize",
         request_uri_parameter_supported: true
@@ -27,12 +28,10 @@ export default function GoogleSignIn({setLoading, navigation}) {
 
     const useProxy = true
     
-    
-
     const [request, response, promptAsync] = useAuthRequest({
-        clientId: "2o54hoh2kq8t2v4e2dqom8866t",
+        clientId: "2o54hoh2kq8t2v4e2dqom8866t",  
         extraParams: {identity_provider: "Google"},
-        scopes: ['aws.cognito.signin.user.admin', "email", "openid", "phone", "profile"],
+        scopes: ['aws.cognito.signin.user.admin'],
         responseType: "token",
         redirectUri: makeRedirectUri({
             scheme:"com.application.budmember",
@@ -41,11 +40,9 @@ export default function GoogleSignIn({setLoading, navigation}) {
         },
         discoveryDocument
     )
-
-    console.log(request)
+    
         
         if (response) {
-            console.log(response)
           if (response.error) {
             Alert.alert(
               'Authentication error',

@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useContext} from 'react';
-import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal, Platform, InputAccessoryView, Touchable } from "react-native";
+import { StyleSheet, View, Text, TextInput, Image, TouchableOpacity, Alert, Modal, Platform, InputAccessoryView, Touchable, ActivityIndicator } from "react-native";
 import Checkbox from 'expo-checkbox';
 import { ScrollView } from 'react-native-gesture-handler'
 import {useFonts} from 'expo-font'
@@ -106,25 +106,31 @@ export default function Signup({navigation}) {
 }
      
       async function handleSignup() {
-        setErrors({
-            firstName:null,
-            lastName: null,
-            email:null,
-            password: null,
-        })
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
+        setIsLoading(true)
+        try {
+            
+            setErrors({
+                firstName:null,
+                lastName: null,
+                email:null,
+                password: null,
+            })
+            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/
         if(!submitDisabled()) {
             if(password === repeatPassword) {
                 if(mediumPassword.test(password)) {
                     if(moment().diff(moment(birthDayString), 'years',false) >= 18) {
                         if(privacyAccepted && termsAccepted) {
                             signUp(email.toLowerCase(), password, firstName, lastName, moment(birthDayString).format("YYYY-MM-DD"))
+                        
                         } else {
                             setAcceptError("You have to accept our privacy policy and terms in order to accept")
+                            setIsLoading(false)
                         }
                         
                     } else {
                         setAgeError("You have to be at least 18 years old to sign up")
+                        setIsLoading(false)
                     }
                     
                     setErrors({
@@ -140,6 +146,7 @@ export default function Signup({navigation}) {
                         password: "Your password is not strong enough",
                         lastName: null, 
                     })
+                    setIsLoading(false)
                 }
             } else if(password !== repeatPassword) {
                 setErrors({
@@ -148,6 +155,7 @@ export default function Signup({navigation}) {
                     password: "Your passwords don't match",
                     lastName: null, 
                 })
+                setIsLoading(false)
                 
             }
 
@@ -158,6 +166,7 @@ export default function Signup({navigation}) {
                 password:"Please enter a password",
                 lastName: "Your last name is required", 
             })
+            setIsLoading(false)
             if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && !reg.test(email)) {
                 setErrors({
                     email: "Please enter a valid email address",
@@ -165,6 +174,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             } else if(firstName.length === 0 && lastName.length > 0 && password.length === 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -172,7 +182,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: "Please enter a password"
                 })
-            
+                setIsLoading(false)
             } else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -180,7 +190,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: null
                 })
-            
+                setIsLoading(false)
             }else if(firstName.length === 0 && lastName.length === 0 && password.length === 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -188,6 +198,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             } else if(firstName.length > 0 && lastName.length > 0 && password.length > 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -195,6 +206,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: null
                 })
+                setIsLoading(false)
             }else if(firstName.length > 0 && lastName.length > 0 && password.length === 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -202,6 +214,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             } else if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -209,6 +222,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             } else if(firstName.length > 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -216,6 +230,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: null
                 })
+                setIsLoading(false)
             } else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && !reg.test(email)) { 
                 setErrors({
                     email: "Please enter a valid email address",
@@ -223,6 +238,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: null
                 })
+                setIsLoading(false)
             }else if(firstName.length === 0 && lastName.length === 0 && password.length > 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -230,6 +246,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: null
                 })
+                setIsLoading(false)
             }else if(firstName.length > 0 && lastName.length === 0 && password.length > 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -237,6 +254,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: null
                 })
+                setIsLoading(false)
             }else if(firstName.length === 0 && lastName.length > 0 && password.length > 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -244,6 +262,7 @@ export default function Signup({navigation}) {
                     firstName: "Your first name is required",
                     password: null
                 })
+                setIsLoading(false)
             }else if(firstName.length > 0 && lastName.length > 0 && password.length === 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -251,6 +270,7 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             }else if(firstName.length > 0 && lastName.length === 0 && password.length === 0 && reg.test(email)) { 
                 setErrors({
                     email: null,
@@ -258,11 +278,14 @@ export default function Signup({navigation}) {
                     firstName: null,
                     password: "Please enter a password"
                 })
+                setIsLoading(false)
             }
               
-            
+        }
 
-        }     
+        } catch(err) {
+            console.log(err)
+        } 
     }
     
      
@@ -295,6 +318,7 @@ export default function Signup({navigation}) {
 
     return (
         <View style={styles.masterContainer}>
+            <ActivityIndicator color={"#2CA491"} animating={isLoading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
             <KeyboardAwareScrollView
                 extraHeight={-64}
                 extraScrollHeight={150}
@@ -463,8 +487,8 @@ export default function Signup({navigation}) {
                     {acceptError !== null ? <Text style={[styles.errorText, {marginLeft: 0, marginTop: 10}]}>{acceptError}</Text> : null}
                 </View>
 
-                <TouchableOpacity onPress={handleSignup} style={styles.btn}>
-                    <Text style={styles.btnText}>Create Account</Text>
+                <TouchableOpacity disabled={isLoading} onPress={handleSignup} style={styles.btn}>
+                    <Text style={styles.btnText}>{isLoading? "Please Wait...": "Create Account"}</Text>
                 </TouchableOpacity>
                 </KeyboardAwareScrollView>
                 

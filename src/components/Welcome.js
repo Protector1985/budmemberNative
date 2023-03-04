@@ -1,12 +1,11 @@
 import { View, TouchableOpacity, Text, StyleSheet, Image } from "react-native";
 import {useFonts} from 'expo-font'
 import { AntDesign } from '@expo/vector-icons'; 
-
 import React from 'react';
 import { useDispatch } from "react-redux";
 import Alert from "./utils/Alert";
-import { setLocationPermission } from "../store/permissionSlice";
-import * as Location from 'expo-location';
+import { CookieStorage } from "amazon-cognito-identity-js";
+
 
 
 export default function Welcome({navigation}) {
@@ -15,15 +14,12 @@ export default function Welcome({navigation}) {
     const [alertMessage, setAlertMessage] = React.useState("")
     const [alertType, setAlertType] = React.useState("")
     const dispatch = useDispatch()
-    
-    
-   
-    
-
 
       function handleNavigation() {
         navigation.navigate("Login")
       }
+    
+    
      
     return(
         <View style={styles.masterContainer}>

@@ -9,16 +9,24 @@ import moment from 'moment'
 import { FontAwesome } from '@expo/vector-icons'; 
 import { FancyAlert } from 'react-native-expo-fancy-alerts';
 import { AntDesign } from '@expo/vector-icons';
+import _init from '../lib/_init';
+import * as Location from 'expo-location'
 
-function ConfirmCancelModal({setLoading, lastChargeDate, open, setOpen, subId, email, navigation}) {
+function ConfirmCancelModal({loading, setLoading, lastChargeDate, open, setOpen, subId, email, navigation}) {
     const [message, setMessage] = React.useState(`If you cancel your membership, you will lose access to member benefits on ${moment(lastChargeDate).add(1, "Months").format("MM-DD-YYYY")}`)
+    const [status, requestPermission] = Location.useForegroundPermissions()
+    const {userSlice} = useSelector((state) => state)
+    const {cognitoData} = useSelector((state) => state.cognitoDataSlice)
+    const {avatarUri} = useSelector((state) => state.userSlice)
+    const [initState, setInitState] = React.useState()
+    const dispatch = useDispatch()
     async function handleCancel() {
         setLoading(true)
         try {
             const res = await cancelSubscription(subId, email, lastChargeDate)
-
-            if(res.data === "SUCCESS") {
-                navigation.navigate("appStack", {screen:"Map"})
+      
+            if(res?.data === "SUCCESS") {
+                navigation.navigate("Map")
                 setLoading(false)
             } else {
                 setMessage("Something went wrong. Your request could not be processed and your subscription was not cancelled - email contact@budmember.com")
@@ -26,6 +34,8 @@ function ConfirmCancelModal({setLoading, lastChargeDate, open, setOpen, subId, e
             }
         } catch(err) {
             console.log(err)
+        } finally {
+            _init(status.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
         }
     }
 
@@ -45,14 +55,14 @@ function ConfirmCancelModal({setLoading, lastChargeDate, open, setOpen, subId, e
                 <View style={styles.cancelButtons}>
                     
                     <View style={[styles.cancelBtnInModal, {backgroundColor:"#2CA491"}]}>
-                        <TouchableOpacity onPress={() => setOpen(false)} style={styles.cancelBtnOpacity}>
+                        <TouchableOpacity disabled={loading} onPress={() => setOpen(false)} style={styles.cancelBtnOpacity}>
                             <Text style={styles.cancelButtonsText}>Close</Text>
                         </TouchableOpacity>
                     </View>
                 
                     <View style={[styles.cancelBtnInModal, {backgroundColor:"#86BDB2"}]}>
-                        <TouchableOpacity onPress={() => handleCancel()} style={styles.cancelBtnOpacity}>
-                            <Text style={styles.cancelButtonsText}>Unsubscribe</Text>
+                        <TouchableOpacity disabled={loading} onPress={() => handleCancel()} style={styles.cancelBtnOpacity}>
+                            <Text style={styles.cancelButtonsText}>{ !loading? "Unsubscribe" : "Please wait..."}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -100,7 +110,7 @@ export default function Billing({navigation}) {
     return (
         <SafeAreaView style={styles.container}>
         <ActivityIndicator color={"#2CA491"} animating={loading} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
-        <ConfirmCancelModal setLoading={setLoading} email={Email} subId={cognitoData["custom:authorizeSubId"]} setOpen={setCancelOpen} open={cancelOpen} lastChargeDate={lastChargeDate} />
+        <ConfirmCancelModal navigation={navigation} loading={loading} setLoading={setLoading} email={Email} subId={cognitoData["custom:authorizeSubId"]} setOpen={setCancelOpen} open={cancelOpen} lastChargeDate={lastChargeDate} />
         <Image style={styles.img} source={require("../../../assets/pictures/logo_white.png")} />
             <ScrollView style={styles.scrollContainer}>
         

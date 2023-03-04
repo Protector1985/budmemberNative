@@ -22,6 +22,7 @@ export default function AppNav() {
     try {
         setIsLoading(true)
         let userToken = await AsyncStorage.getItem("userToken")
+        console.log(userToken)
         dispatch(setUserToken(userToken))
         setIsLoading(false)
     } catch(err) {
@@ -38,9 +39,14 @@ async function homePosition() {
  }
 
 React.useEffect(() => {
-  isLoggedIn()
+ 
   homePosition();
 },[])
+
+React.useEffect(() => {
+  console.log("Reloading")
+  isLoggedIn()
+},[userToken])
 
 
 

@@ -280,6 +280,18 @@ export const cancelSubscription = async (subscriptionId, email, startDate) => {
     }
 }
 
+
+
+export const cognitoSignOut = async () => {
+    try{
+        const headers = await setToken();
+        const signoutRes = await axios.post(ENDPOINT + '/cognitoSignOut', {}, {headers})
+        return signoutRes;
+    } catch (err) {
+        return err.response
+    }
+}
+
 export const fetchDispensaryDetails = async (data) => {
     try{
         const headers = await setToken()

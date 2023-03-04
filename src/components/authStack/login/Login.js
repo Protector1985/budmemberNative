@@ -9,7 +9,7 @@ import { findUser } from "../../../api/nodeApi";
 import Spinner from '../../utils/Spinner';
 import GoogleSignIn from "../googleSignIn/GoogleSignIn";
 import { useSelector } from "react-redux";
-import { setIsLoading } from "../../../store/authSlice";
+
 
 
 export default function Login({navigation}) {

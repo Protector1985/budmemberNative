@@ -10,6 +10,8 @@ import axios from 'axios';
 import { setUserToken } from '../../../store/authSlice';
 import * as WebBrowser from 'expo-web-browser'
 import { makeRedirectUri} from 'expo-auth-session';
+import { cognitoSignOut } from '../../../api/nodeApi';
+
 
 const height = Dimensions.get("window").height
 
@@ -35,15 +37,20 @@ return (
 function Logout({navigation, screenName, screenLink}) {
     const dispatch = useDispatch();
     
-    function handleNavigation() { 
-        const logoutUrl = `https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/logout?client_id=2o54hoh2kq8t2v4e2dqom8866t&redirect_uri=${makeRedirectUri({scheme:"com.application.budmember",useProxy: true})}&response_type=code`
-        axios.get(logoutUrl)
-        .then((res) => console.log(res))
+    async function handleNavigation() { 
+        const res = await cognitoSignOut()
+        if(res?.data?.success) {
+            WebBrowser.coolDownAsync()
+            AsyncStorage.clear()
+            dispatch(setUserToken(null))
+        }
+        
+
         
         
         
-        AsyncStorage.clear();
-        dispatch(setUserToken(null))
+        
+        
     }
 
 return (
