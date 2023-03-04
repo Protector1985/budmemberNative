@@ -15,7 +15,7 @@ import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
 
 export default function GoogleSignIn({setLoading, navigation}) {
    const dispatch = useDispatch();
-    
+
     
     const discoveryDocument = {
         authorizationEndpoint: "https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/authorize",
@@ -75,9 +75,14 @@ export default function GoogleSignIn({setLoading, navigation}) {
           }
         }
     
+        function handleSubmit() {
+            promptAsync({useProxy: true, showInRecents: true})
+            dispatch(setGlobalSpinnerOn(true))
+        }
+        
     
     return(
-        <SocialLoginButton setLoading={setLoading} click={() => promptAsync({useProxy: true, showInRecents: true})} socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
+        <SocialLoginButton setLoading={setLoading} click={() => handleSubmit() } socialIcon={require("../../../assets/pictures/google.png")} socialDescription={"Continue with Google"} type="GOOGLE" />
     )
 }
 

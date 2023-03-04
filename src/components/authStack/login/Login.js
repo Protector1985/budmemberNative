@@ -18,6 +18,7 @@ export default function Login({navigation}) {
     const [isLoading, setLoading] = useState(false);
     const {globalSpinnerOn} = useSelector((state) => state.authSlice)
    
+    console.log(globalSpinnerOn)
 
       // onPress function passed to Continue button
       async function handlePress() {
@@ -42,15 +43,16 @@ export default function Login({navigation}) {
 }
 
     //if isLoading === true, return the loading spinner
-    if(isLoading) {
-        return <Spinner />
-    }
+    // if(isLoading || globalSpinnerOn) {
+    //     return <Spinner />
+    // }
 
    
     
     
     return (
         <View style={styles.masterContainer}>
+        <ActivityIndicator color={"#2CA491"} animating={isLoading || globalSpinnerOn} style={{zIndex: 10000, position: 'absolute', alignSelf: "center", top: "50%", bottom: "50%"}} size="large" />
             <KeyboardAvoidingView style={styles.subContainer}>
             <View style={styles.imgContainer}>
                 <Image style={styles.logo} source={require('./logo.jpg')} />

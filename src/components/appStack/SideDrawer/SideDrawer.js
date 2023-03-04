@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { closeDrawer, toggleDrawer } from '../../../store/drawerSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { setUserToken } from '../../../store/authSlice';
+import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
 import * as WebBrowser from 'expo-web-browser'
 import { makeRedirectUri} from 'expo-auth-session';
 import { cognitoSignOut } from '../../../api/nodeApi';
@@ -43,6 +43,7 @@ function Logout({navigation, screenName, screenLink}) {
             WebBrowser.coolDownAsync()
             AsyncStorage.clear()
             dispatch(setUserToken(null))
+            dispatch(setGlobalSpinnerOn(false))
         }
         
 
