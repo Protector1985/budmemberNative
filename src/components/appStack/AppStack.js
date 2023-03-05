@@ -29,24 +29,21 @@ export default function AppStack() {
         stepsLeft: 5,
         message: "Initializing"
     })
+    const {homeLat, lat} = useSelector((state) => state.locationSlice)
     React.useEffect(() => {
         if(status != null) {
             _init(status?.granted, userSlice, cognitoData, avatarUri, dispatch, setInitState)
         }
-        
     }, [status])
 
+    
  
-    return (
-            
+    return ( 
             <ActionSheetProvider>
                 <TabNavigator initProgress={initState} />
                 
-            </ActionSheetProvider>
-            
-            
-        
-    )
+            </ActionSheetProvider>  
+        )
 }
 
 

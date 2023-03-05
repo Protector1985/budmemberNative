@@ -12,7 +12,7 @@ export default async function getLocation(dispatch, locationPermission) {
     }
 
     let location = await Location.getCurrentPositionAsync({});
-
+    
     dispatch(setLocation({longitude: location.coords.longitude, latitude: location.coords.latitude}))
 
   } catch(err) {

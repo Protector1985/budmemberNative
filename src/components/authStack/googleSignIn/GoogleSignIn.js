@@ -9,6 +9,8 @@ import * as Linking from 'expo-linking'
 import { googleSignin } from '../../../api/nodeApi';
 import { useDispatch } from 'react-redux';
 import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
+import Expo from 'expo'
+import { redirectURI } from '../../../../endpoint';
 
 
 
@@ -16,43 +18,27 @@ import { setGlobalSpinnerOn, setUserToken } from '../../../store/authSlice';
 export default function GoogleSignIn({setLoading, navigation}) {
    const dispatch = useDispatch();
 
-    
+
     const discoveryDocument = {
         authorizationEndpoint: "https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/authorize",
         request_uri_parameter_supported: true
     }
 
-  
+    const redirect = makeRedirectUri({
+        scheme:"com.application.budmember",
+        useProxy: true
+    })
 
-    // `https://${process.env.REACT_APP_COGNITO_DOMAIN}/oauth2/authorize?identity_provider=Google&redirect_uri=${process.env.REACT_APP_CLIENT_LOGIN_URL}&response_type=TOKEN&client_id=${process.env.REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID}&scope=aws.cognito.signin.user.admin email openid phone profile`
+    const ur = `https://budmember-prod.auth.us-west-2.amazoncognito.com/oauth2/authorize?identity_provider=Google&redirect_uri=${redirectURI}&response_type=TOKEN&client_id=2o54hoh2kq8t2v4e2dqom8866t&scope=aws.cognito.signin.user.admin`
 
-    const useProxy = true
     
-    const [request, response, promptAsync] = useAuthRequest({
-        clientId: "2o54hoh2kq8t2v4e2dqom8866t",  
-        extraParams: {identity_provider: "Google"},
-        scopes: ['aws.cognito.signin.user.admin'],
-        responseType: "token",
-        redirectUri: makeRedirectUri({
-            scheme:"com.application.budmember",
-            useProxy: true
-        })
-        },
-        discoveryDocument
-    )
-    
+        async function handleSubmit() {
+            // promptAsync({useProxy: true, showInRecents: true})
+            const result = await WebBrowser.openAuthSessionAsync(ur, redirect, {preferEphemeralSession: true})
+            
+            const access_token = result?.url?.match(/\#(?:access_token)\=([\S\s]*?)\&/)[1];
         
-        if (response) {
-          if (response.error) {
-            Alert.alert(
-              'Authentication error',
-              response.params.error_description || 'something went wrong'
-            )
-            return
-          }
-          if (response.type === 'success') {
-
-            const decoded = jwt_decode(response.params.access_token)
+            const decoded = jwt_decode(access_token)
         
             googleSignin(decoded)
                 .then((res) => {
@@ -63,7 +49,6 @@ export default function GoogleSignIn({setLoading, navigation}) {
                         dispatch(setUserToken(res.data.token))
                         
                         setTimeout(()=> {
-                            console.log("processed")
                             navigation.navigate("AppStack", "Map")
                         }, 2000)
                         
@@ -71,12 +56,7 @@ export default function GoogleSignIn({setLoading, navigation}) {
                         console.log("Something went wrong")
                     }
                 })
-         
-          }
-        }
-    
-        function handleSubmit() {
-            promptAsync({useProxy: true, showInRecents: true})
+            
             dispatch(setGlobalSpinnerOn(true))
         }
         

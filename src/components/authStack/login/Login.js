@@ -18,7 +18,6 @@ export default function Login({navigation}) {
     const [isLoading, setLoading] = useState(false);
     const {globalSpinnerOn} = useSelector((state) => state.authSlice)
    
-    console.log(globalSpinnerOn)
 
       // onPress function passed to Continue button
       async function handlePress() {
@@ -41,11 +40,6 @@ export default function Login({navigation}) {
         console.log(err)
     }
 }
-
-    //if isLoading === true, return the loading spinner
-    // if(isLoading || globalSpinnerOn) {
-    //     return <Spinner />
-    // }
 
    
     

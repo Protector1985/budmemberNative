@@ -27,7 +27,6 @@
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/stack": "^6.3.11",
     "@reduxjs/toolkit": "^1.8.6",
-    "@unimodules/core": "^7.1.2",
     "amazon-cognito-identity-js": "^5.2.14",
     "apple-pay": "^1.0.2",
     "aws-amplify": "^4.3.45",

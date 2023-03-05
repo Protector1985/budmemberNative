@@ -37,7 +37,6 @@ function Card({index, selectionIndex, setSelectionIndex, method, ccNumber}) {
 export default function SelectPayment({navigation}) {
     const [paymentMethods, setPaymentMethods] = React.useState([])
     const {selectedPlan,  membershipPlans} = useSelector((state) => state.membershipPlanSlice)
-    useSelector((state) => console.log(state.membershipPlanSlice))
     const paymentInfo = useSelector((state) => state.paymentInfoSlice)
     const {locationPermission} = useSelector((state) => state.permissionSlice)
     const {cognitoData} = useSelector((state) => state.cognitoDataSlice)

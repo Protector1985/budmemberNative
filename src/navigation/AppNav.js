@@ -17,12 +17,11 @@ export default function AppNav() {
   const [isLoading, setIsLoading] = React.useState(false)
   const { userToken } = useSelector((state)=> state.authSlice)
   const dispatch = useDispatch();
-
+  
   async function isLoggedIn() {
     try {
         setIsLoading(true)
         let userToken = await AsyncStorage.getItem("userToken")
-        console.log(userToken)
         dispatch(setUserToken(userToken))
         setIsLoading(false)
     } catch(err) {
@@ -39,18 +38,15 @@ async function homePosition() {
  }
 
 React.useEffect(() => {
- 
-  homePosition();
+  
 },[])
 
 React.useEffect(() => {
-  console.log("Reloading")
   isLoggedIn()
+  homePosition();
 },[userToken])
 
 
-
- 
 
   if(isLoading) {
     return (
@@ -61,10 +57,6 @@ React.useEffect(() => {
   }
 
  
-
-
- 
-
   return (
     <NavigationContainer style={styles.masterContainer} >
       { userToken !== null ? <AppStack /> : <AuthStack/>}
