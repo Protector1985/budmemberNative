@@ -37,9 +37,19 @@ return (
 function Logout({navigation, screenName, screenLink}) {
     const dispatch = useDispatch();
     
+    
+    
+
     async function handleNavigation() { 
         const res = await cognitoSignOut()
+        console.log("rct below")
+        
         if(res?.data?.success) {
+            WebBrowser.coolDownAsync()
+            AsyncStorage.clear()
+            dispatch(setUserToken(null))
+            dispatch(setGlobalSpinnerOn(false))
+        } else {
             WebBrowser.coolDownAsync()
             AsyncStorage.clear()
             dispatch(setUserToken(null))
@@ -48,7 +58,7 @@ function Logout({navigation, screenName, screenLink}) {
         
 
         
-        
+    
         
         
         
